@@ -9,6 +9,44 @@
 
 	<packaging>pom</packaging>
 
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>Parent POM for the org.slizaa.scanner.core artifacts.</description>
+	<url>http://www.slizaa.org</url>
+	<inceptionYear>2017</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>Eclipse Public License - Version 1.0</name>
+			<url>http://www.eclipse.org/org/documents/epl-v10.php</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>wuetherich</id>
+			<name>Gerd Wuetherich</name>
+			<email>gerd@slizaa.org</email>
+			<url>http://www.gerd-wuetherich.de</url>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/slizaa/slizaa-scanner-core.git</connection>
+		<developerConnection>scm:git:ssh://github.com:slizaa/slizaa-scanner-core.git</developerConnection>
+		<url>http://github.com/slizaa/slizaa-scanner-core</url>
+	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
