@@ -55,7 +55,6 @@
 	<modules>
 		<module>org.slizaa.scanner.core.spi-api</module>
 		<module>org.slizaa.scanner.core.contentdefinition</module>
-		<module>org.slizaa.scanner.core.classpathscanner</module>
 	</modules>
 
 	<dependencyManagement>
