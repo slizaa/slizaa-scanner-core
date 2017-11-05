@@ -24,8 +24,8 @@ import org.slizaa.scanner.core.spi.parser.model.Label;
 public enum ResourceType implements Label {
 
 	/** source content */
-	SOURCE,
+	Source,
 
 	/** binary content */
-	BINARY;
+	Binary;
 }

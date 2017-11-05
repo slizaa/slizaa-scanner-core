@@ -20,5 +20,5 @@ import org.slizaa.scanner.core.spi.parser.model.Label;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public enum CoreModelElementType implements Label {
-  GROUP, MODULE, DIRECTORY, RESOURCE
+  Group, Module, Directory, Resource
 }
