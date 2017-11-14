@@ -1,0 +1,3 @@
+Export-Package: org.slizaa.scanner.core.mvnresolver, org.slizaa.scanner.core.mvnresolver.api
+Import-Package: !org.xeustechnologies.jcl,com.google.common.base,com.google.common.collect,*
+-snapshot: BUILD-${tstamp}

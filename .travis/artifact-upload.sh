@@ -5,7 +5,7 @@ target_dir=slizaa-scanner-core
 
 echo TRAVIS_BUILD_DIR: $TRAVIS_BUILD_DIR
 
-PRODUCTS_DIR=$TRAVIS_BUILD_DIR/slizaa-scanner-core-eclipse/org.slizaa.scanner.core.eclipse.repository/target/repository
+PRODUCTS_DIR=$TRAVIS_BUILD_DIR/eclipse-p2/target/repository
 echo PRODUCTS_DIR: $PRODUCTS_DIR
 
 filesToUpload=$(find $PRODUCTS_DIR -name "*.jar" -printf '%P\n')

@@ -9,8 +9,9 @@ env:
   - secure: A8DWwgZgUsJ0kPzDh4HrV3V0GwJ6rRTBPujf2pFoFaJhwc1B46czUPdG2QN3rlpiQwEZiaLQ80yzX6tEVkKBuRJ2mdYyZyE6dXVgxnozbROVuAJZq/I/yKnFj+/CHRtESSOMRHe1SAMn3vCZ2TV8mH+NhDMSFWpskSXysXIRzSs2zlBMgCJFwhQmeL32qt2xlkc/j2sePeQMf1bbftFGMEQl3E51Fw1FwZ9khrvJ7VkWWORg7ZZfr0LvdYuTlWcELOz9GiFsyjbj69PGZT32VlFaasjJLrGH0+V0UZwPhZXGeLlI4oAKsorQKGQW0BILSSRtwuCeRBqBv/5HL2VKGt93tVnnrydHOk2X1wosO5wM1sbXi6o34ioGgXR3yLs3Ez4JDiJRFh+ZXEBgo74klMGmsBwupbM84cDForIOV0Xz8D6ubE4N09jBibKd4cmanzvuuRbOg7z5yqyhNHum9mgRNHScxG2QL50AvriH+u+x7SRLKfY0bi56JV8AU020F7Yp566DDwO/ttdoKrMUyeWhw+0kBDk/siZafmsfCHclBZNrOSgBTNAFlet9Tz8ovsK4+XBNXRbFd2yE+WbQtYjPNGAqCdfUMKHwsnLuLhJ4gEelwxosmHwQvVRWGsnkQsdNcHu7SGx80S5M6Cxs1w/fZt9Oh2xGUXsGY8s622U=
 
 script:
+- mvn clean deploy -s .travis/travis-maven-settings.xml -f slizaa-scanner-core/slizaa-scanner-mojos/pom.xml
 - mvn clean deploy -s .travis/travis-maven-settings.xml -f slizaa-scanner-core/pom.xml
-- mvn clean install -f slizaa-scanner-core-eclipse/pom.xml
+- mvn clean deploy -s .travis/travis-maven-settings.xml -f slizaa-scanner-core/eclipse-p2/pom.xml
 
 after_success:
 - chmod +x ./.travis/artifact-delete.sh

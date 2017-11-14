@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<prerequisites>
+		<maven>3.0.3</maven>
+	</prerequisites>
+
+	<groupId>org.slizaa.test</groupId>
+	<artifactId>this-is-for-test-only</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<name>This is for Test ONLY</name>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.slizaa.mojo</groupId>
+				<artifactId>copydependencies-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<configuration>
+					<targetDirectory>target/classes/libs</targetDirectory>
+					<coords>
+						<coord>org.slizaa.scanner.neo4j:org.slizaa.scanner.neo4j.graphdbfactory:1.0.0-SNAPSHOT</coord>
+						<coord>org.slizaa.scanner.neo4j:org.slizaa.scanner.neo4j.importer:1.0.0-SNAPSHOT</coord>
+						<coord>org.neo4j:neo4j:3.2.3</coord>
+						<coord>org.neo4j:neo4j-bolt:3.2.3</coord>
+						<coord>org.slf4j:slf4j-api:1.7.25</coord>
+						<coord>org.slf4j:slf4j-simple:1.7.25</coord>
+						<coord>com.google.guava:guava:21.0</coord>
+					</coords>
+					<excludeArtifactIds>org.eclipse.equinox.common,org.slizaa.scanner.core.spi-api,org.eclipse.osgi,nimal-sniffer-annotations,j2objc-annotations,error_prone_annotations,jsr305</excludeArtifactIds>
+				</configuration>
+				<executions>
+					<execution>
+						<id>copyDependencies</id>
+						<goals>
+							<goal>copyDependencies</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
