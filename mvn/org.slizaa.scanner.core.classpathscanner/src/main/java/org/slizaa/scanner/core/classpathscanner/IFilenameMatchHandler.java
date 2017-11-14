@@ -19,7 +19,14 @@ import java.util.List;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 @FunctionalInterface
-public interface IMethodAnnotationMatchHandler {
+public interface IFilenameMatchHandler {
 
-  void processMatch(Object codeSource, List<Class<?>> classesWithMethodAnnotation);
+  /**
+   * <p>
+   * </p>
+   *
+   * @param codeSource
+   * @param path
+   */
+  void processMatch(Object codeSource, List<String> path);
 }

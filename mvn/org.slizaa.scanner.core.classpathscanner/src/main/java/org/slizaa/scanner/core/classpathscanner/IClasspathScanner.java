@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.slizaa.scanner.core.classpathscanner;
 
+import java.lang.annotation.Annotation;
+
 /**
  * <p>
  * </p>
@@ -26,7 +28,29 @@ public interface IClasspathScanner {
    * @param processor
    * @return
    */
-  IClasspathScanner matchClassesWithAnnotation(Class<?> clazz, IClassAnnotationMatchHandler processor);
+  IClasspathScanner matchClassesWithAnnotation(Class<? extends Annotation> clazz,
+      IClassAnnotationMatchHandler processor);
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @param clazz
+   * @param processor
+   * @return
+   */
+  IClasspathScanner matchClassesWithMethodAnnotation(Class<? extends Annotation> clazz,
+      IMethodAnnotationMatchHandler processor);
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @param extensionToMatch
+   * @param processor
+   * @return
+   */
+  IClasspathScanner matchFiles(String extensionToMatch, IFilenameMatchHandler processor);
 
   /**
    * <p>

@@ -33,21 +33,21 @@ public class ClasspathScannerTest {
    * @throws ClassNotFoundException
    */
   @Test
-  public void testPluginRegistry_1() throws ClassNotFoundException {
+  public void testClasspathScanner_1() throws ClassNotFoundException {
 
     // create test class loader
     ClassLoader pathToScan = new URLClassLoader(
         new URL[] { this.getClass().getProtectionDomain().getCodeSource().getLocation() });
 
     //
-    IClasspathScannerFactory pluginRegistry = new ClasspathScannerFactory()
+    IClasspathScannerFactory classpathScanner = new ClasspathScannerFactory()
         .registerCodeSourceClassLoaderProvider(ClassLoader.class, cl -> cl);
 
     //
     List<Object> parserFactories = new ArrayList<>();
 
     //
-    pluginRegistry.createScanner(pathToScan).matchClassesWithAnnotation(TestAnnotation.class, (codeSource, classes) -> {
+    classpathScanner.createScanner(pathToScan).matchClassesWithAnnotation(TestAnnotation.class, (codeSource, classes) -> {
 
       //
       for (Class<?> clazz : classes) {
@@ -65,6 +65,43 @@ public class ClasspathScannerTest {
 
     //
     assertThat(parserFactories).hasSize(1);
+    System.out.println(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
+  }
+  
+  @Test
+  public void testClasspathScanner_2() throws ClassNotFoundException {
+
+    // create test class loader
+    ClassLoader pathToScan = new URLClassLoader(
+        new URL[] { this.getClass().getProtectionDomain().getCodeSource().getLocation() });
+
+    //
+    IClasspathScannerFactory classpathScanner = new ClasspathScannerFactory()
+        .registerCodeSourceClassLoaderProvider(ClassLoader.class, cl -> cl);
+
+    //
+    List<String> files = new ArrayList<>();
+
+    //
+    classpathScanner.createScanner(pathToScan).matchFiles("cypher", (codeSource, paths) -> {
+
+      //
+      for (String path : paths) {
+        try {
+          files.add(path);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+
+    }).scan();
+
+    //
+    Stopwatch stopwatch = Stopwatch.createStarted();
+
+    //
+    assertThat(files).hasSize(1);
+    assertThat(files.get(0)).isEqualTo("org/slizaa/scanner/core/impl/plugins/test.cypher");
     System.out.println(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
   }
 }

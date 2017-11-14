@@ -12,6 +12,7 @@ package org.slizaa.scanner.core.classpathscanner.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,23 +20,28 @@ import java.util.Map;
 
 import org.slizaa.scanner.core.classpathscanner.IClassAnnotationMatchHandler;
 import org.slizaa.scanner.core.classpathscanner.IClasspathScanner;
+import org.slizaa.scanner.core.classpathscanner.IFilenameMatchHandler;
 import org.slizaa.scanner.core.classpathscanner.IMethodAnnotationMatchHandler;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
+import io.github.lukehutch.fastclasspathscanner.matchprocessor.FileMatchProcessor;
 
 public class ClasspathScanner implements IClasspathScanner {
 
   /** - */
-  private ClasspathScannerFactory                                   _factory;
+  private ClasspathScannerFactory                                                       _factory;
 
   /** - */
-  private List<?>                                                   _elementsToScan;
+  private List<?>                                                                       _elementsToScan;
 
   /** - */
-  private Map<Class<?>, List<ClassAnnotationMatchProcessorAdapter>> _classAnnotationMatchProcessors;
+  private Map<Class<? extends Annotation>, List<ClassAnnotationMatchProcessorAdapter>>  _classAnnotationMatchProcessors;
 
   /** - */
-  private List<IMethodAnnotationMatchHandler>                     _methodAnnotationMatchHandlers;
+  private Map<Class<? extends Annotation>, List<MethodAnnotationMatchProcessorAdaptor>> _methodAnnotationMatchProcessors;
+
+  /** - */
+  private Map<String, List<FilenameMatchProcessorAdaptor>>                              _filenameMatchProcessors;
 
   /**
    * <p>
@@ -49,11 +55,32 @@ public class ClasspathScanner implements IClasspathScanner {
     _elementsToScan = checkNotNull(elementsToScan);
 
     _classAnnotationMatchProcessors = new HashMap<>();
-    _methodAnnotationMatchHandlers = new ArrayList<>();
+    _methodAnnotationMatchProcessors = new HashMap<>();
+    _filenameMatchProcessors = new HashMap<>();
   }
 
   @Override
-  public IClasspathScanner matchClassesWithAnnotation(Class<?> clazz, IClassAnnotationMatchHandler processor) {
+  public IClasspathScanner matchFiles(String extensionToMatch, IFilenameMatchHandler processor) {
+
+    //
+    FilenameMatchProcessorAdaptor adapter = new FilenameMatchProcessorAdaptor(processor);
+
+    //
+    List<FilenameMatchProcessorAdaptor> adapterList = _filenameMatchProcessors.computeIfAbsent(extensionToMatch,
+        key -> new ArrayList<>());
+
+    if (!adapterList.contains(adapter)) {
+
+      // add...
+      adapterList.add(adapter);
+    }
+
+    return this;
+  }
+
+  @Override
+  public IClasspathScanner matchClassesWithAnnotation(Class<? extends Annotation> clazz,
+      IClassAnnotationMatchHandler processor) {
 
     //
     ClassAnnotationMatchProcessorAdapter adapter = new ClassAnnotationMatchProcessorAdapter(processor);
@@ -72,9 +99,28 @@ public class ClasspathScanner implements IClasspathScanner {
   }
 
   @Override
+  public IClasspathScanner matchClassesWithMethodAnnotation(Class<? extends Annotation> clazz,
+      IMethodAnnotationMatchHandler processor) {
+
+    //
+    MethodAnnotationMatchProcessorAdaptor adapter = new MethodAnnotationMatchProcessorAdaptor(processor);
+
+    //
+    List<MethodAnnotationMatchProcessorAdaptor> adapterList = _methodAnnotationMatchProcessors.computeIfAbsent(clazz,
+        key -> new ArrayList<>());
+
+    if (!adapterList.contains(adapter)) {
+
+      // add...
+      adapterList.add(adapter);
+    }
+
+    return this;
+  }
+
+  @Override
   public void scan() {
     _elementsToScan.forEach(codeSource -> scanSingleElement(codeSource));
-
   }
 
   /**
@@ -102,28 +148,55 @@ public class ClasspathScanner implements IClasspathScanner {
 
     //
     _classAnnotationMatchProcessors.entrySet().forEach(entry -> {
-
       entry.getValue().forEach(processor -> {
-
-        // call before scan
         processor.beforeScan(codeSource);
-
-        // add handler to class path scanner
         classpathScanner.matchClassesWithAnnotation(entry.getKey(), classWithAnnotation -> {
           processor.addClassWithAnnotation(classWithAnnotation);
         });
       });
     });
 
+    //
+    _methodAnnotationMatchProcessors.entrySet().forEach(entry -> {
+      entry.getValue().forEach(processor -> {
+        processor.beforeScan(codeSource);
+        classpathScanner.matchClassesWithMethodAnnotation(entry.getKey(), (classWithAnnotation, method) -> {
+          processor.addClassesWithMethodAnnotation(classWithAnnotation);
+        });
+      });
+    });
+
+    //
+    _filenameMatchProcessors.entrySet().forEach(entry -> {
+      entry.getValue().forEach(processor -> {
+        processor.beforeScan(codeSource);
+        classpathScanner.matchFilenameExtension(entry.getKey(),
+            (FileMatchProcessor) (relativePath, inputStream, lengthBytes) -> {
+              processor.addPath(relativePath);
+            });
+      });
+    });
+
     // Actually perform the scan (nothing will happen without this call)
     classpathScanner.scan();
 
-    //
+    // call after scan
     _classAnnotationMatchProcessors.entrySet().forEach(entry -> {
-
       entry.getValue().forEach(processor -> {
+        processor.afterScan(codeSource);
+      });
+    });
 
-        // call after scan
+    // call after scan
+    _methodAnnotationMatchProcessors.entrySet().forEach(entry -> {
+      entry.getValue().forEach(processor -> {
+        processor.afterScan(codeSource);
+      });
+    });
+    
+    // call after scan
+    _filenameMatchProcessors.entrySet().forEach(entry -> {
+      entry.getValue().forEach(processor -> {
         processor.afterScan(codeSource);
       });
     });
