@@ -101,7 +101,7 @@ public class ClasspathScannerTest {
 
     //
     assertThat(files).hasSize(1);
-    assertThat(files.get(0)).isEqualTo("org/slizaa/scanner/core/impl/plugins/test.cypher");
+    assertThat(files.get(0)).isEqualTo("test.cypher");
     System.out.println(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
   }
 }
