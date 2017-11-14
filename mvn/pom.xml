@@ -57,6 +57,7 @@
 		<module>org.slizaa.scanner.core.contentdefinition</module>
 		<module>org.slizaa.scanner.core.classpathscanner</module>
 		<module>mvnresolver</module>
+		<module>org.slizaa.scanner.core.cypherregistry</module>
 	</modules>
 
 	<dependencyManagement>
