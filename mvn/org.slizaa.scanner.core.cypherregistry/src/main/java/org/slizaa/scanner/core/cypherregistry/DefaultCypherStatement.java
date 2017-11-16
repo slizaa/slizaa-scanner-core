@@ -1,5 +1,7 @@
 package org.slizaa.scanner.core.cypherregistry;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import org.slizaa.scanner.core.api.cypherregistry.ICypherStatement;
@@ -32,6 +34,17 @@ public class DefaultCypherStatement implements ICypherStatement {
 
   /** - */
   private String       _relativePath;
+
+  public DefaultCypherStatement() {
+    super();
+  }
+
+  public DefaultCypherStatement(String groupId, String statementId, String statement) {
+    super();
+    _groupId = checkNotNull(groupId);
+    _statementId = checkNotNull(statementId);
+    _statement = checkNotNull(statement);
+  }
 
   /**
    * {@inheritDoc}
@@ -97,32 +110,32 @@ public class DefaultCypherStatement implements ICypherStatement {
     return _codeSource;
   }
 
-  public void setRelativePath(String relativePath) {
-    _relativePath = relativePath;
+  public void setGroupId(String groupId) {
+    _groupId = groupId;
   }
 
-  public void setGroup(String group) {
-    _groupId = group;
-  }
-
-  public void setName(String name) {
-    _statementId = name;
+  public void setStatementId(String statementId) {
+    _statementId = statementId;
   }
 
   public void setDescription(String description) {
     _description = description;
   }
 
-  public void setCypherStatement(String cypherStatement) {
-    _statement = cypherStatement;
+  public void setStatement(String statement) {
+    _statement = statement;
   }
 
-  public void setRequires(List<String> requires) {
-    _requiredStatements = requires;
+  public void setRequiredStatements(List<String> requiredStatements) {
+    _requiredStatements = requiredStatements;
   }
 
   public void setCodeSource(Object codeSource) {
     _codeSource = codeSource;
+  }
+
+  public void setRelativePath(String relativePath) {
+    _relativePath = relativePath;
   }
 
   public boolean isValid() {

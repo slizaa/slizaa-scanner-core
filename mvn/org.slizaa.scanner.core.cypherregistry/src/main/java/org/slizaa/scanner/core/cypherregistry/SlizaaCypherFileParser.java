@@ -47,12 +47,12 @@ public class SlizaaCypherFileParser {
 
         //
         if ("slizaa.group".equals(matcher_doclet.group(1))) {
-          defaultCypherStatement.setGroup(matcher_doclet.group(2));
+          defaultCypherStatement.setGroupId(matcher_doclet.group(2));
         }
 
         //
         if ("slizaa.name".equals(matcher_doclet.group(1))) {
-          defaultCypherStatement.setName(matcher_doclet.group(2));
+          defaultCypherStatement.setStatementId(matcher_doclet.group(2));
         }
       }
     }
