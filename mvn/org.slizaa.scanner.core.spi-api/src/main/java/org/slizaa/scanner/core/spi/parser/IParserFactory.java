@@ -57,7 +57,6 @@ public interface IParserFactory {
    *          TODO
    * @throws Exception
    */
-  // TODO
   void batchParseStart(IContentDefinitionProvider systemDefinition, Object graphDatabase, IProgressMonitor subMonitor)
       throws Exception;
 
@@ -71,7 +70,6 @@ public interface IParserFactory {
    *          TODO
    * @throws Exception
    */
-  // TODO
   void batchParseStop(IContentDefinitionProvider systemDefinition, Object graphDatabase, IProgressMonitor subMonitor)
       throws Exception;
 
@@ -92,15 +90,6 @@ public interface IParserFactory {
    * @throws Exception
    */
   void batchParseStopContentDefinition(IContentDefinition contentDefinition) throws Exception;
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param node
-   */
-  // TODO!
-  void beforeDeleteResourceNode(Object node);
 
   /**
    * <p>
@@ -130,8 +119,8 @@ public interface IParserFactory {
      * {@inheritDoc}
      */
     @Override
-    public void batchParseStart(IContentDefinitionProvider systemDefinition, Object graphDatabase, IProgressMonitor subMonitor)
-        throws Exception {
+    public void batchParseStart(IContentDefinitionProvider systemDefinition, Object graphDatabase,
+        IProgressMonitor subMonitor) throws Exception {
       // empty default implementation
     }
 
@@ -139,8 +128,8 @@ public interface IParserFactory {
      * {@inheritDoc}
      */
     @Override
-    public void batchParseStop(IContentDefinitionProvider systemDefinition, Object graphDatabase, IProgressMonitor subMonitor)
-        throws Exception {
+    public void batchParseStop(IContentDefinitionProvider systemDefinition, Object graphDatabase,
+        IProgressMonitor subMonitor) throws Exception {
       // empty default implementation
     }
 
@@ -157,14 +146,6 @@ public interface IParserFactory {
      */
     @Override
     public void batchParseStopContentDefinition(IContentDefinition contentDefinition) throws Exception {
-      // empty default implementation
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void beforeDeleteResourceNode(Object node) {
       // empty default implementation
     }
   }

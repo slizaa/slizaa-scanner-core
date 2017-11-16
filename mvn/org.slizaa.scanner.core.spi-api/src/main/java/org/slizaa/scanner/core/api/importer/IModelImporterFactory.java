@@ -11,7 +11,9 @@
 package org.slizaa.scanner.core.api.importer;
 
 import java.io.File;
+import java.util.List;
 
+import org.slizaa.scanner.core.api.cypherregistry.ICypherStatement;
 import org.slizaa.scanner.core.spi.contentdefinition.IContentDefinitionProvider;
 import org.slizaa.scanner.core.spi.parser.IParserFactory;
 
@@ -37,5 +39,5 @@ public interface IModelImporterFactory {
    * @return a new {@link IModelImporter} instance
    */
   IModelImporter createModelImporter(IContentDefinitionProvider contentDefinitionProvider, File databaseDirectory,
-      IParserFactory... parserFactories);
+      List<IParserFactory> parserFactories, List<ICypherStatement> cypherStatements);
 }

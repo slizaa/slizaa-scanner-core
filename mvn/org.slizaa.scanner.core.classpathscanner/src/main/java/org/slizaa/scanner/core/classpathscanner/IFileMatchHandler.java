@@ -19,14 +19,14 @@ import java.util.List;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 @FunctionalInterface
-public interface IFilenameMatchHandler {
+public interface IFileMatchHandler<T> {
 
   /**
    * <p>
    * </p>
    *
    * @param codeSource
-   * @param path
+   * @param item
    */
-  void processMatch(Object codeSource, List<String> path);
+  void processMatch(Object codeSource, List<T> item);
 }

@@ -20,7 +20,8 @@ import java.util.Map;
 
 import org.slizaa.scanner.core.classpathscanner.IClassAnnotationMatchHandler;
 import org.slizaa.scanner.core.classpathscanner.IClasspathScanner;
-import org.slizaa.scanner.core.classpathscanner.IFilenameMatchHandler;
+import org.slizaa.scanner.core.classpathscanner.IFileMatchHandler;
+import org.slizaa.scanner.core.classpathscanner.IFileMatchHandlerTransformator;
 import org.slizaa.scanner.core.classpathscanner.IMethodAnnotationMatchHandler;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
@@ -41,7 +42,7 @@ public class ClasspathScanner implements IClasspathScanner {
   private Map<Class<? extends Annotation>, List<MethodAnnotationMatchProcessorAdaptor>> _methodAnnotationMatchProcessors;
 
   /** - */
-  private Map<String, List<FilenameMatchProcessorAdaptor>>                              _filenameMatchProcessors;
+  private Map<String, List<FilenameMatchProcessorAdaptor<?>>>                           _filenameMatchProcessors;
 
   /**
    * <p>
@@ -59,14 +60,18 @@ public class ClasspathScanner implements IClasspathScanner {
     _filenameMatchProcessors = new HashMap<>();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public IClasspathScanner matchFiles(String extensionToMatch, IFilenameMatchHandler processor) {
+  public <T> IClasspathScanner matchFiles(String extensionToMatch, IFileMatchHandlerTransformator<T> transformator,
+      IFileMatchHandler<T> processor) {
 
     //
-    FilenameMatchProcessorAdaptor adapter = new FilenameMatchProcessorAdaptor(processor);
+    FilenameMatchProcessorAdaptor<T> adapter = new FilenameMatchProcessorAdaptor<T>(processor, transformator);
 
     //
-    List<FilenameMatchProcessorAdaptor> adapterList = _filenameMatchProcessors.computeIfAbsent(extensionToMatch,
+    List<FilenameMatchProcessorAdaptor<?>> adapterList = _filenameMatchProcessors.computeIfAbsent(extensionToMatch,
         key -> new ArrayList<>());
 
     if (!adapterList.contains(adapter)) {
@@ -78,6 +83,9 @@ public class ClasspathScanner implements IClasspathScanner {
     return this;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public IClasspathScanner matchClassesWithAnnotation(Class<? extends Annotation> clazz,
       IClassAnnotationMatchHandler processor) {
@@ -172,7 +180,7 @@ public class ClasspathScanner implements IClasspathScanner {
         processor.beforeScan(codeSource);
         classpathScanner.matchFilenameExtension(entry.getKey(),
             (FileMatchProcessor) (relativePath, inputStream, lengthBytes) -> {
-              processor.addPath(relativePath);
+              processor.transformAndAdd(relativePath, inputStream, lengthBytes);
             });
       });
     });
@@ -193,7 +201,7 @@ public class ClasspathScanner implements IClasspathScanner {
         processor.afterScan(codeSource);
       });
     });
-    
+
     // call after scan
     _filenameMatchProcessors.entrySet().forEach(entry -> {
       entry.getValue().forEach(processor -> {

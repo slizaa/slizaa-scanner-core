@@ -12,10 +12,15 @@ package org.slizaa.scanner.core.impl.plugins;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
@@ -47,18 +52,19 @@ public class ClasspathScannerTest {
     List<Object> parserFactories = new ArrayList<>();
 
     //
-    classpathScanner.createScanner(pathToScan).matchClassesWithAnnotation(TestAnnotation.class, (codeSource, classes) -> {
+    classpathScanner.createScanner(pathToScan)
+        .matchClassesWithAnnotation(TestAnnotation.class, (codeSource, classes) -> {
 
-      //
-      for (Class<?> clazz : classes) {
-        try {
-          parserFactories.add(clazz.newInstance());
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
+          //
+          for (Class<?> clazz : classes) {
+            try {
+              parserFactories.add(clazz.newInstance());
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
+          }
 
-    }).scan();
+        }).scan();
 
     //
     Stopwatch stopwatch = Stopwatch.createStarted();
@@ -67,7 +73,7 @@ public class ClasspathScannerTest {
     assertThat(parserFactories).hasSize(1);
     System.out.println(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
   }
-  
+
   @Test
   public void testClasspathScanner_2() throws ClassNotFoundException {
 
@@ -80,28 +86,51 @@ public class ClasspathScannerTest {
         .registerCodeSourceClassLoaderProvider(ClassLoader.class, cl -> cl);
 
     //
-    List<String> files = new ArrayList<>();
+    Map<Object, List<String>> files = new HashMap<>();
 
     //
-    classpathScanner.createScanner(pathToScan).matchFiles("cypher", (codeSource, paths) -> {
+    classpathScanner.createScanner(pathToScan).matchFiles("cypher",
 
-      //
-      for (String path : paths) {
-        try {
-          files.add(path);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
+        // the item transformer
+        (relativePath, inputStream, lengthBytes) -> {
+          return extract(inputStream, lengthBytes);
+        },
 
-    }).scan();
+        // the collector
+        (codeSource, paths) -> {
+          files.put(codeSource, paths);
+        }).scan();
 
     //
     Stopwatch stopwatch = Stopwatch.createStarted();
 
     //
     assertThat(files).hasSize(1);
-    assertThat(files.get(0)).isEqualTo("test.cypher");
+    assertThat(files.get(pathToScan).get(0)).contains("@slizaa.name type-references");
     System.out.println(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @param inputStream
+   * @param lengthBytes
+   * @return
+   */
+  private String extract(InputStream inputStream, long lengthBytes) {
+    try {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      byte[] buffer = new byte[1024];
+      int read = 0;
+      while ((read = inputStream.read(buffer, 0, buffer.length)) != -1) {
+        baos.write(buffer, 0, read);
+      }
+      baos.flush();
+      return new String(baos.toByteArray(), "UTF-8");
+    } catch (IOException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 }

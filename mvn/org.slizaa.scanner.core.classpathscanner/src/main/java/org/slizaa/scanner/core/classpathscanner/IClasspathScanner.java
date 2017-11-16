@@ -50,7 +50,8 @@ public interface IClasspathScanner {
    * @param processor
    * @return
    */
-  IClasspathScanner matchFiles(String extensionToMatch, IFilenameMatchHandler processor);
+  <T> IClasspathScanner matchFiles(String extensionToMatch, IFileMatchHandlerTransformator<T> transformator,
+      IFileMatchHandler<T> processor);
 
   /**
    * <p>

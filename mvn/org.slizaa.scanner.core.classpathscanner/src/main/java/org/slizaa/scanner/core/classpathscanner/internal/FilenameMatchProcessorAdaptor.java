@@ -2,18 +2,23 @@ package org.slizaa.scanner.core.classpathscanner.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.slizaa.scanner.core.classpathscanner.IFilenameMatchHandler;
+import org.slizaa.scanner.core.classpathscanner.IFileMatchHandler;
+import org.slizaa.scanner.core.classpathscanner.IFileMatchHandlerTransformator;
 
-public class FilenameMatchProcessorAdaptor {
-
-  /** - */
-  private IFilenameMatchHandler _processor;
+public class FilenameMatchProcessorAdaptor<T> {
 
   /** - */
-  private List<String>          _result;
+  private IFileMatchHandler<T>              _processor;
+
+  /** - */
+  private IFileMatchHandlerTransformator<T> _transformator;
+
+  /** - */
+  private List<T>                           _result;
 
   /**
    * <p>
@@ -22,13 +27,12 @@ public class FilenameMatchProcessorAdaptor {
    *
    * @param processor
    */
-  public FilenameMatchProcessorAdaptor(IFilenameMatchHandler processor) {
+  public FilenameMatchProcessorAdaptor(IFileMatchHandler<T> processor,
+      IFileMatchHandlerTransformator<T> transformator) {
 
     //
-    checkNotNull(processor);
-
-    //
-    _processor = processor;
+    _processor = checkNotNull(processor);
+    _transformator = checkNotNull(transformator);
   }
 
   /**
@@ -48,8 +52,9 @@ public class FilenameMatchProcessorAdaptor {
    *
    * @param path
    */
-  public void addPath(String path) {
-    _result.add(path);
+  public void transformAndAdd(String relativePath, InputStream inputStream, long lengthBytes) {
+    T item = _transformator.transformFileMatch(relativePath, inputStream, lengthBytes);
+    _result.add(item);
   }
 
   /**
@@ -79,7 +84,7 @@ public class FilenameMatchProcessorAdaptor {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    FilenameMatchProcessorAdaptor other = (FilenameMatchProcessorAdaptor) obj;
+    FilenameMatchProcessorAdaptor<?> other = (FilenameMatchProcessorAdaptor<?>) obj;
     if (_processor == null) {
       if (other._processor != null)
         return false;
