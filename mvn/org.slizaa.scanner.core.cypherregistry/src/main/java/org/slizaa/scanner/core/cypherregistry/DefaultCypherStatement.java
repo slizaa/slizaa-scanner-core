@@ -2,6 +2,7 @@ package org.slizaa.scanner.core.cypherregistry;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slizaa.scanner.core.api.cypherregistry.ICypherStatement;
@@ -27,20 +28,33 @@ public class DefaultCypherStatement implements ICypherStatement {
   private String       _statement;
 
   /** - */
-  private List<String> _requiredStatements;
-
-  /** - */
   private Object       _codeSource;
 
   /** - */
   private String       _relativePath;
 
+  /** - */
+  private List<String> _requiredStatements = new ArrayList<>();
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link DefaultCypherStatement}.
+   * </p>
+   */
   public DefaultCypherStatement() {
     super();
   }
 
+  /**
+   * <p>
+   * Creates a new instance of type {@link DefaultCypherStatement}.
+   * </p>
+   *
+   * @param groupId
+   * @param statementId
+   * @param statement
+   */
   public DefaultCypherStatement(String groupId, String statementId, String statement) {
-    super();
     _groupId = checkNotNull(groupId);
     _statementId = checkNotNull(statementId);
     _statement = checkNotNull(statement);
@@ -91,7 +105,7 @@ public class DefaultCypherStatement implements ICypherStatement {
    */
   @Override
   public List<String> getRequiredStatements() {
-    return null;
+    return _requiredStatements;
   }
 
   /**
@@ -139,7 +153,7 @@ public class DefaultCypherStatement implements ICypherStatement {
   }
 
   public boolean isValid() {
-    return _groupId != null && _statementId != null && _description != null;
+    return _groupId != null && _statementId != null;
   }
 
   @Override

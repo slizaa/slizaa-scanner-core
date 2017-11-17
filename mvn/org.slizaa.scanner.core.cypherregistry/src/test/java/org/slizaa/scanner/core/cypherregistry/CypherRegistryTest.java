@@ -2,69 +2,71 @@ package org.slizaa.scanner.core.cypherregistry;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.slizaa.scanner.core.api.cypherregistry.ICypherStatement;
 import org.slizaa.scanner.core.api.cypherregistry.ICypherStatementRegistry;
-import org.slizaa.scanner.core.classpathscanner.IClasspathScannerFactory;
-import org.slizaa.scanner.core.classpathscanner.internal.ClasspathScannerFactory;
 
+/**
+ * <p>
+ * </p>
+ *
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public class CypherRegistryTest {
 
-  @Test
-  public void testIt() {
+  /** - */
+  private ICypherStatementRegistry _statementRegistry;
 
-    //
-    ICypherStatementRegistry statementRegistry = new CypherStatementRegistry(() -> getCypherStatements());
-    statementRegistry.rescan();
-
-    System.out.println(statementRegistry.getAllStatements());
-
-    //
-    assertThat(statementRegistry.getAllStatements()).hasSize(2);
-    assertThat(statementRegistry.getStatement("org.slizaa.jtype.typeresolution.type-references")).isNotEmpty();
-    assertThat(statementRegistry.getStatement("org.slizaa.jtype.typeresolution.type-references-1")).isNotEmpty();
-
-    //
-    assertThat(statementRegistry.getStatement("org.slizaa.jtype.typeresolution.type-references-2")).isEmpty();
+  @Before
+  public void init() {
+    _statementRegistry = new CypherStatementRegistry(
+        () -> CypherRegistryUtils.getCypherStatementsFromClasspath(CypherRegistryTest.class));
+    _statementRegistry.rescan();
   }
 
-  private List<ICypherStatement> getCypherStatements() {
+  @Test
+  public void testExistingStatements() {
+    assertThat(_statementRegistry.getAllStatements()).hasSize(3);
+    assertThat(_statementRegistry.getStatement("org.slizaa.jtype.typeresolution.test-statement-1")).isNotEmpty();
+    assertThat(_statementRegistry.getStatement("org.slizaa.jtype.typeresolution.test-statement-2")).isNotEmpty();
+    assertThat(_statementRegistry.getStatement("org.slizaa.jtype.typeresolution.test-statement-3")).isNotEmpty();
+  }
 
-    // create test class loader
-    ClassLoader pathToScan = new URLClassLoader(
-        new URL[] { this.getClass().getProtectionDomain().getCodeSource().getLocation() });
+  @Test
+  public void testNonExistingsStatements() {
+    assertThat(_statementRegistry.getStatement("org.slizaa.jtype.typeresolution.NOT_EXISTING")).isEmpty();
+  }
 
-    //
-    IClasspathScannerFactory classpathScanner = new ClasspathScannerFactory()
-        .registerCodeSourceClassLoaderProvider(ClassLoader.class, cl -> cl);
+  @Test
+  public void testRequiredStatements() {
+    assertThat(_statementRegistry.getStatement("org.slizaa.jtype.typeresolution.test-statement-1").get()
+        .getRequiredStatements()).containsExactly("test-statement-2");
+    assertThat(_statementRegistry.getStatement("org.slizaa.jtype.typeresolution.test-statement-2").get()
+        .getRequiredStatements()).isEmpty();
+    assertThat(_statementRegistry.getStatement("org.slizaa.jtype.typeresolution.test-statement-3").get()
+        .getRequiredStatements()).containsExactlyInAnyOrder("test-statement-1", "test-statement-2");
+  }
 
-    //
-    List<ICypherStatement> statements = new ArrayList<>();
-
-    //
-    classpathScanner.createScanner(pathToScan).matchFiles("cypher",
-
-        // parse the statements
-        (relativePath, inputStream, lengthBytes) -> {
-          DefaultCypherStatement statement = SlizaaCypherFileParser.parse(inputStream);
-          statement.setRelativePath(relativePath);
-          return statement;
-        },
-
-        // fill the collector
-        (codeSource, statementList) -> {
-          for (ICypherStatement cypherStatement : statementList) {
-            ((DefaultCypherStatement) cypherStatement).setCodeSource(codeSource);
-            statements.add(cypherStatement);
-          }
-        }).scan();
+  @Test
+  public void testCypherStatements() {
 
     //
-    return statements;
+    ICypherStatement cypherStatement = _statementRegistry
+        .getStatement("org.slizaa.jtype.typeresolution.test-statement-1").get();
+
+    //
+    assertThat(cypherStatement.getStatement()).isNotNull();
+  }
+
+  @Test
+  public void testOrder() {
+    List<ICypherStatement> cypherStatements = _statementRegistry.computeOrder(_statementRegistry.getAllStatements());
+    assertThat(cypherStatements).hasSize(3);
+    assertThat(cypherStatements.stream().map(s -> s.getStatementId()).collect(Collectors.toList()))
+        .containsExactly("test-statement-2", "test-statement-1", "test-statement-3");
   }
 }

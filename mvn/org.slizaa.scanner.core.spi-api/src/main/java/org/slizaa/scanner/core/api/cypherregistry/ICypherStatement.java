@@ -73,4 +73,6 @@ public interface ICypherStatement {
    * @return
    */
   String getRelativePath();
+
+  boolean isValid();
 }

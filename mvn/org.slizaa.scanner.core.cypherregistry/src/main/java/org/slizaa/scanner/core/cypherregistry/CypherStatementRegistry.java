@@ -4,20 +4,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.slizaa.scanner.core.api.cypherregistry.ICypherStatement;
 import org.slizaa.scanner.core.api.cypherregistry.ICypherStatementRegistry;
+import org.slizaa.scanner.core.cypherregistry.impl.DependencyGraph;
 
 public class CypherStatementRegistry implements ICypherStatementRegistry {
 
   private Supplier<List<ICypherStatement>> _supplier;
 
   /** - */
-  private List<ICypherStatement>           _cypherStatements;
+  private Map<String, ICypherStatement>    _cypherStatements;
 
   /**
    * <p>
@@ -28,7 +31,7 @@ public class CypherStatementRegistry implements ICypherStatementRegistry {
    */
   public CypherStatementRegistry(Supplier<List<ICypherStatement>> supplier) {
     _supplier = checkNotNull(supplier);
-    _cypherStatements = Collections.emptyList();
+    rescan();
   }
 
   /**
@@ -37,7 +40,53 @@ public class CypherStatementRegistry implements ICypherStatementRegistry {
    */
   @Override
   public void rescan() {
-    _cypherStatements = _supplier.get();
+
+    //
+    List<ICypherStatement> statements = _supplier.get();
+    _cypherStatements = new HashMap<>();
+
+    //
+    for (ICypherStatement statement : statements) {
+      _cypherStatements.put(statement.getFullyQualifiedName(), statement);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<ICypherStatement> computeOrder(List<ICypherStatement> statements) {
+
+    //
+    DependencyGraph<ICypherStatement> dependencyGraph = new DependencyGraph<ICypherStatement>();
+
+    //
+    for (ICypherStatement parent : statements) {
+
+      //
+      for (String requiredStatement : parent.getRequiredStatements()) {
+
+        //
+        ICypherStatement child = _cypherStatements.get(requiredStatement);
+
+        //
+        if (child == null) {
+          child = _cypherStatements.get(parent.getGroupId() + "." + requiredStatement);
+        }
+
+        //
+        if (child == null) {
+          // TODO
+          throw new RuntimeException("Missing requirement.");
+        }
+
+        //
+        dependencyGraph.addEdge(parent, child);
+      }
+    }
+
+    //
+    return dependencyGraph.calculateOrder();
   }
 
   /**
@@ -45,7 +94,7 @@ public class CypherStatementRegistry implements ICypherStatementRegistry {
    */
   @Override
   public List<ICypherStatement> getAllStatements() {
-    return Collections.unmodifiableList(_cypherStatements);
+    return Collections.unmodifiableList(new ArrayList<>(_cypherStatements.values()));
   }
 
   /**
@@ -54,7 +103,7 @@ public class CypherStatementRegistry implements ICypherStatementRegistry {
   @Override
   public List<ICypherStatement> getStatements(String group) {
     checkNotNull(group);
-    return _cypherStatements.stream().filter(statement -> group.equalsIgnoreCase(statement.getGroupId()))
+    return _cypherStatements.values().stream().filter(statement -> group.equalsIgnoreCase(statement.getGroupId()))
         .collect(Collectors.toList());
   }
 
@@ -64,7 +113,7 @@ public class CypherStatementRegistry implements ICypherStatementRegistry {
   @Override
   public Optional<ICypherStatement> getStatement(String fullyQualifedName) {
     checkNotNull(fullyQualifedName);
-    return _cypherStatements.stream()
+    return _cypherStatements.values().stream()
         .filter(statement -> fullyQualifedName.equalsIgnoreCase(statement.getFullyQualifiedName())).findFirst();
   }
 }
