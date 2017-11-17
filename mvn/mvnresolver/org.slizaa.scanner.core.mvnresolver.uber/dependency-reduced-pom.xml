@@ -24,7 +24,7 @@
         <configuration>
           <targetDirectory>target/classes/libs</targetDirectory>
           <coords>
-            <coord>org.slizaa.scanner.core.mvnresolver:org.slizaa.scanner.core.mvnresolver.implementation:1.0.0-SNAPSHOT</coord>
+            <coord>org.slizaa.scanner.core:org.slizaa.scanner.core.mvnresolver.implementation:1.0.0-SNAPSHOT</coord>
             <coord>org.slf4j:slf4j-nop:1.7.25</coord>
             <coord>org.slf4j:slf4j-api:1.7.25</coord>
           </coords>
@@ -43,7 +43,7 @@
             <configuration>
               <artifactSet>
                 <includes>
-                  <include>org.slizaa.scanner.core.mvnresolver:org.slizaa.scanner.core.mvnresolver.api</include>
+                  <include>org.slizaa.scanner.core:org.slizaa.scanner.core.mvnresolver.api</include>
                   <include>org.xeustechnologies:*</include>
                   <include>org.slf4j:*</include>
                 </includes>

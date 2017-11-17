@@ -17,7 +17,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.slizaa.scanner.core.mvnresolver</groupId>
+			<groupId>org.slizaa.scanner.core</groupId>
 			<artifactId>org.slizaa.scanner.core.mvnresolver.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>

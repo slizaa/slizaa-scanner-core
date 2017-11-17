@@ -81,7 +81,7 @@ public abstract class AbstractEclipseTest {
         //
         mavenBundle("com.google.guava", "guava", "21.0"),
         mavenBundle("org.eclipse.platform", "org.eclipse.equinox.common").versionAsInProject(),
-        mavenBundle("org.slizaa.scanner.core.mvnresolver", "org.slizaa.scanner.core.mvnresolver.uber")
+        mavenBundle("org.slizaa.scanner.core", "org.slizaa.scanner.core.mvnresolver.uber")
             .versionAsInProject());
   }
 
