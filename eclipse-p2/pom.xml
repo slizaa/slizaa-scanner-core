@@ -26,6 +26,7 @@
 								</artifact>
 								<artifact>
 									<id>${project.groupId}:org.slizaa.scanner.core.cypherregistry:${project.version}</id>
+									<transitive>false</transitive>
 								</artifact>
 								<artifact>
 									<id>${project.groupId}:org.slizaa.scanner.core.contentdefinition:${project.version}</id>
@@ -33,6 +34,10 @@
 								</artifact>
 								<artifact>
 									<id>${project.groupId}:org.slizaa.scanner.core.classpathscanner:${project.version}</id>
+									<transitive>false</transitive>
+								</artifact>
+								<artifact>
+									<id>${project.groupId}:org.slizaa.scanner.core.mvnresolver.uber:${project.version}</id>
 									<transitive>false</transitive>
 								</artifact>
 							</artifacts>
