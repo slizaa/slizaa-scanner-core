@@ -1,6 +1,5 @@
 Export-Package: org.slizaa.scanner.core.classpathscanner
 Import-Package: !io.github.lukehutch.*, *
 Bundle-ClassPath: ., lib/fast-classpath-scanner.jar
--includeresource: OSGI-OPT/src=src/main/java
--includeresource: lib/fast-classpath-scanner.jar=fast-classpath-scanner*.jar;lib:=true
+-includeresource: OSGI-OPT/src=src/main/java, lib/fast-classpath-scanner.jar=fast-classpath-scanner*.jar;lib:=true
 -snapshot: BUILD-${tstamp}
