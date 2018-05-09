@@ -22,7 +22,7 @@ import org.slizaa.scanner.core.classpathscanner.IOSGiBundleClasspathScannerServi
 public class OSGiExtensionBundleClasspathScannerImpl implements IOSGiBundleClasspathScannerService {
 
   /** - */
-  private ExtensionBundleTracker   _extensionBundleTracker;
+  private ExtensionBundleTracker _extensionBundleTracker;
 
   /**
    * <p>
@@ -32,10 +32,10 @@ public class OSGiExtensionBundleClasspathScannerImpl implements IOSGiBundleClass
    */
   @Activate
   public void actviate(BundleContext context) {
-    
+
     //
-    _extensionBundleTracker = new ExtensionBundleTracker(context);
-    _extensionBundleTracker.open();
+    this._extensionBundleTracker = new ExtensionBundleTracker(context);
+    this._extensionBundleTracker.open();
   }
 
   /**
@@ -46,7 +46,7 @@ public class OSGiExtensionBundleClasspathScannerImpl implements IOSGiBundleClass
   public void deactviate() {
 
     //
-    _extensionBundleTracker.close();
+    this._extensionBundleTracker.close();
   }
 
   /**
@@ -57,10 +57,13 @@ public class OSGiExtensionBundleClasspathScannerImpl implements IOSGiBundleClass
 
     //
     List<Object> result = new ArrayList<Object>();
-    
+
     //
-    for (Entry<Bundle, ExtensionHolder> entry : _extensionBundleTracker.getTracked().entrySet()) {
-      
+    for (Entry<Bundle, ExtensionHolder> entry : this._extensionBundleTracker.getTracked().entrySet()) {
+
+      //
+      System.out.println("TRACKED: " + entry.getKey().getSymbolicName());
+
       //
       result.addAll(entry.getValue().getExtensionsWithClassAnnotation(annotationType));
     }

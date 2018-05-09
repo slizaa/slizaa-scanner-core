@@ -3,6 +3,7 @@ package org.slizaa.scanner.core.classpathscanner.internal.osgi;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.lang.annotation.Annotation;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +35,9 @@ public class ExtensionHolder {
    * @param classpathScannerFactory
    */
   public ExtensionHolder(Bundle bundle, IClasspathScannerFactory classpathScannerFactory) {
-    _bundle = checkNotNull(bundle);
-    _classpathScannerFactory = checkNotNull(classpathScannerFactory);
+    this._bundle = checkNotNull(bundle);
+    this._classpathScannerFactory = checkNotNull(classpathScannerFactory);
+    this._extensionsWithClassAnnotation = new HashMap<>();
   }
 
   /**
@@ -48,23 +50,25 @@ public class ExtensionHolder {
   public List<Class<?>> getExtensionsWithClassAnnotation(Class<? extends Annotation> annotationType) {
 
     //
-    if (!_extensionsWithClassAnnotation.containsKey(checkNotNull(annotationType))) {
+    if (!this._extensionsWithClassAnnotation.containsKey(checkNotNull(annotationType))) {
 
       // scan the bundle
       this._classpathScannerFactory
 
           //
-          .createScanner(_bundle)
+          .createScanner(this._bundle)
 
           //
-          .matchClassesWithAnnotation(annotationType,
-              (b, exts) -> _extensionsWithClassAnnotation.put(annotationType, exts))
+          .matchClassesWithAnnotation(annotationType, (b, exts) -> {
+            System.out.println("EXT: " + exts);
+            this._extensionsWithClassAnnotation.put(annotationType, exts);
+          })
 
           //
           .scan();
     }
 
     //
-    return _extensionsWithClassAnnotation.get(annotationType);
+    return this._extensionsWithClassAnnotation.get(annotationType);
   }
 }
