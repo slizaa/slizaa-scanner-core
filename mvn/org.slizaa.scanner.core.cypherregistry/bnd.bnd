@@ -1,3 +1,4 @@
 Export-Package: org.slizaa.scanner.core.cypherregistry
+Bundle-Activator: org.slizaa.scanner.core.cypherregistry.impl.Activator
 -includeresource: OSGI-OPT/src=src/main/java
 -snapshot: BUILD-${tstamp}

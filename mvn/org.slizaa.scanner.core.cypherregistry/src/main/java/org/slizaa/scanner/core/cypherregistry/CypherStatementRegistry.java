@@ -17,6 +17,7 @@ import org.slizaa.scanner.core.cypherregistry.impl.DependencyGraph;
 
 public class CypherStatementRegistry implements ICypherStatementRegistry {
 
+  /** - */
   private Supplier<List<ICypherStatement>> _supplier;
 
   /** - */
@@ -30,7 +31,7 @@ public class CypherStatementRegistry implements ICypherStatementRegistry {
    * @param supplier
    */
   public CypherStatementRegistry(Supplier<List<ICypherStatement>> supplier) {
-    _supplier = checkNotNull(supplier);
+    this._supplier = checkNotNull(supplier);
     rescan();
   }
 
@@ -42,12 +43,12 @@ public class CypherStatementRegistry implements ICypherStatementRegistry {
   public void rescan() {
 
     //
-    List<ICypherStatement> statements = _supplier.get();
-    _cypherStatements = new HashMap<>();
+    List<ICypherStatement> statements = this._supplier.get();
+    this._cypherStatements = new HashMap<>();
 
     //
     for (ICypherStatement statement : statements) {
-      _cypherStatements.put(statement.getFullyQualifiedName(), statement);
+      this._cypherStatements.put(statement.getFullyQualifiedName(), statement);
     }
   }
 
@@ -67,11 +68,11 @@ public class CypherStatementRegistry implements ICypherStatementRegistry {
       for (String requiredStatement : parent.getRequiredStatements()) {
 
         //
-        ICypherStatement child = _cypherStatements.get(requiredStatement);
+        ICypherStatement child = this._cypherStatements.get(requiredStatement);
 
         //
         if (child == null) {
-          child = _cypherStatements.get(parent.getGroupId() + "." + requiredStatement);
+          child = this._cypherStatements.get(parent.getGroupId() + "." + requiredStatement);
         }
 
         //
@@ -94,7 +95,7 @@ public class CypherStatementRegistry implements ICypherStatementRegistry {
    */
   @Override
   public List<ICypherStatement> getAllStatements() {
-    return Collections.unmodifiableList(new ArrayList<>(_cypherStatements.values()));
+    return Collections.unmodifiableList(new ArrayList<>(this._cypherStatements.values()));
   }
 
   /**
@@ -103,7 +104,7 @@ public class CypherStatementRegistry implements ICypherStatementRegistry {
   @Override
   public List<ICypherStatement> getStatements(String group) {
     checkNotNull(group);
-    return _cypherStatements.values().stream().filter(statement -> group.equalsIgnoreCase(statement.getGroupId()))
+    return this._cypherStatements.values().stream().filter(statement -> group.equalsIgnoreCase(statement.getGroupId()))
         .collect(Collectors.toList());
   }
 
@@ -113,7 +114,7 @@ public class CypherStatementRegistry implements ICypherStatementRegistry {
   @Override
   public Optional<ICypherStatement> getStatement(String fullyQualifedName) {
     checkNotNull(fullyQualifedName);
-    return _cypherStatements.values().stream()
+    return this._cypherStatements.values().stream()
         .filter(statement -> fullyQualifedName.equalsIgnoreCase(statement.getFullyQualifiedName())).findFirst();
   }
 }
