@@ -2,10 +2,12 @@ package org.slizaa.scanner.core.classpathscanner.internal.osgi;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import org.osgi.framework.Bundle;
@@ -22,7 +24,7 @@ import org.slizaa.scanner.core.classpathscanner.IClasspathScannerService;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 @Component(immediate = true)
-public class OSGiExtensionBundleClasspathScannerImpl implements IClasspathScannerService {
+public class EquinoxExtensionBundleClasspathScannerImpl implements IClasspathScannerService {
 
   /** - */
   private ExtensionBundleTracker _extensionBundleTracker;
@@ -140,6 +142,26 @@ public class OSGiExtensionBundleClasspathScannerImpl implements IClasspathScanne
 
       //
       result.addAll(partialResult);
+    }
+
+    //
+    return result;
+  }
+
+  @Override
+  public <T> List<T> getFiles(String postfix, Class<T> resultType, BiFunction<String, InputStream, T> transformer) {
+
+    //
+    checkNotNull(postfix);
+    checkNotNull(resultType);
+    checkNotNull(transformer);
+
+    //
+    List<T> result = new ArrayList<>();
+
+    //
+    for (Entry<Bundle, ExtensionHolder> entry : this._extensionBundleTracker.getTracked().entrySet()) {
+      result.addAll(entry.getValue().getFiles(postfix, resultType, transformer));
     }
 
     //

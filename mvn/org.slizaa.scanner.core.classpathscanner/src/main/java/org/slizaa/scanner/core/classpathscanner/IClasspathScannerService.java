@@ -1,7 +1,9 @@
 package org.slizaa.scanner.core.classpathscanner;
 
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.function.BiFunction;
 
 /**
  * <p>
@@ -48,4 +50,15 @@ public interface IClasspathScannerService {
    * @return
    */
   <T> List<Class<T>> getExtensionsWithMethodAnnotation(Class<? extends Annotation> annotationType, Class<T> targetType);
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @param postfix
+   * @param resultType
+   * @param transformer
+   * @return
+   */
+  <T> List<T> getFiles(String postfix, Class<T> resultType, BiFunction<String, InputStream, T> transformer);
 }
