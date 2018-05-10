@@ -22,6 +22,9 @@ public class ExtensionHolder {
   private Map<Class<? extends Annotation>, List<Class<?>>> _extensionsWithClassAnnotation;
 
   /** - */
+  private Map<Class<? extends Annotation>, List<Class<?>>> _extensionsWithMethodAnnotation;
+
+  /** - */
   private Bundle                                           _bundle;
 
   /** - */
@@ -38,6 +41,38 @@ public class ExtensionHolder {
     this._bundle = checkNotNull(bundle);
     this._classpathScannerFactory = checkNotNull(classpathScannerFactory);
     this._extensionsWithClassAnnotation = new HashMap<>();
+    this._extensionsWithMethodAnnotation = new HashMap<>();
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @param annotationType
+   * @return
+   */
+  public List<Class<?>> getExtensionsWithMethodAnnotation(Class<? extends Annotation> annotationType) {
+
+    //
+    if (!this._extensionsWithMethodAnnotation.containsKey(checkNotNull(annotationType))) {
+
+      // scan the bundle
+      this._classpathScannerFactory
+
+          //
+          .createScanner(this._bundle)
+
+          //
+          .matchClassesWithMethodAnnotation(annotationType, (b, exts) -> {
+            this._extensionsWithClassAnnotation.put(annotationType, exts);
+          })
+
+          //
+          .scan();
+    }
+
+    //
+    return this._extensionsWithMethodAnnotation.get(annotationType);
   }
 
   /**
@@ -60,7 +95,6 @@ public class ExtensionHolder {
 
           //
           .matchClassesWithAnnotation(annotationType, (b, exts) -> {
-            System.out.println("EXT: " + exts);
             this._extensionsWithClassAnnotation.put(annotationType, exts);
           })
 

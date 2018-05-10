@@ -1,16 +1,19 @@
 package org.slizaa.scanner.core.classpathscanner.internal.osgi;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.slizaa.scanner.core.classpathscanner.IOSGiBundleClasspathScannerService;
+import org.slizaa.scanner.core.classpathscanner.IClasspathScannerService;
 
 /**
  * <p>
@@ -19,7 +22,7 @@ import org.slizaa.scanner.core.classpathscanner.IOSGiBundleClasspathScannerServi
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 @Component(immediate = true)
-public class OSGiExtensionBundleClasspathScannerImpl implements IOSGiBundleClasspathScannerService {
+public class OSGiExtensionBundleClasspathScannerImpl implements IClasspathScannerService {
 
   /** - */
   private ExtensionBundleTracker _extensionBundleTracker;
@@ -53,18 +56,13 @@ public class OSGiExtensionBundleClasspathScannerImpl implements IOSGiBundleClass
    * {@inheritDoc}
    */
   @Override
-  public List<Object> getExtensionsWithClassAnnotation(Class<? extends Annotation> annotationType) {
+  public List<Class<?>> getExtensionsWithClassAnnotation(Class<? extends Annotation> annotationType) {
 
     //
-    List<Object> result = new ArrayList<Object>();
+    List<Class<?>> result = new ArrayList<>();
 
     //
     for (Entry<Bundle, ExtensionHolder> entry : this._extensionBundleTracker.getTracked().entrySet()) {
-
-      //
-      System.out.println("TRACKED: " + entry.getKey().getSymbolicName());
-
-      //
       result.addAll(entry.getValue().getExtensionsWithClassAnnotation(annotationType));
     }
 
@@ -72,4 +70,79 @@ public class OSGiExtensionBundleClasspathScannerImpl implements IOSGiBundleClass
     return result;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public <T> List<Class<T>> getExtensionsWithClassAnnotation(Class<? extends Annotation> annotationType,
+      Class<T> targetType) {
+
+    //
+    checkNotNull(targetType);
+
+    //
+    List<Class<T>> result = new ArrayList<>();
+
+    //
+    for (Entry<Bundle, ExtensionHolder> entry : this._extensionBundleTracker.getTracked().entrySet()) {
+
+      //
+      @SuppressWarnings("unchecked")
+      List<Class<T>> partialResult = entry.getValue().getExtensionsWithClassAnnotation(annotationType).stream()
+          .filter(cl -> targetType.isAssignableFrom(cl)).map(cl -> (Class<T>) cl).collect(Collectors.toList());
+
+      //
+      result.addAll(partialResult);
+    }
+
+    //
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<Class<?>> getExtensionsWithMethodAnnotation(Class<? extends Annotation> annotationType) {
+
+    //
+    List<Class<?>> result = new ArrayList<>();
+
+    //
+    for (Entry<Bundle, ExtensionHolder> entry : this._extensionBundleTracker.getTracked().entrySet()) {
+      result.addAll(entry.getValue().getExtensionsWithMethodAnnotation(annotationType));
+    }
+
+    //
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public <T> List<Class<T>> getExtensionsWithMethodAnnotation(Class<? extends Annotation> annotationType,
+      Class<T> targetType) {
+
+    //
+    checkNotNull(targetType);
+
+    //
+    List<Class<T>> result = new ArrayList<>();
+
+    //
+    for (Entry<Bundle, ExtensionHolder> entry : this._extensionBundleTracker.getTracked().entrySet()) {
+
+      //
+      @SuppressWarnings("unchecked")
+      List<Class<T>> partialResult = entry.getValue().getExtensionsWithMethodAnnotation(annotationType).stream()
+          .filter(cl -> targetType.isAssignableFrom(cl)).map(cl -> (Class<T>) cl).collect(Collectors.toList());
+
+      //
+      result.addAll(partialResult);
+    }
+
+    //
+    return result;
+  }
 }
