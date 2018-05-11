@@ -71,7 +71,7 @@ public class ExtensionHolder {
 
           //
           .matchClassesWithMethodAnnotation(annotationType, (b, exts) -> {
-            this._extensionsWithClassAnnotation.put(annotationType, exts);
+            this._extensionsWithMethodAnnotation.put(annotationType, exts);
           })
 
           //
