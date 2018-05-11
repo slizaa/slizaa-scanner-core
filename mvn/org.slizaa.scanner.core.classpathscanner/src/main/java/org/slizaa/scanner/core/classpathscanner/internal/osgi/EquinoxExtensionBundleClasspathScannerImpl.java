@@ -12,9 +12,6 @@ import java.util.stream.Collectors;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.slizaa.scanner.core.classpathscanner.IClasspathScannerService;
 
 /**
@@ -23,7 +20,6 @@ import org.slizaa.scanner.core.classpathscanner.IClasspathScannerService;
  *
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-@Component(immediate = true)
 public class EquinoxExtensionBundleClasspathScannerImpl implements IClasspathScannerService {
 
   /** - */
@@ -35,7 +31,6 @@ public class EquinoxExtensionBundleClasspathScannerImpl implements IClasspathSca
    *
    * @param context
    */
-  @Activate
   public void actviate(BundleContext context) {
 
     //
@@ -47,7 +42,6 @@ public class EquinoxExtensionBundleClasspathScannerImpl implements IClasspathSca
    * <p>
    * </p>
    */
-  @Deactivate
   public void deactviate() {
 
     //
