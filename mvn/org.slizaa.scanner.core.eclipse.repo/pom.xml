@@ -55,7 +55,7 @@
 										</artifact>
 									</artifacts>
 								</feature>
-								<feature>
+								<!-- <feature>
 									<id>org.slizaa.scanner.core.jersey.feature</id>
 									<version>2.27</version>
 									<label>org.slizaa.scanner.core.jersey.feature</label>
@@ -116,7 +116,7 @@
 											<transitive>false</transitive>
 										</artifact>
 									</artifacts>
-								</feature>
+								</feature> -->
 							</featureDefinitions>
 						</configuration>
 					</execution>
