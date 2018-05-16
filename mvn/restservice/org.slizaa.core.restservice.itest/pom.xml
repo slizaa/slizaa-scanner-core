@@ -3,86 +3,82 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.slizaa.scanner.core</groupId>
-		<artifactId>org.slizaa.scanner.core.mvnresolver.parent</artifactId>
+		<groupId>org.slizaa.core</groupId>
+		<artifactId>org.slizaa.core.restservice.parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>org.slizaa.scanner.core.mvnresolver.itest</artifactId>
-
-	<properties>
-		<exam.version>4.11.0</exam.version>
-		<url.version>2.5.2</url.version>
-	</properties>
+	<artifactId>org.slizaa.core.restservice.itest</artifactId>
 
 	<dependencies>
+
 		<dependency>
-			<groupId>org.slizaa.scanner.core</groupId>
-			<artifactId>org.slizaa.scanner.core.mvnresolver.uber</artifactId>
-			<version>${project.version}</version>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.1</version>
 		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>21.0</version>
-		</dependency>
-		<!-- test dependencies -->
-		<dependency>
-			<groupId>org.ops4j.pax.url</groupId>
-			<artifactId>pax-url-wrap</artifactId>
-			<version>${url.version}</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.ops4j.pax.exam</groupId>
 			<artifactId>pax-exam-container-native</artifactId>
-			<version>${exam.version}</version>
+			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.ops4j.pax.exam</groupId>
+			<artifactId>pax-exam-container-native</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.ops4j.pax.exam</groupId>
 			<artifactId>pax-exam-junit4</artifactId>
-			<version>${exam.version}</version>
+			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.ops4j.pax.exam</groupId>
 			<artifactId>pax-exam-link-mvn</artifactId>
-			<version>${exam.version}</version>
+			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.ops4j.pax.url</groupId>
 			<artifactId>pax-url-aether</artifactId>
-			<version>2.5.2</version>
+			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.platform</groupId>
-			<artifactId>org.eclipse.equinox.common</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.platform</groupId>
-			<artifactId>org.eclipse.osgi</artifactId>
-		</dependency>
+
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
+			<scope>test</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
+			<scope>test</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.25</version>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.osgi</artifactId>
+			<scope>test</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.25</version>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.equinox.common</artifactId>
+			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -102,5 +98,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

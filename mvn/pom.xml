@@ -50,6 +50,8 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<exam.version>4.11.0</exam.version>
+		<url.version>2.4.5</url.version>
 	</properties>
 
 	<modules>
@@ -58,20 +60,41 @@
 		<module>org.slizaa.scanner.core.classpathscanner</module>
 		<module>org.slizaa.scanner.core.cypherregistry</module>
 		<module>mvnresolver</module>
+		<module>restservice</module>
 		<module>org.slizaa.scanner.core.eclipse.repo</module>
 	</modules>
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>org.ops4j.pax.exam</groupId>
+				<artifactId>pax-exam-container-native</artifactId>
+				<version>${exam.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ops4j.pax.exam</groupId>
+				<artifactId>pax-exam-junit4</artifactId>
+				<version>${exam.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ops4j.pax.exam</groupId>
+				<artifactId>pax-exam-link-mvn</artifactId>
+				<version>${exam.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ops4j.pax.url</groupId>
+				<artifactId>pax-url-aether</artifactId>
+				<version>${url.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.eclipse.platform</groupId>
 				<artifactId>org.eclipse.equinox.common</artifactId>
-				<version>3.8.0</version>
+				<version>3.9.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.platform</groupId>
 				<artifactId>org.eclipse.osgi</artifactId>
-				<version>3.11.3</version>
+				<version>3.12.100</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.code.gson</groupId>
@@ -117,6 +140,16 @@
 				<groupId>org.assertj</groupId>
 				<artifactId>assertj-core</artifactId>
 				<version>3.8.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.25</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>1.7.25</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
