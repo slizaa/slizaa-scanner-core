@@ -59,6 +59,7 @@
 		<module>org.slizaa.scanner.core.contentdefinition</module>
 		<module>org.slizaa.scanner.core.classpathscanner</module>
 		<module>org.slizaa.scanner.core.cypherregistry</module>
+		<module>org.slizaa.scanner.core.jersey-osgi</module>
 		<module>mvnresolver</module>
 		<module>org.slizaa.scanner.core.eclipse.repo</module>
 	</modules>
