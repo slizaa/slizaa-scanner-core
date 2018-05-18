@@ -53,6 +53,10 @@
 											<id>${project.groupId}:org.slizaa.scanner.core.mvnresolver.uber:${project.version}</id>
 											<transitive>false</transitive>
 										</artifact>
+										<artifact>
+											<id>${project.groupId}:org.slizaa.scanner.core.jersey-osgi:${project.version}</id>
+											<transitive>false</transitive>
+										</artifact>										
 									</artifacts>
 								</feature>
 								<!-- <feature>

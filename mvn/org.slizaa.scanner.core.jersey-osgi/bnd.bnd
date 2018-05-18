@@ -46,3 +46,4 @@ Import-Package:\
  !javax.net.ssl,\
  !javax.persistence,\
  *
+Require-Capability: osgi.ee; filter="(&(osgi.ee=JavaSE)(version=1.8))"
