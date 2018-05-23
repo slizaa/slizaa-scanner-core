@@ -1,12 +1,9 @@
 /*******************************************************************************
- * Copyright (C) 2011-2017 Gerd Wuetherich (gerd@gerd-wuetherich.de).
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
+ * Copyright (C) 2011-2017 Gerd Wuetherich (gerd@gerd-wuetherich.de). All rights reserved. This program and the
+ * accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this
+ * distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors: Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
 package org.slizaa.scanner.core.api.graphdb;
 
@@ -23,7 +20,7 @@ import java.io.File;
  * <p>
  * Example: <code><pre>
  * IGraphDbFactory graphDbFactory = ...;
- * 
+ *
  * graphDbFactory.newGraphDb(5001, "/home/exampleUser/databaseDir").create();
  * </pre></code>
  * </p>
@@ -31,6 +28,17 @@ import java.io.File;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public interface IGraphDbFactory {
+
+  /**
+   * <p>
+   * Creates a new {@link IGraphDbBuilder} to configure a graph database instance.
+   * </p>
+   *
+   * @param databaseDir
+   *          the database directory
+   * @return a newly created {@link IGraphDbBuilder}
+   */
+  IGraphDbBuilder newGraphDb(File databaseDir);
 
   /**
    * <p>
