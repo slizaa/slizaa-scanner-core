@@ -1,12 +1,9 @@
 /*******************************************************************************
- * Copyright (C) 2011-2017 Gerd Wuetherich (gerd@gerd-wuetherich.de).
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
+ * Copyright (C) 2011-2017 Gerd Wuetherich (gerd@gerd-wuetherich.de). All rights reserved. This program and the
+ * accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this
+ * distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors: Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
 package org.slizaa.scanner.core.impl.plugins;
 
@@ -34,7 +31,7 @@ public class ClasspathScannerTest {
   /**
    * <p>
    * </p>
-   * 
+   *
    * @throws ClassNotFoundException
    */
   @Test
@@ -106,7 +103,7 @@ public class ClasspathScannerTest {
 
     //
     assertThat(files).hasSize(1);
-    assertThat(files.get(pathToScan).get(0)).contains("@slizaa.name type-references");
+    assertThat(files.get(pathToScan).get(0)).contains("@slizaa.statementId type-references");
     System.out.println(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
   }
 
