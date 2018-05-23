@@ -1,6 +1,6 @@
 /**
- * @slizaa.group org.slizaa.jtype.typeresolution
- * @slizaa.name type-references
+ * @slizaa.groupId org.slizaa.jtype.typeresolution
+ * @slizaa.statementId type-references
  * @slizaa.description 'Resolves type references to types'
  * @slizaa.requiredStatements org.slizaa.jtype.typeresolution.methodrefs
  */
