@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.slizaa.scanner.core.api.cypherregistry.ICypherStatement;
+import org.slizaa.scanner.core.classpathscanner.ClasspathScannerFactoryBuilder;
 import org.slizaa.scanner.core.classpathscanner.IClasspathScannerFactory;
-import org.slizaa.scanner.core.classpathscanner.internal.ClasspathScannerFactory;
 
 /**
  * <p>
@@ -32,8 +32,8 @@ public class CypherRegistryUtils {
         new URL[] { checkNotNull(clazz).getProtectionDomain().getCodeSource().getLocation() });
 
     //
-    IClasspathScannerFactory classpathScanner = new ClasspathScannerFactory()
-        .registerCodeSourceClassLoaderProvider(ClassLoader.class, cl -> cl);
+    IClasspathScannerFactory classpathScanner = ClasspathScannerFactoryBuilder.newClasspathScannerFactory()
+        .registerCodeSourceClassLoaderProvider(ClassLoader.class, cl -> cl).create();
 
     //
     List<ICypherStatement> statements = new ArrayList<>();
