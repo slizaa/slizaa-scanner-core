@@ -49,7 +49,9 @@ public class MethodAnnotationMatchProcessorAdaptor {
    * @param classWithAnnotation
    */
   public void addClassesWithMethodAnnotation(Class<?> classWithAnnotation) {
-    _result.add(classWithAnnotation);
+    if (!_result.contains(classWithAnnotation)) {
+      _result.add(classWithAnnotation);
+    }
   }
 
   /**
