@@ -53,11 +53,11 @@ public interface IParserFactory {
    * </p>
    * 
    * @param systemDefinition
+   * @param cypherStatementExecutor
    * @param subMonitor
-   *          TODO
    * @throws Exception
    */
-  void batchParseStart(IContentDefinitionProvider systemDefinition, Object graphDatabase, IProgressMonitor subMonitor)
+  void batchParseStart(IContentDefinitionProvider systemDefinition, ICypherStatementExecutor cypherStatementExecutor, IProgressMonitor subMonitor)
       throws Exception;
 
   /**
@@ -65,12 +65,11 @@ public interface IParserFactory {
    * </p>
    * 
    * @param systemDefinition
-   * @param graphDatabase
+   * @param cypherStatementExecutor
    * @param subMonitor
-   *          TODO
    * @throws Exception
    */
-  void batchParseStop(IContentDefinitionProvider systemDefinition, Object graphDatabase, IProgressMonitor subMonitor)
+  void batchParseStop(IContentDefinitionProvider systemDefinition, ICypherStatementExecutor cypherStatementExecutor, IProgressMonitor subMonitor)
       throws Exception;
 
   /**
@@ -119,7 +118,7 @@ public interface IParserFactory {
      * {@inheritDoc}
      */
     @Override
-    public void batchParseStart(IContentDefinitionProvider systemDefinition, Object graphDatabase,
+    public void batchParseStart(IContentDefinitionProvider systemDefinition, ICypherStatementExecutor cypherStatementExecutor,
         IProgressMonitor subMonitor) throws Exception {
       // empty default implementation
     }
@@ -128,7 +127,7 @@ public interface IParserFactory {
      * {@inheritDoc}
      */
     @Override
-    public void batchParseStop(IContentDefinitionProvider systemDefinition, Object graphDatabase,
+    public void batchParseStop(IContentDefinitionProvider systemDefinition, ICypherStatementExecutor cypherStatementExecutor,
         IProgressMonitor subMonitor) throws Exception {
       // empty default implementation
     }
