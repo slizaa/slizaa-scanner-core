@@ -89,7 +89,7 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>21.0</version>
-      <scope>provided</scope>
+      <scope>compile</scope>
       <exclusions>
         <exclusion>
           <artifactId>animal-sniffer-annotations</artifactId>

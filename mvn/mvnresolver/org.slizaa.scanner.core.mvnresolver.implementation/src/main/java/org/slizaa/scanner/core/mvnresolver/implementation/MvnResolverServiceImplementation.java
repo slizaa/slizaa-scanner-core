@@ -14,12 +14,16 @@ import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.collection.DependencyCollectionException;
 import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.graph.DependencyFilter;
 import org.eclipse.aether.graph.DependencyNode;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResolutionException;
 import org.eclipse.aether.resolution.DependencyResult;
+import org.eclipse.aether.util.filter.AndDependencyFilter;
+import org.eclipse.aether.util.filter.PatternExclusionsDependencyFilter;
+import org.eclipse.aether.util.filter.PatternInclusionsDependencyFilter;
 import org.slizaa.scanner.core.mvnresolver.api.IMvnResolverService;
 import org.slizaa.scanner.core.mvnresolver.implementation.internal.ManualRepositorySystemFactory;
 import org.slizaa.scanner.core.mvnresolver.implementation.internal.NullConsoleRepositoryListener;
@@ -56,45 +60,119 @@ public class MvnResolverServiceImplementation implements IMvnResolverService {
   public void initialize() {
 
     //
-    if (_localRepository == null) {
+    if (this._localRepository == null) {
       setLocalRepository(new File(LOCAL_REPO));
     }
 
     //
-    _repoSystem = ManualRepositorySystemFactory.newRepositorySystem();
+    this._repoSystem = ManualRepositorySystemFactory.newRepositorySystem();
 
     // new session
-    _session = newRepositorySystemSession(_repoSystem);
+    this._session = newRepositorySystemSession(this._repoSystem);
 
     //
-    if (_remoteRepositories.isEmpty()) {
-      _remoteRepositories.add(newCentralRepository());
+    if (this._remoteRepositories.isEmpty()) {
+      this._remoteRepositories.add(newCentralRepository());
     }
+  }
+
+  @Override
+  public IMvnResolverJob newMvnResolverJob() {
+    return new MvnResolverJobImplementation(this);
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public File[] resolve(String coords) {
+  public File[] resolve(String... coords) {
+
+    //
+    checkNotNull(coords);
 
     try {
 
-      // create dependency
-      Dependency dependency = new Dependency(new DefaultArtifact(coords), "test");
-
       //
       CollectRequest collectRequest = new CollectRequest();
-      collectRequest.setRoot(dependency);
+      for (String coord : coords) {
+        collectRequest.addDependency(new Dependency(new DefaultArtifact(coord), "compile"));
+      }
 
       // add remoteRepos
-      _remoteRepositories.forEach(repo -> collectRequest.addRepository(repo));
+      this._remoteRepositories.forEach(repo -> collectRequest.addRepository(repo));
 
-      DependencyNode node = _repoSystem.collectDependencies(_session, collectRequest).getRoot();
+      DependencyNode node = this._repoSystem.collectDependencies(this._session, collectRequest).getRoot();
 
       DependencyRequest dependencyRequest = new DependencyRequest();
       dependencyRequest.setRoot(node);
-      DependencyResult result = _repoSystem.resolveDependencies(_session, dependencyRequest);
+
+      // DependencyFilter filter = new AndDependencyFilter(new PatternInclusionsDependencyFilter("*:neo4j*"),
+      // new PatternExclusionsDependencyFilter("*:*-cypher"));
+      //
+      // dependencyRequest.setFilter(filter);
+
+      DependencyResult result = this._repoSystem.resolveDependencies(this._session, dependencyRequest);
+
+      //
+      return result.getArtifactResults().stream().map(ar -> ar.getArtifact().getFile()).toArray(size -> new File[size]);
+    }
+    //
+    catch (DependencyCollectionException e) {
+      throw new RuntimeException(e);
+    }
+    //
+    catch (DependencyResolutionException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @param jobImplementation
+   * @return
+   */
+  File[] resolve(MvnResolverJobImplementation job) {
+
+    //
+    checkNotNull(job);
+
+    //
+    try {
+
+      //
+      CollectRequest collectRequest = new CollectRequest();
+
+      // get the coordinates
+      for (String coordinate : job.getCoords()) {
+        collectRequest.addDependency(new Dependency(new DefaultArtifact(coordinate), "compile"));
+      }
+
+      // add remoteRepos
+      this._remoteRepositories.forEach(repo -> collectRequest.addRepository(repo));
+
+      DependencyNode node = this._repoSystem.collectDependencies(this._session, collectRequest).getRoot();
+      DependencyRequest dependencyRequest = new DependencyRequest();
+      dependencyRequest.setRoot(node);
+
+      // construct the filter
+      DependencyFilter exclusionFilter = job.getExclusionPatterns().isEmpty() ? null
+          : new PatternExclusionsDependencyFilter(job.getExclusionPatterns());
+
+      DependencyFilter inclusionFilter = job.getInclusionPatterns().isEmpty() ? null
+          : new PatternInclusionsDependencyFilter(job.getInclusionPatterns());
+
+      if (exclusionFilter != null && inclusionFilter != null) {
+        dependencyRequest.setFilter(new AndDependencyFilter(exclusionFilter, inclusionFilter));
+      } else if (exclusionFilter != null) {
+        dependencyRequest.setFilter(exclusionFilter);
+      } else if (inclusionFilter != null) {
+        dependencyRequest.setFilter(inclusionFilter);
+      }
+
+      //
+      DependencyResult result = this._repoSystem.resolveDependencies(this._session, dependencyRequest);
 
       //
       return result.getArtifactResults().stream().map(ar -> ar.getArtifact().getFile()).toArray(size -> new File[size]);
@@ -116,7 +194,7 @@ public class MvnResolverServiceImplementation implements IMvnResolverService {
    * @param localRepository
    */
   void setLocalRepository(File localRepository) {
-    _localRepository = new LocalRepository(checkNotNull(localRepository));
+    this._localRepository = new LocalRepository(checkNotNull(localRepository));
   }
 
   /**
@@ -127,7 +205,7 @@ public class MvnResolverServiceImplementation implements IMvnResolverService {
    * @param url
    */
   void addRemoteRepository(String id, String url) {
-    _remoteRepositories.add(new RemoteRepository.Builder(checkNotNull(id), "default", checkNotNull(url)).build());
+    this._remoteRepositories.add(new RemoteRepository.Builder(checkNotNull(id), "default", checkNotNull(url)).build());
   }
 
   /**
@@ -137,7 +215,7 @@ public class MvnResolverServiceImplementation implements IMvnResolverService {
    * @param remoteRepository
    */
   void addRemoteRepository(RemoteRepository remoteRepository) {
-    _remoteRepositories.add(checkNotNull(remoteRepository));
+    this._remoteRepositories.add(checkNotNull(remoteRepository));
   }
 
   /**
@@ -152,7 +230,7 @@ public class MvnResolverServiceImplementation implements IMvnResolverService {
 
     DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
 
-    session.setLocalRepositoryManager(system.newLocalRepositoryManager(session, _localRepository));
+    session.setLocalRepositoryManager(system.newLocalRepositoryManager(session, this._localRepository));
     session.setTransferListener(new NullConsoleTransferListener());
     session.setRepositoryListener(new NullConsoleRepositoryListener());
 
