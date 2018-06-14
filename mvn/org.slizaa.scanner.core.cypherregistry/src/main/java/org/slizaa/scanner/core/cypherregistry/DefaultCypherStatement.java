@@ -55,9 +55,9 @@ public class DefaultCypherStatement implements ICypherStatement {
    * @param statement
    */
   public DefaultCypherStatement(String groupId, String statementId, String statement) {
-    _groupId = checkNotNull(groupId);
-    _statementId = checkNotNull(statementId);
-    _statement = checkNotNull(statement);
+    this._groupId = checkNotNull(groupId);
+    this._statementId = checkNotNull(statementId);
+    this._statement = checkNotNull(statement);
   }
 
   /**
@@ -65,7 +65,7 @@ public class DefaultCypherStatement implements ICypherStatement {
    */
   @Override
   public String getGroupId() {
-    return _groupId;
+    return this._groupId;
   }
 
   /**
@@ -73,7 +73,7 @@ public class DefaultCypherStatement implements ICypherStatement {
    */
   @Override
   public String getStatementId() {
-    return _statementId;
+    return this._statementId;
   }
 
   /**
@@ -81,7 +81,7 @@ public class DefaultCypherStatement implements ICypherStatement {
    */
   @Override
   public String getFullyQualifiedName() {
-    return _groupId + "." + _statementId;
+    return this._groupId + "." + this._statementId;
   }
 
   /**
@@ -89,7 +89,7 @@ public class DefaultCypherStatement implements ICypherStatement {
    */
   @Override
   public String getDescription() {
-    return _description;
+    return this._description;
   }
 
   /**
@@ -97,7 +97,7 @@ public class DefaultCypherStatement implements ICypherStatement {
    */
   @Override
   public String getStatement() {
-    return _statement;
+    return this._statement;
   }
 
   /**
@@ -105,7 +105,7 @@ public class DefaultCypherStatement implements ICypherStatement {
    */
   @Override
   public List<String> getRequiredStatements() {
-    return _requiredStatements;
+    return this._requiredStatements;
   }
 
   /**
@@ -113,7 +113,7 @@ public class DefaultCypherStatement implements ICypherStatement {
    */
   @Override
   public String getRelativePath() {
-    return _relativePath;
+    return this._relativePath;
   }
 
   /**
@@ -121,45 +121,47 @@ public class DefaultCypherStatement implements ICypherStatement {
    */
   @Override
   public Object getCodeSource() {
-    return _codeSource;
+    return this._codeSource;
   }
 
   public void setGroupId(String groupId) {
-    _groupId = groupId;
+    this._groupId = groupId;
   }
 
   public void setStatementId(String statementId) {
-    _statementId = statementId;
+    this._statementId = statementId;
   }
 
   public void setDescription(String description) {
-    _description = description;
+    this._description = description;
   }
 
   public void setStatement(String statement) {
-    _statement = statement;
+    this._statement = statement;
   }
 
   public void setRequiredStatements(List<String> requiredStatements) {
-    _requiredStatements = requiredStatements;
+    checkNotNull(requiredStatements).forEach(element -> checkNotNull(element));
+    this._requiredStatements = requiredStatements;
   }
 
   public void setCodeSource(Object codeSource) {
-    _codeSource = codeSource;
+    this._codeSource = codeSource;
   }
 
   public void setRelativePath(String relativePath) {
-    _relativePath = relativePath;
+    this._relativePath = relativePath;
   }
 
+  @Override
   public boolean isValid() {
-    return _groupId != null && _statementId != null;
+    return this._groupId != null && this._statementId != null;
   }
 
   @Override
   public String toString() {
-    return "DefaultCypherStatement [groupId=" + _groupId + ", statementId=" + _statementId + ", description="
-        + _description + ", statement=" + _statement + ", requiredStatements=" + _requiredStatements + ", codeSource="
-        + _codeSource + ", relativePath=" + _relativePath + "]";
+    return "DefaultCypherStatement [groupId=" + this._groupId + ", statementId=" + this._statementId + ", description="
+        + this._description + ", statement=" + this._statement + ", requiredStatements=" + this._requiredStatements
+        + ", codeSource=" + this._codeSource + ", relativePath=" + this._relativePath + "]";
   }
 }

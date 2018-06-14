@@ -43,6 +43,4 @@ public interface ICypherStatementRegistry {
    * @return
    */
   Optional<ICypherStatement> getStatement(String fullyQualifedName);
-
-  List<ICypherStatement> computeOrder(List<ICypherStatement> statements);
 }

@@ -2,7 +2,7 @@ package org.slizaa.scanner.core.cypherregistry;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -56,46 +56,8 @@ public class CypherStatementRegistry implements ICypherStatementRegistry {
    * {@inheritDoc}
    */
   @Override
-  public List<ICypherStatement> computeOrder(List<ICypherStatement> statements) {
-
-    //
-    DependencyGraph<ICypherStatement> dependencyGraph = new DependencyGraph<ICypherStatement>();
-
-    //
-    for (ICypherStatement parent : statements) {
-
-      //
-      for (String requiredStatement : parent.getRequiredStatements()) {
-
-        //
-        ICypherStatement child = this._cypherStatements.get(requiredStatement);
-
-        //
-        if (child == null) {
-          child = this._cypherStatements.get(parent.getGroupId() + "." + requiredStatement);
-        }
-
-        //
-        if (child == null) {
-          // TODO
-          throw new RuntimeException("Missing requirement.");
-        }
-
-        //
-        dependencyGraph.addEdge(parent, child);
-      }
-    }
-
-    //
-    return dependencyGraph.calculateOrder();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   public List<ICypherStatement> getAllStatements() {
-    return Collections.unmodifiableList(new ArrayList<>(this._cypherStatements.values()));
+    return Collections.unmodifiableList(computeOrder(this._cypherStatements.values()));
   }
 
   /**
@@ -104,8 +66,8 @@ public class CypherStatementRegistry implements ICypherStatementRegistry {
   @Override
   public List<ICypherStatement> getStatements(String group) {
     checkNotNull(group);
-    return this._cypherStatements.values().stream().filter(statement -> group.equalsIgnoreCase(statement.getGroupId()))
-        .collect(Collectors.toList());
+    return computeOrder(this._cypherStatements.values().stream()
+        .filter(statement -> group.equalsIgnoreCase(statement.getGroupId())).collect(Collectors.toList()));
   }
 
   /**
@@ -117,4 +79,50 @@ public class CypherStatementRegistry implements ICypherStatementRegistry {
     return this._cypherStatements.values().stream()
         .filter(statement -> fullyQualifedName.equalsIgnoreCase(statement.getFullyQualifiedName())).findFirst();
   }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @param statements
+   * @return
+   */
+  private List<ICypherStatement> computeOrder(Collection<ICypherStatement> statements) {
+
+    // create the dependency graph
+    DependencyGraph<ICypherStatement> dependencyGraph = new DependencyGraph<ICypherStatement>();
+
+    checkNotNull(statements).forEach(cypherStatement -> {
+
+      // add node
+      dependencyGraph.addVertex(cypherStatement);
+
+      //
+      cypherStatement.getRequiredStatements().forEach(requiredStatementName -> {
+
+        //
+        ICypherStatement requiredStatement = this._cypherStatements.get(requiredStatementName);
+
+        //
+        if (requiredStatement == null) {
+          requiredStatement = this._cypherStatements.get(cypherStatement.getGroupId() + "." + requiredStatementName);
+        }
+
+        //
+        if (requiredStatement == null) {
+          // TODO
+          throw new RuntimeException(String.format(
+              "Missing requirement: statement '%s' requires missing statement '%s'. Registered statements are %s.",
+              cypherStatement.getFullyQualifiedName(), requiredStatementName, this._cypherStatements.keySet()));
+        }
+
+        //
+        dependencyGraph.addEdge(cypherStatement, requiredStatement);
+      });
+    });
+
+    //
+    return dependencyGraph.calculateOrder();
+  }
+
 }
