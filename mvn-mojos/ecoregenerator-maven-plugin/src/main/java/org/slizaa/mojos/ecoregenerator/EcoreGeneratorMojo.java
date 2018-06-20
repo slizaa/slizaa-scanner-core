@@ -16,7 +16,6 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModelPackage;
 import org.eclipse.emf.codegen.ecore.genmodel.generator.GenBaseGeneratorAdapter;
 import org.eclipse.emf.codegen.ecore.genmodel.generator.GenModelGeneratorAdapterFactory;
-import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -27,8 +26,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
- * <p>
- * </p>
  *
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
@@ -36,8 +33,17 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 public class EcoreGeneratorMojo extends AbstractMojo {
 
   /** - */
+  private static final String WORKSPACE_NAME = "workspace";
+
+  /** - */
   @Parameter(defaultValue = "${project}", readonly = true, required = true)
-  private MavenProject project;
+  private MavenProject        project;
+
+  @Parameter(property = "genModel", required = true)
+  private String              genModel;
+
+  @Parameter(property = "ecoreModel", required = true)
+  private String              ecoreModel;
 
   /**
    * {@inheritDoc}
@@ -45,7 +51,7 @@ public class EcoreGeneratorMojo extends AbstractMojo {
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
 
-    // we have to register the resource factories for '*.genmodel' and '*.ecore' files
+    // we have to register xmi resource factories for '*.genmodel' and '*.ecore' files
     Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("genmodel", new XMIResourceFactoryImpl());
     Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new XMIResourceFactoryImpl());
 
@@ -57,61 +63,53 @@ public class EcoreGeneratorMojo extends AbstractMojo {
     resourceSet.getPackageRegistry().put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
     resourceSet.getPackageRegistry().put(GenModelPackage.eNS_URI, GenModelPackage.eINSTANCE);
 
-    // compute the workspace directory
-    String workspaceDir = project.getBasedir() + File.separator + project.getBuild().getDirectory() + File.separator
-        + "workspace";
+    // compute the workspace directory...
+    String workspaceDir = this.project.getBuild().getDirectory() + File.separator + WORKSPACE_NAME + File.separator;
 
-    new File(workspaceDir).mkdirs();
-    
-    //
-    URI workspaceUri = URI.createFileURI(workspaceDir);
-    System.out.println(workspaceUri);
-    resourceSet.getURIConverter().getURIMap().put(URI.createURI("platform:/resource/"), workspaceUri);
+    // ... and add it in the URI map
+    resourceSet.getURIConverter().getURIMap().put(URI.createURI("platform:/resource/"),
+        URI.createFileURI(workspaceDir));
 
     try {
 
-      //
+      // compute the
       String relativeFilePath = PathTool.getRelativeFilePath(new File(System.getProperty("user.dir")).getAbsolutePath(),
-          project.getBasedir().getAbsolutePath());
+          this.project.getBasedir().getAbsolutePath());
 
       //
-      String hierarchicalGraphGenModelURI = relativeFilePath + File.separator
-          + "src/main/resources/model/hierarchicalgraph.genmodel";
-      String hierarchicalGraphEcoreModelURI = relativeFilePath + File.separator
-          + "src/main/resources/model/hierarchicalgraph.ecore";
+      String relativeGenModelPath = relativeFilePath.isEmpty() ? this.genModel
+          : relativeFilePath + File.separator + this.genModel;
+      String relativeEcoreModelPath = relativeFilePath.isEmpty() ? this.ecoreModel
+          : relativeFilePath + File.separator + this.ecoreModel;
 
       //
-      System.out.println("relativeFilePath: " + relativeFilePath);
-      System.out.println("hierarchicalGraphGenModelURI: " + hierarchicalGraphGenModelURI);
-      System.out.println("hierarchicalGraphEcoreModelURI: " + hierarchicalGraphEcoreModelURI);
+      URI relativeGenModelURI = converter.normalize(URI.createURI(relativeGenModelPath));
+      URI relativeEcoreModelURI = converter.normalize(URI.createURI(relativeEcoreModelPath));
 
       // load the gen model
-      Resource hierarchicalGraphGenModelResource = resourceSet
-          .getResource(converter.normalize(URI.createURI(hierarchicalGraphGenModelURI)), true);
+      Resource hierarchicalGraphGenModelResource = resourceSet.getResource(relativeGenModelURI, true);
       hierarchicalGraphGenModelResource.load(null);
 
       // load the ecore model
-      Resource reportDesignerEcoreResource = resourceSet
-          .getResource(converter.normalize(URI.createURI(hierarchicalGraphEcoreModelURI)), true);
+      Resource reportDesignerEcoreResource = resourceSet.getResource(relativeEcoreModelURI, true);
       reportDesignerEcoreResource.load(null);
 
-      // // Resource regattaEcoreResource =
-      // // resourceSet.getResource(converter.normalize(URI.createURI(regattaEcoreModelURI)),
-      // // true);
-      // // regattaEcoreResource.load(null);
+      // TODO: load referenced models
+      // Resource referencedEcoreResource =
+      // resourceSet.getResource(converter.normalize(URI.createURI(referencedEcoreModelURI)), true);
+      // regattaEcoreResource.load(null);
 
       //
       if (hierarchicalGraphGenModelResource.getContents().size() != 1) {
 
-        //
-        System.out
-            .println("Resource has " + hierarchicalGraphGenModelResource.getContents().size() + " loaded objects");
+        // throw new mojo execution exception
+        throw new MojoExecutionException("Specified gen model file does not contain a valid gen model.");
       }
 
       //
       else {
 
-        //
+        // get the gen model
         GenModel genModel = (GenModel) hierarchicalGraphGenModelResource.getContents().get(0);
 
         // Globally register the default generator adapter factory for
@@ -125,7 +123,14 @@ public class EcoreGeneratorMojo extends AbstractMojo {
         genModel.setCanGenerate(true);
 
         // Generator model code.
-        generator.generate(genModel, GenBaseGeneratorAdapter.MODEL_PROJECT_TYPE, new BasicMonitor.Printing(System.out));
+        generator.generate(genModel, GenBaseGeneratorAdapter.MODEL_PROJECT_TYPE,
+            new MonitorToMavenLogAdapter(this.getLog()));
+
+        // add the model directory
+        String modelDirectory = new File(this.project.getBuild().getDirectory()).getName() + File.separator
+            + WORKSPACE_NAME + genModel.getModelDirectory();
+        getLog().info(String.format("Adding model directory '%s' to compile source root...", modelDirectory));
+        this.project.addCompileSourceRoot(modelDirectory);
       }
 
     } catch (Exception e) {
