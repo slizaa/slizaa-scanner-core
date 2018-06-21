@@ -1,53 +1,48 @@
 package org.slizaa.mojos.ecoregenerator;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.io.File;
-
-import org.apache.maven.plugin.testing.MojoRule;
 import org.apache.maven.plugin.testing.resources.TestResources;
-import org.apache.maven.project.MavenProject;
-import org.junit.Rule;
 import org.junit.Test;
 
-public class Ecore_Generator_Test {
+/**
+ * <p>
+ * </p>
+ *
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
+public class Ecore_Generator_Test extends AbstractEcoreGeneratorTest {
 
-  /** - */
-  @Rule
-  public MojoRule      rule      = new MojoRule();
+  /**
+   * <p>
+   * Creates a new instance of type {@link Ecore_Generator_Test}.
+   * </p>
+   */
+  public Ecore_Generator_Test() {
+    super("ecore-generator");
+  }
 
-  /** - */
-  @Rule
-  public TestResources resources = new TestResources();
-
+  /**
+   * <p>
+   * </p>
+   *
+   * @throws Exception
+   */
   @Test
   public void test() throws Exception {
 
-    // get the test pom file
-    File testPom = new File("src/test/projects/ecore-generator/pom.xml").getAbsoluteFile();
-    assertNotNull(testPom);
-
-    // create the ecore generator mojo
-    EcoreGeneratorMojo mojo = new EcoreGeneratorMojo();
-    mojo = (EcoreGeneratorMojo) this.rule.configureMojo(mojo,
-        this.rule.extractPluginConfiguration("ecoregenerator-maven-plugin", testPom));
-
     //
-    File basedir = this.resources.getBasedir("ecore-generator");
+    getEcoreGeneratorMojo().execute();
 
-    // Create the Maven project by hand (...)
-    final MavenProject mvnProject = new MavenProject();
-    mvnProject.setFile(new File(basedir, "pom.xml"));
-    mvnProject.getBuild().setDirectory(new File(basedir, "target").getAbsolutePath());
-    this.rule.setVariableValueToObject(mojo, "project", mvnProject);
-
-    //
-    mojo.execute();
-
-    //
-    TestResources.assertDirectoryContents(basedir, "pom.xml", "src/", "src\\main/", "src\\main\\resources/",
-        "src\\main\\resources\\model/", "src\\main\\resources\\model\\hierarchicalgraph.ecore",
-        "src\\main\\resources\\model\\hierarchicalgraph.genmodel", "target/", "target\\workspace/",
+    // @formatter:off
+    TestResources.assertDirectoryContents(getBasedir(), 
+        "pom.xml", 
+        "src/", 
+        "src\\main/", 
+        "src\\main\\resources/",
+        "src\\main\\resources\\model/", 
+        "src\\main\\resources\\model\\hierarchicalgraph.ecore",
+        "src\\main\\resources\\model\\hierarchicalgraph.genmodel", 
+        "target/", 
+        "target\\workspace/",
         "target\\workspace\\org.slizaa.hierarchicalgraph.core.model/",
         "target\\workspace\\org.slizaa.hierarchicalgraph.core.model\\META-INF/",
         "target\\workspace\\org.slizaa.hierarchicalgraph.core.model\\META-INF\\MANIFEST.MF",
@@ -90,5 +85,6 @@ public class Ecore_Generator_Test {
         "target\\workspace\\org.slizaa.hierarchicalgraph.core.model\\src-gen\\org\\slizaa\\hierarchicalgraph\\util/",
         "target\\workspace\\org.slizaa.hierarchicalgraph.core.model\\src-gen\\org\\slizaa\\hierarchicalgraph\\util\\HierarchicalgraphAdapterFactory.java",
         "target\\workspace\\org.slizaa.hierarchicalgraph.core.model\\src-gen\\org\\slizaa\\hierarchicalgraph\\util\\HierarchicalgraphSwitch.java");
+    // @formatter:on
   }
 }
