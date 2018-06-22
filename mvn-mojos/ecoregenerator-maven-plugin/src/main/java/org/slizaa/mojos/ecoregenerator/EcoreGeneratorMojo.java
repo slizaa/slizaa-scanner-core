@@ -1,10 +1,7 @@
 package org.slizaa.mojos.ecoregenerator;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
@@ -20,12 +17,6 @@ import org.codehaus.plexus.util.PathTool;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.repository.RemoteRepository;
-import org.eclipse.core.runtime.ContributorFactorySimple;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.RegistryFactory;
 import org.eclipse.emf.codegen.ecore.generator.Generator;
 import org.eclipse.emf.codegen.ecore.generator.GeneratorAdapterFactory;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
@@ -79,38 +70,12 @@ public class EcoreGeneratorMojo extends AbstractMojo {
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
 
-    //
-    IExtensionRegistry extensionRegistry = RegistryFactory.createRegistry(null, null, null);
+    // compute the workspace directory...
+    String workspaceDir = this.project.getBuild().getDirectory() + File.separator + WORKSPACE_NAME + File.separator;
 
-    //
+    // populate with referenced models
     for (final Artifact artifact : this.project.getArtifacts()) {
-
-      try (ZipFile zipFile = new ZipFile(artifact.getFile())) {
-
-        ZipEntry zipEntry = zipFile.getEntry("plugin.xml");
-
-        if (zipEntry != null) {
-          InputStream inputStream = zipFile.getInputStream(zipEntry);
-
-          extensionRegistry.addContribution(inputStream, ContributorFactorySimple.createContributor(artifact.getId()),
-              false, null, null, null);
-
-        }
-
-        IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint("org.eclipse.emf.ecore.generated_package");
-        for (IExtension extension : extensionPoint.getExtensions()) {
-          for (IConfigurationElement configurationElement : extension.getConfigurationElements()) {
-            System.out.println(" - " + configurationElement);
-          }
-        }
-
-      } catch (Exception exception) {
-
-      }
-
-      System.out.println(" - " + artifact.getFile());
-      // Do whatever you need here.
-      // If having the actual file (artifact.getFile()) is not important, you do not need requiresDependencyResolution.
+      ExtractModelDefinitions.extractModelDefinitions(artifact.getFile(), workspaceDir);
     }
 
     // we have to register xmi resource factories for '*.genmodel' and '*.ecore' files
@@ -121,9 +86,6 @@ public class EcoreGeneratorMojo extends AbstractMojo {
     ResourceSet resourceSet = new ResourceSetImpl();
     resourceSet.getPackageRegistry().put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
     resourceSet.getPackageRegistry().put(GenModelPackage.eNS_URI, GenModelPackage.eINSTANCE);
-
-    // compute the workspace directory...
-    String workspaceDir = this.project.getBuild().getDirectory() + File.separator + WORKSPACE_NAME + File.separator;
 
     // ... and add it in the URI map
     resourceSet.getURIConverter().getURIMap().put(URI.createURI("platform:/resource/"),
@@ -153,8 +115,6 @@ public class EcoreGeneratorMojo extends AbstractMojo {
 
       //
       if (hierarchicalGraphGenModelResource.getContents().size() != 1) {
-
-        // throw new mojo execution exception
         throw new MojoExecutionException("Specified gen model file does not contain a valid gen model.");
       }
 
