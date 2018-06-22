@@ -29,8 +29,8 @@
 					</execution>
 				</executions>
 				<configuration>
-					<genModel>src/main/resources/model/hierarchicalgraph-neo4j.genmodel</genModel>
-					<ecoreModel>src/main/resources/model/hierarchicalgraph-neo4j.ecore</ecoreModel>
+					<genModel>model/hierarchicalgraph-neo4j.genmodel</genModel>
+					<ecoreModel>model/hierarchicalgraph-neo4j.ecore</ecoreModel>
 				</configuration>
 			</plugin>
 		</plugins>

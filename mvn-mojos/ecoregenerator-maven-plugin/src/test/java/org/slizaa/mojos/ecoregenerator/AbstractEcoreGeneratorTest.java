@@ -43,7 +43,7 @@ public class AbstractEcoreGeneratorTest {
    * @param testProjectName
    */
   public AbstractEcoreGeneratorTest(String testProjectName) {
-    _testProjectName = checkNotNull(testProjectName);
+    this._testProjectName = checkNotNull(testProjectName);
   }
 
   /**
@@ -56,54 +56,56 @@ public class AbstractEcoreGeneratorTest {
   public void setup() throws Exception {
 
     //
-    _basedir = this.testResources.getBasedir(_testProjectName);
+    this._basedir = this.testResources.getBasedir(this._testProjectName);
+
+    System.out.println(this._basedir);
 
     // get the test pom file
-    File testPom = new File(_basedir, "pom.xml").getAbsoluteFile();
+    File testPom = new File(this._basedir, "pom.xml").getAbsoluteFile();
     assertNotNull(testPom);
 
     //
-    _ecoreGeneratorMojo = (EcoreGeneratorMojo) this.mojoRule.configureMojo(new EcoreGeneratorMojo(),
+    this._ecoreGeneratorMojo = (EcoreGeneratorMojo) this.mojoRule.configureMojo(new EcoreGeneratorMojo(),
         this.mojoRule.extractPluginConfiguration("ecoregenerator-maven-plugin", testPom));
 
     // Create the Maven project by hand (...)
     final MavenProject mvnProject = new MavenProject();
     mvnProject.setFile(testPom);
-    mvnProject.getBuild().setDirectory(new File(_basedir, "target").getAbsolutePath());
-    this.mojoRule.setVariableValueToObject(_ecoreGeneratorMojo, "project", mvnProject);
+    mvnProject.getBuild().setDirectory(new File(this._basedir, "target").getAbsolutePath());
+    this.mojoRule.setVariableValueToObject(this._ecoreGeneratorMojo, "project", mvnProject);
 
     //
     RepositorySystem repositorySystem = ManualRepositorySystemFactory.newRepositorySystem();
-    this.mojoRule.setVariableValueToObject(_ecoreGeneratorMojo, "repoSystem", repositorySystem);
-    Assert.assertNotNull(this.mojoRule.getVariableValueFromObject(_ecoreGeneratorMojo, "repoSystem"));
+    this.mojoRule.setVariableValueToObject(this._ecoreGeneratorMojo, "repoSystem", repositorySystem);
+    Assert.assertNotNull(this.mojoRule.getVariableValueFromObject(this._ecoreGeneratorMojo, "repoSystem"));
 
     //
     DefaultRepositorySystemSession systemSession = Booter.newRepositorySystemSession(repositorySystem);
-    this.mojoRule.setVariableValueToObject(_ecoreGeneratorMojo, "repoSession", systemSession);
-    Assert.assertNotNull(this.mojoRule.getVariableValueFromObject(_ecoreGeneratorMojo, "repoSession"));
+    this.mojoRule.setVariableValueToObject(this._ecoreGeneratorMojo, "repoSession", systemSession);
+    Assert.assertNotNull(this.mojoRule.getVariableValueFromObject(this._ecoreGeneratorMojo, "repoSession"));
 
-    this.mojoRule.setVariableValueToObject(_ecoreGeneratorMojo, "repositories",
+    this.mojoRule.setVariableValueToObject(this._ecoreGeneratorMojo, "repositories",
         Booter.newRepositories(repositorySystem, systemSession));
-    Assert.assertNotNull(this.mojoRule.getVariableValueFromObject(_ecoreGeneratorMojo, "repositories"));
+    Assert.assertNotNull(this.mojoRule.getVariableValueFromObject(this._ecoreGeneratorMojo, "repositories"));
   }
 
   protected MojoRule getMojoRule() {
-    return mojoRule;
+    return this.mojoRule;
   }
 
   protected TestResources getTestResources() {
-    return testResources;
+    return this.testResources;
   }
 
   protected String getTestProjectName() {
-    return _testProjectName;
+    return this._testProjectName;
   }
 
   protected EcoreGeneratorMojo getEcoreGeneratorMojo() {
-    return _ecoreGeneratorMojo;
+    return this._ecoreGeneratorMojo;
   }
 
   protected File getBasedir() {
-    return _basedir;
+    return this._basedir;
   }
 }

@@ -1,8 +1,12 @@
 package org.slizaa.mojos.ecoregenerator;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -10,11 +14,18 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.PathTool;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.core.runtime.ContributorFactorySimple;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.RegistryFactory;
 import org.eclipse.emf.codegen.ecore.generator.Generator;
 import org.eclipse.emf.codegen.ecore.generator.GeneratorAdapterFactory;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
@@ -25,8 +36,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.URIConverter;
-import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
@@ -34,7 +43,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
  *
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-@Mojo(name = "generateFromEcore", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
+@Mojo(name = "generateFromEcore", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class EcoreGeneratorMojo extends AbstractMojo {
 
   /** - */
@@ -70,12 +79,43 @@ public class EcoreGeneratorMojo extends AbstractMojo {
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
 
+    //
+    IExtensionRegistry extensionRegistry = RegistryFactory.createRegistry(null, null, null);
+
+    //
+    for (final Artifact artifact : this.project.getArtifacts()) {
+
+      try (ZipFile zipFile = new ZipFile(artifact.getFile())) {
+
+        ZipEntry zipEntry = zipFile.getEntry("plugin.xml");
+
+        if (zipEntry != null) {
+          InputStream inputStream = zipFile.getInputStream(zipEntry);
+
+          extensionRegistry.addContribution(inputStream, ContributorFactorySimple.createContributor(artifact.getId()),
+              false, null, null, null);
+
+        }
+
+        IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint("org.eclipse.emf.ecore.generated_package");
+        for (IExtension extension : extensionPoint.getExtensions()) {
+          for (IConfigurationElement configurationElement : extension.getConfigurationElements()) {
+            System.out.println(" - " + configurationElement);
+          }
+        }
+
+      } catch (Exception exception) {
+
+      }
+
+      System.out.println(" - " + artifact.getFile());
+      // Do whatever you need here.
+      // If having the actual file (artifact.getFile()) is not important, you do not need requiresDependencyResolution.
+    }
+
     // we have to register xmi resource factories for '*.genmodel' and '*.ecore' files
     Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("genmodel", new XMIResourceFactoryImpl());
     Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new XMIResourceFactoryImpl());
-
-    // create an ExtensibleURIConverterImpl instance to normalize URIs
-    URIConverter converter = new ExtensibleURIConverterImpl();
 
     // create the resource set and register the ecore and genmodel packages
     ResourceSet resourceSet = new ResourceSetImpl();
@@ -84,9 +124,6 @@ public class EcoreGeneratorMojo extends AbstractMojo {
 
     // compute the workspace directory...
     String workspaceDir = this.project.getBuild().getDirectory() + File.separator + WORKSPACE_NAME + File.separator;
-
-    //
-    resourceSet.setURIConverter(resourceSet.getURIConverter());
 
     // ... and add it in the URI map
     resourceSet.getURIConverter().getURIMap().put(URI.createURI("platform:/resource/"),
@@ -104,30 +141,14 @@ public class EcoreGeneratorMojo extends AbstractMojo {
       String relativeEcoreModelPath = relativeFilePath.isEmpty() ? this.ecoreModel
           : relativeFilePath + File.separator + this.ecoreModel;
 
-      //
-      URI relativeGenModelURI = converter.normalize(URI.createURI(relativeGenModelPath));
-      URI relativeEcoreModelURI = converter.normalize(URI.createURI(relativeEcoreModelPath));
-
-      // // TODO: load referenced models
-      // // jar:platform:/resource/com.example.model/target/com.example.basemodel.jar!/model/basemodel.ecore
-      // String uri =
-      // "jar:file:/C:\\temp\\org.slizaa.hierarchicalgraph.core.model-1.0.0-SNAPSHOT.jar!/model/hierarchicalgraph.ecore";
-      // Resource resource = resourceSet.getResource(converter.normalize(URI.createURI(uri)), true);
-      // resource.load(null);
-      // System.out.println(resource.getContents().get(0));
-      //
-      // uri =
-      // "jar:file:/C:\\temp\\org.slizaa.hierarchicalgraph.core.model-1.0.0-SNAPSHOT.jar!/model/hierarchicalgraph.genmodel";
-      // resource = resourceSet.getResource(converter.normalize(URI.createURI(uri)), true);
-      // resource.load(null);
-      // System.out.println(resource.getContents().get(0));
-
       // load the gen model
-      Resource hierarchicalGraphGenModelResource = resourceSet.getResource(relativeGenModelURI, true);
+      Resource hierarchicalGraphGenModelResource = resourceSet
+          .getResource(URI.createFileURI(new File(relativeGenModelPath).getAbsolutePath()), true);
       hierarchicalGraphGenModelResource.load(null);
 
       // load the ecore model
-      Resource reportDesignerEcoreResource = resourceSet.getResource(relativeEcoreModelURI, true);
+      Resource reportDesignerEcoreResource = resourceSet
+          .getResource(URI.createFileURI(new File(relativeEcoreModelPath).getAbsolutePath()), true);
       reportDesignerEcoreResource.load(null);
 
       //

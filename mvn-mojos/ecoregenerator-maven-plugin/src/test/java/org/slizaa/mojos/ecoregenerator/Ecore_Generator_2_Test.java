@@ -30,7 +30,7 @@ public class Ecore_Generator_2_Test extends AbstractEcoreGeneratorTest {
 
     //
     getEcoreGeneratorMojo().execute();
-    
+
     // https://stackoverflow.com/questions/9386348/register-ecore-meta-model-programmatically
   }
 }
