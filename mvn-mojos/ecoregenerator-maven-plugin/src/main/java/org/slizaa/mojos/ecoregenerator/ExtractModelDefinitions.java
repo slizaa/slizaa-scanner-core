@@ -81,13 +81,13 @@ public class ExtractModelDefinitions {
 
     //
     generatedModels.forEach(path -> {
-      
+
       //
       ZipEntry zipEntry = zipFile.getEntry(path);
-      
+
       //
       if (zipEntry != null) {
-        
+
         //
         try {
           InputStream is = zipFile.getInputStream(zipEntry);
@@ -160,8 +160,11 @@ public class ExtractModelDefinitions {
 
       //
       String bundleSymbolicName = properties.getProperty("Bundle-SymbolicName");
-      String[] splittedString = bundleSymbolicName.split(";");
-      return splittedString[0];
+
+      if (bundleSymbolicName != null) {
+        String[] splittedString = bundleSymbolicName.split(";");
+        return splittedString[0];
+      }
     }
     return defaultName;
   }

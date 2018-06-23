@@ -31,19 +31,13 @@ public class Ecore_Generator_2_Test extends AbstractEcoreGeneratorTest {
 
     //
     getEcoreGeneratorMojo().execute();
-    
+
     // @formatter:off
-    TestResources.assertDirectoryContents(getBasedir(), 
+    TestResources.assertDirectoryContents(getBasedir(),
         "model/",
         "model\\hierarchicalgraph-neo4j.ecore",
         "model\\hierarchicalgraph-neo4j.genmodel",
         "pom.xml",
-        "src/",
-        "src\\main/",
-        "src\\main\\resources/",
-        "src\\main\\resources\\model/",
-        "src\\main\\resources\\model\\hierarchicalgraph-neo4j.ecore",
-        "src\\main\\resources\\model\\hierarchicalgraph-neo4j.genmodel",
         "target/",
         "target\\workspace/",
         "target\\workspace\\org.slizaa.hierarchicalgraph.core.model/",
