@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.slizaa.scanner.core.spi.internal.contentdefinition.filebased.FileBasedContentDefinition;
 
 /**
@@ -126,7 +125,6 @@ public abstract class AbstractContentDefinitionProvider implements IContentDefin
    * @param sourcePaths
    * @param analyzeMode
    * @return
-   * @throws CoreException
    */
   protected IContentDefinition createFileBasedContentDefinition(String contentName, String contentVersion,
       File[] binaryPaths, File[] sourcePaths, AnalyzeMode analyzeMode) {

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.slizaa.scanner.core.spi.parser;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.slizaa.scanner.core.spi.contentdefinition.IContentDefinition;
 import org.slizaa.scanner.core.spi.contentdefinition.IContentDefinitionProvider;
@@ -44,7 +43,6 @@ public interface IParserFactory {
    * </p>
    * 
    * @return the newly created {@link IParser}
-   * @throws CoreException
    */
   IParser createParser(IContentDefinitionProvider systemDefinition);
 

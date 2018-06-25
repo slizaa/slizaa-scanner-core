@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.eclipse.core.runtime.CoreException;
 import org.slizaa.scanner.core.spi.contentdefinition.AnalyzeMode;
 import org.slizaa.scanner.core.spi.contentdefinition.ContentType;
 import org.slizaa.scanner.core.spi.contentdefinition.filebased.IFile;
@@ -239,8 +238,6 @@ public final class FileBasedContentDefinition implements IFileBasedContentDefini
    * <p>
    * Initializes this content entry.
    * </p>
-   * 
-   * @throws CoreException
    */
   public final void initialize() {
 

@@ -14,7 +14,6 @@ import static org.slizaa.scanner.core.spi.internal.Preconditions.checkNotNull;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.CoreException;
 import org.slizaa.scanner.core.spi.contentdefinition.AnalyzeMode;
 import org.slizaa.scanner.core.spi.contentdefinition.ContentType;
 import org.slizaa.scanner.core.spi.contentdefinition.IContentDefinition;
@@ -32,7 +31,6 @@ public class FileBasedContentDefinitionFactory {
    * @param sourcePaths
    * @param analyzeMode
    * @return
-   * @throws CoreException
    */
   public static IContentDefinition createFileBasedContentDefinition(String contentName, String contentVersion,
       File[] binaryPaths, File[] sourcePaths, AnalyzeMode analyzeMode) {
