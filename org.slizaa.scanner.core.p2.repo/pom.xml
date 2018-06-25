@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -45,88 +46,15 @@
 											<id>${project.groupId}:org.slizaa.scanner.core.contentdefinition:${project.version}</id>
 											<transitive>false</transitive>
 										</artifact>
-										<artifact>
-											<id>${project.groupId}:org.slizaa.scanner.core.classpathscanner:${project.version}</id>
-											<transitive>false</transitive>
-										</artifact>
-										<artifact>
-											<id>${project.groupId}:org.slizaa.scanner.core.mvnresolver.uber:${project.version}</id>
-											<transitive>false</transitive>
-										</artifact>
-										<artifact>
-											<id>${project.groupId}:org.slizaa.scanner.core.jersey-osgi:${project.version}</id>
-											<transitive>false</transitive>
-										</artifact>										
 									</artifacts>
 								</feature>
-								<!-- <feature>
-									<id>org.slizaa.scanner.core.jersey.feature</id>
-									<version>2.27</version>
-									<label>org.slizaa.scanner.core.jersey.feature</label>
-									<providerName>${project.groupId}</providerName>
-									<description>${project.description}</description>
-									<generateSourceFeature>false</generateSourceFeature>
-									<artifacts>
-										<artifact>
-											<id>org.glassfish.hk2:osgi-resource-locator:1.0.1</id>
-											<transitive>false</transitive>
-										</artifact>
-										<artifact>
-											<id>org.glassfish.hk2:hk2-api:2.5.0-b42</id>
-											<transitive>false</transitive>
-										</artifact>
-										<artifact>
-											<id>org.glassfish.hk2:hk2-locator:2.5.0-b42</id>
-											<transitive>false</transitive>
-										</artifact>
-										<artifact>
-											<id>org.glassfish.hk2:hk2-utils:2.5.0-b42</id>
-											<transitive>false</transitive>
-										</artifact>
-										<artifact>
-											<id>org.glassfish.hk2.external:javax.inject:2.5.0-b42</id>
-											<transitive>false</transitive>
-										</artifact>
-										<artifact>
-											<id>org.glassfish.hk2.external:aopalliance-repackaged:2.5.0-b42</id>
-											<transitive>false</transitive>
-										</artifact>
-										<artifact>
-											<id>javax.ws.rs:javax.ws.rs-api:2.1</id>
-											<transitive>false</transitive>
-										</artifact>
-										<artifact>
-											<id>org.glassfish.jersey.core:jersey-common:2.27</id>
-											<transitive>false</transitive>
-										</artifact>
-										<artifact>
-											<id>org.glassfish.jersey.core:jersey-server:2.27</id>
-											<transitive>false</transitive>
-										</artifact>
-										<artifact>
-											<id>org.glassfish.jersey.core:jersey-client:2.27</id>
-											<transitive>false</transitive>
-										</artifact>
-										<artifact>
-											<id>org.glassfish.jersey.containers:jersey-container-servlet-core:2.27</id>
-											<transitive>false</transitive>
-										</artifact>
-										<artifact>
-											<id>org.glassfish.jersey.inject:jersey-hk2:2.27</id>
-											<transitive>false</transitive>
-										</artifact>
-										<artifact>
-											<id>org.javassist:javassist:3.22.0-CR2</id>
-											<transitive>false</transitive>
-										</artifact>
-									</artifacts>
-								</feature> -->
 							</featureDefinitions>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
+
 		<pluginManagement>
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
