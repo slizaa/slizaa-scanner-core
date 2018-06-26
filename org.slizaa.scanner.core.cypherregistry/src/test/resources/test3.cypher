@@ -1,5 +1,5 @@
 /**
- * @slizaa.groupId org.slizaa.jtype.typeresolution
+ * @slizaa.groupId org.slizaa.example.typeresolution
  * @slizaa.statementId test-statement-3
  * @slizaa.description Resolves type references to types
  * @slizaa.requiredStatements test-statement-2,  test-statement-1

@@ -31,23 +31,23 @@ public class CypherRegistryTest {
   @Test
   public void testExistingStatements() {
     assertThat(this._statementRegistry.getAllStatements()).hasSize(3);
-    assertThat(this._statementRegistry.getStatement("org.slizaa.jtype.typeresolution.test-statement-1")).isNotEmpty();
-    assertThat(this._statementRegistry.getStatement("org.slizaa.jtype.typeresolution.test-statement-2")).isNotEmpty();
-    assertThat(this._statementRegistry.getStatement("org.slizaa.jtype.typeresolution.test-statement-3")).isNotEmpty();
+    assertThat(this._statementRegistry.getStatement("org.slizaa.example.typeresolution.test-statement-1")).isNotEmpty();
+    assertThat(this._statementRegistry.getStatement("org.slizaa.example.typeresolution.test-statement-2")).isNotEmpty();
+    assertThat(this._statementRegistry.getStatement("org.slizaa.example.typeresolution.test-statement-3")).isNotEmpty();
   }
 
   @Test
   public void testNonExistingsStatements() {
-    assertThat(this._statementRegistry.getStatement("org.slizaa.jtype.typeresolution.NOT_EXISTING")).isEmpty();
+    assertThat(this._statementRegistry.getStatement("org.slizaa.example.typeresolution.NOT_EXISTING")).isEmpty();
   }
 
   @Test
   public void testRequiredStatements() {
-    assertThat(this._statementRegistry.getStatement("org.slizaa.jtype.typeresolution.test-statement-1").get()
+    assertThat(this._statementRegistry.getStatement("org.slizaa.example.typeresolution.test-statement-1").get()
         .getRequiredStatements()).containsExactly("test-statement-2");
-    assertThat(this._statementRegistry.getStatement("org.slizaa.jtype.typeresolution.test-statement-2").get()
+    assertThat(this._statementRegistry.getStatement("org.slizaa.example.typeresolution.test-statement-2").get()
         .getRequiredStatements()).isEmpty();
-    assertThat(this._statementRegistry.getStatement("org.slizaa.jtype.typeresolution.test-statement-3").get()
+    assertThat(this._statementRegistry.getStatement("org.slizaa.example.typeresolution.test-statement-3").get()
         .getRequiredStatements()).containsExactlyInAnyOrder("test-statement-1", "test-statement-2");
   }
 
@@ -56,7 +56,7 @@ public class CypherRegistryTest {
 
     //
     ICypherStatement cypherStatement = this._statementRegistry
-        .getStatement("org.slizaa.jtype.typeresolution.test-statement-1").get();
+        .getStatement("org.slizaa.example.typeresolution.test-statement-1").get();
 
     //
     assertThat(cypherStatement.getStatement()).isNotNull();
