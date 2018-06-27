@@ -60,6 +60,7 @@
 		<module>org.slizaa.scanner.core.contentdefinition</module>
 		<module>org.slizaa.scanner.core.cypherregistry</module>
 		<module>org.slizaa.scanner.core.p2.repo</module>
+		<module>org.slizaa.scanner.core.testfwk</module>
 	</modules>
 
 	<dependencyManagement>
