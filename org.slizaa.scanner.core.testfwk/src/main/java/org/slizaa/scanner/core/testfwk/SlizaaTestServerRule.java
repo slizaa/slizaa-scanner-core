@@ -35,7 +35,6 @@ import org.slizaa.scanner.core.api.importer.IModelImporterFactory;
 import org.slizaa.scanner.core.spi.contentdefinition.IContentDefinitionProvider;
 import org.slizaa.scanner.core.spi.parser.IParserFactory;
 import org.slizaa.scanner.core.testfwk.internal.ScannerBackendLoader;
-import org.slizaa.scanner.core.testfwk.internal.SlizaaTestProgressMonitor;
 import org.slizaa.scanner.core.testfwk.internal.ZipUtil;
 
 /**
@@ -144,7 +143,7 @@ public class SlizaaTestServerRule implements TestRule {
 
         //
         executeWithThreadContextClassLoader(SlizaaTestServerRule.this._backendLoader.getClassLoader(),
-            () -> modelImporter.parse(new SlizaaTestProgressMonitor(),
+            () -> modelImporter.parse(new ConsoleLogProgressMonitor(),
                 () -> graphDbFactory.newGraphDb(5001, SlizaaTestServerRule.this._databaseDirectory).create()));
 
         //

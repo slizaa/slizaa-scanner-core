@@ -1,4 +1,4 @@
-package org.slizaa.scanner.core.testfwk.internal;
+package org.slizaa.scanner.core.testfwk;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * <p>
  * </p>
  */
-public class SlizaaTestProgressMonitor implements IProgressMonitor {
+public class ConsoleLogProgressMonitor implements IProgressMonitor {
 
   /** - */
   private double _totalWork;

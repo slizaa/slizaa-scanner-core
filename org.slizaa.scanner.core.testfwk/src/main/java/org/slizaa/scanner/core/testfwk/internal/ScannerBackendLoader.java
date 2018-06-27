@@ -62,14 +62,32 @@ public class ScannerBackendLoader {
    * @param configurer
    */
   public ScannerBackendLoader(Consumer<IMvnResolverJob> configurer) {
+    this(configurer, ScannerBackendLoader.class.getClassLoader());
+  }
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link ScannerBackendLoader}.
+   * </p>
+   *
+   * @param configurer
+   * @param mainClassLoader
+   */
+  public ScannerBackendLoader(Consumer<IMvnResolverJob> configurer, ClassLoader mainClassLoader) {
 
     //
     this._configurer = checkNotNull(configurer);
 
     //
-    resolve();
+    resolve(mainClassLoader);
   }
 
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
   public IModelImporterFactory getModelImporterFactory() {
     return this._modelImporterFactory;
   }
@@ -93,8 +111,10 @@ public class ScannerBackendLoader {
   /**
    * <p>
    * </p>
+   *
+   * @param
    */
-  private void resolve() {
+  private void resolve(ClassLoader mainClassLoader) {
 
     //
     IMvnResolverServiceFactory resolverServiceFactory = MvnResolverServiceFactoryFactory
@@ -131,7 +151,8 @@ public class ScannerBackendLoader {
     IClasspathScannerFactory classpathScannerFactory = ClasspathScannerFactoryBuilder.newClasspathScannerFactory()
         .registerCodeSourceClassLoaderProvider(URLClassLoader.class, cl -> cl).create();
 
-    IClasspathScanner classpathScanner = classpathScannerFactory.createScanner(classLoader);
+    IClasspathScanner classpathScanner = classpathScannerFactory.createScanner(classLoader,
+        ScannerBackendLoader.class.getClassLoader());
 
     //
     ICypherStatementRegistry cypherStatementRegistry = new CypherStatementRegistry(() -> {
@@ -141,8 +162,9 @@ public class ScannerBackendLoader {
 
       //
       classpathScanner.matchFiles("cypher", (name, stream, lengthBytes) -> SlizaaCypherFileParser.parse(name, stream),
-          (codeSource, items) -> result.addAll(items));
+          (codeSource, items) -> result.addAll(items)).scan();
 
+      //
       return result;
     });
 
