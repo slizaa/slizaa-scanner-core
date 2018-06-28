@@ -5,7 +5,6 @@ package org.slizaa.scanner.core.testfwk.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,11 +14,8 @@ import java.util.function.Consumer;
 
 import org.slizaa.core.classpathscanner.ClasspathScannerFactoryBuilder;
 import org.slizaa.core.classpathscanner.IClasspathScanner;
-import org.slizaa.core.classpathscanner.IClasspathScannerFactory;
 import org.slizaa.core.mvnresolver.MvnResolverServiceFactoryFactory;
-import org.slizaa.core.mvnresolver.api.IMvnResolverService;
 import org.slizaa.core.mvnresolver.api.IMvnResolverService.IMvnResolverJob;
-import org.slizaa.core.mvnresolver.api.IMvnResolverServiceFactory;
 import org.slizaa.scanner.core.api.cypherregistry.ICypherStatement;
 import org.slizaa.scanner.core.api.cypherregistry.ICypherStatementRegistry;
 import org.slizaa.scanner.core.api.graphdb.IGraphDbFactory;
@@ -37,25 +33,19 @@ import org.slizaa.scanner.core.spi.parser.IParserFactory;
 public class ScannerBackendLoader {
 
   /** - */
-  private Consumer<IMvnResolverJob> _configurer;
+  private IModelImporterFactory    _modelImporterFactory;
 
   /** - */
-  private IModelImporterFactory     _modelImporterFactory;
+  private IGraphDbFactory          _graphDbFactory;
 
   /** - */
-  private IGraphDbFactory           _graphDbFactory;
+  private List<IParserFactory>     _parserFactories;
 
   /** - */
-  private List<IParserFactory>      _parserFactories;
+  private ICypherStatementRegistry _cypherStatementRegistry;
 
   /** - */
-  private ICypherStatementRegistry  _cypherStatementRegistry;
-
-  /** - */
-  private ClassLoader               _classLoader;
-
-  /** - */
-  private ClassLoader               _mainClassLoader;
+  private ClassLoader              _classLoader;
 
   /**
    * <p>
@@ -79,13 +69,53 @@ public class ScannerBackendLoader {
   public ScannerBackendLoader(Consumer<IMvnResolverJob> configurer, ClassLoader mainClassLoader) {
 
     //
-    this._configurer = checkNotNull(configurer);
+    checkNotNull(configurer);
+    checkNotNull(mainClassLoader);
+
+    // create new maven resolver job...
+    IMvnResolverJob mvnResolverJob = MvnResolverServiceFactoryFactory.createNewResolverServiceFactory()
+        .newMvnResolverService().create().newMvnResolverJob();
+
+    // ...configure it...
+    configurer.accept(mvnResolverJob);
+
+    // ... and create a new class loader from the result
+    this._classLoader = new URLClassLoader(mvnResolverJob.resolveToUrlArray(), mainClassLoader);
+
+    // Step 1: load services via service loader mechanism
+    this._modelImporterFactory = singleService(IModelImporterFactory.class, _classLoader);
+    this._graphDbFactory = singleService(IGraphDbFactory.class, _classLoader);
+    this._parserFactories = allServices(IParserFactory.class, _classLoader);
+
+    // // Step 2: scan the main class loader
+    // IClasspathScanner mainclasspathScanner = ClasspathScannerFactoryBuilder.newClasspathScannerFactory()
+    // .registerCodeSourceClassLoaderProvider(ClassLoader.class, cl -> cl).create().createScanner(mainClassLoader);
+    //
+    // //
+    // mainclasspathScanner.matchClassesWithAnnotation(ParserFactory.class, (codeSource, classesWithAnnotation) -> {
+    // classesWithAnnotation.forEach(clazz -> {
+    // try {
+    // this._parserFactories.add((IParserFactory) clazz.newInstance());
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // }
+    // });
+    // }).scan();
+
+    // Step 3: create the cypher statement registry
+    IClasspathScanner urlclasspathScanner = ClasspathScannerFactoryBuilder.newClasspathScannerFactory()
+        .registerCodeSourceClassLoaderProvider(URLClassLoader.class, cl1 -> cl1).create()
+        .createScanner(this._classLoader, ScannerBackendLoader.class.getClassLoader());
 
     //
-    _mainClassLoader = mainClassLoader;
-    
-    //
-    resolve();
+    _cypherStatementRegistry = new CypherStatementRegistry(() -> {
+      List<ICypherStatement> result = new ArrayList<>();
+      urlclasspathScanner
+          .matchFiles("cypher", (name, stream, lengthBytes) -> SlizaaCypherFileParser.parse(name, stream),
+              (codeSource1, items) -> result.addAll(items))
+          .scan();
+      return result;
+    });
   }
 
   /**
@@ -98,83 +128,45 @@ public class ScannerBackendLoader {
     return this._modelImporterFactory;
   }
 
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
   public IGraphDbFactory getGraphDbFactory() {
     return this._graphDbFactory;
   }
 
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
   public ICypherStatementRegistry getCypherStatementRegistry() {
     return this._cypherStatementRegistry;
   }
 
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
   public List<IParserFactory> getParserFactories() {
+    System.out.println(_parserFactories);
     return this._parserFactories;
   }
 
-  public ClassLoader getClassLoader() {
-    return this._classLoader;
-  }
-
   /**
    * <p>
    * </p>
    *
-   * @param
-   */
-  private void resolve() {
-
-    //
-    IMvnResolverServiceFactory resolverServiceFactory = MvnResolverServiceFactoryFactory
-        .createNewResolverServiceFactory();
-
-    //
-    IMvnResolverService mvnResolverService = resolverServiceFactory.newMvnResolverService().create();
-
-    //
-    IMvnResolverJob mvnResolverJob = mvnResolverService.newMvnResolverJob();
-    this._configurer.accept(mvnResolverJob);
-    URL[] resolvedArtifacts = mvnResolverJob.resolveToUrlArray();
-
-    //
-    this._classLoader = new URLClassLoader(resolvedArtifacts, _mainClassLoader);
-
-    //
-    this._modelImporterFactory = singleService(IModelImporterFactory.class, this._classLoader);
-    this._graphDbFactory = singleService(IGraphDbFactory.class, this._classLoader);
-    this._parserFactories = allServices(IParserFactory.class, this._classLoader);
-    this._cypherStatementRegistry = createCypherRegistry(this._classLoader);
-  }
-
-  /**
-   * <p>
-   * </p>
-   *
-   * @param classLoader
    * @return
    */
-  private ICypherStatementRegistry createCypherRegistry(ClassLoader classLoader) {
-
-    //
-    IClasspathScannerFactory classpathScannerFactory = ClasspathScannerFactoryBuilder.newClasspathScannerFactory()
-        .registerCodeSourceClassLoaderProvider(URLClassLoader.class, cl -> cl).create();
-
-    IClasspathScanner classpathScanner = classpathScannerFactory.createScanner(classLoader,
-        ScannerBackendLoader.class.getClassLoader());
-
-    //
-    ICypherStatementRegistry cypherStatementRegistry = new CypherStatementRegistry(() -> {
-
-      //
-      List<ICypherStatement> result = new ArrayList<>();
-
-      //
-      classpathScanner.matchFiles("cypher", (name, stream, lengthBytes) -> SlizaaCypherFileParser.parse(name, stream),
-          (codeSource, items) -> result.addAll(items)).scan();
-
-      //
-      return result;
-    });
-
-    return cypherStatementRegistry;
+  public ClassLoader getClassLoader() {
+    return this._classLoader;
   }
 
   /**
