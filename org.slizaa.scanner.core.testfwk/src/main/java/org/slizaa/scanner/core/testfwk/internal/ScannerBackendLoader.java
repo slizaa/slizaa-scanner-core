@@ -54,6 +54,9 @@ public class ScannerBackendLoader {
   /** - */
   private ClassLoader               _classLoader;
 
+  /** - */
+  private ClassLoader               _mainClassLoader;
+
   /**
    * <p>
    * Creates a new instance of type {@link ScannerBackendLoader}.
@@ -79,7 +82,10 @@ public class ScannerBackendLoader {
     this._configurer = checkNotNull(configurer);
 
     //
-    resolve(mainClassLoader);
+    _mainClassLoader = mainClassLoader;
+    
+    //
+    resolve();
   }
 
   /**
@@ -114,7 +120,7 @@ public class ScannerBackendLoader {
    *
    * @param
    */
-  private void resolve(ClassLoader mainClassLoader) {
+  private void resolve() {
 
     //
     IMvnResolverServiceFactory resolverServiceFactory = MvnResolverServiceFactoryFactory
@@ -129,7 +135,7 @@ public class ScannerBackendLoader {
     URL[] resolvedArtifacts = mvnResolverJob.resolveToUrlArray();
 
     //
-    this._classLoader = new URLClassLoader(resolvedArtifacts, ScannerBackendLoader.class.getClassLoader());
+    this._classLoader = new URLClassLoader(resolvedArtifacts, _mainClassLoader);
 
     //
     this._modelImporterFactory = singleService(IModelImporterFactory.class, this._classLoader);
