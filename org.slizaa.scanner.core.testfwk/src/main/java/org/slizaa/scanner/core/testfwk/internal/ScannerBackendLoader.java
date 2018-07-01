@@ -15,6 +15,7 @@ import java.util.function.Consumer;
 import org.slizaa.core.classpathscanner.ClasspathScannerFactoryBuilder;
 import org.slizaa.core.classpathscanner.IClasspathScanner;
 import org.slizaa.core.mvnresolver.MvnResolverServiceFactoryFactory;
+import org.slizaa.core.mvnresolver.api.IMvnResolverService;
 import org.slizaa.core.mvnresolver.api.IMvnResolverService.IMvnResolverJob;
 import org.slizaa.scanner.core.api.cypherregistry.ICypherStatement;
 import org.slizaa.scanner.core.api.cypherregistry.ICypherStatementRegistry;
@@ -73,8 +74,13 @@ public class ScannerBackendLoader {
     checkNotNull(mainClassLoader);
 
     // create new maven resolver job...
-    IMvnResolverJob mvnResolverJob = MvnResolverServiceFactoryFactory.createNewResolverServiceFactory()
-        .newMvnResolverService().create().newMvnResolverJob();
+    IMvnResolverService mvnResolverService = MvnResolverServiceFactoryFactory.createNewResolverServiceFactory()
+        .newMvnResolverService()
+        // TODO: Make configurable!
+        .withRemoteRepository("central", "https://oss.sonatype.org/content/repositories/snapshots").create();
+
+    //
+    IMvnResolverJob mvnResolverJob = mvnResolverService.newMvnResolverJob();
 
     // ...configure it...
     configurer.accept(mvnResolverJob);
@@ -83,32 +89,17 @@ public class ScannerBackendLoader {
     this._classLoader = new URLClassLoader(mvnResolverJob.resolveToUrlArray(), mainClassLoader);
 
     // Step 1: load services via service loader mechanism
-    this._modelImporterFactory = singleService(IModelImporterFactory.class, _classLoader);
-    this._graphDbFactory = singleService(IGraphDbFactory.class, _classLoader);
-    this._parserFactories = allServices(IParserFactory.class, _classLoader);
+    this._modelImporterFactory = singleService(IModelImporterFactory.class, this._classLoader);
+    this._graphDbFactory = singleService(IGraphDbFactory.class, this._classLoader);
+    this._parserFactories = allServices(IParserFactory.class, this._classLoader);
 
-    // // Step 2: scan the main class loader
-    // IClasspathScanner mainclasspathScanner = ClasspathScannerFactoryBuilder.newClasspathScannerFactory()
-    // .registerCodeSourceClassLoaderProvider(ClassLoader.class, cl -> cl).create().createScanner(mainClassLoader);
-    //
-    // //
-    // mainclasspathScanner.matchClassesWithAnnotation(ParserFactory.class, (codeSource, classesWithAnnotation) -> {
-    // classesWithAnnotation.forEach(clazz -> {
-    // try {
-    // this._parserFactories.add((IParserFactory) clazz.newInstance());
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // }
-    // });
-    // }).scan();
-
-    // Step 3: create the cypher statement registry
+    // Step 2: create the cypher statement registry
     IClasspathScanner urlclasspathScanner = ClasspathScannerFactoryBuilder.newClasspathScannerFactory()
         .registerCodeSourceClassLoaderProvider(URLClassLoader.class, cl1 -> cl1).create()
         .createScanner(this._classLoader, ScannerBackendLoader.class.getClassLoader());
 
     //
-    _cypherStatementRegistry = new CypherStatementRegistry(() -> {
+    this._cypherStatementRegistry = new CypherStatementRegistry(() -> {
       List<ICypherStatement> result = new ArrayList<>();
       urlclasspathScanner
           .matchFiles("cypher", (name, stream, lengthBytes) -> SlizaaCypherFileParser.parse(name, stream),
@@ -155,7 +146,6 @@ public class ScannerBackendLoader {
    * @return
    */
   public List<IParserFactory> getParserFactories() {
-    System.out.println(_parserFactories);
     return this._parserFactories;
   }
 
