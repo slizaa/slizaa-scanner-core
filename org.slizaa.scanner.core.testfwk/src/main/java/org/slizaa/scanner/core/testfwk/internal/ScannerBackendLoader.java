@@ -75,9 +75,10 @@ public class ScannerBackendLoader {
 
     // create new maven resolver job...
     IMvnResolverService mvnResolverService = MvnResolverServiceFactoryFactory.createNewResolverServiceFactory()
-        .newMvnResolverService()
+        .newMvnResolverService().withDefaultRemoteRepository()
         // TODO: Make configurable!
-        .withRemoteRepository("central", "https://oss.sonatype.org/content/repositories/snapshots").create();
+        .withRemoteRepository("oss_sonatype_snapshots", "https://oss.sonatype.org/content/repositories/snapshots")
+        .create();
 
     //
     IMvnResolverJob mvnResolverJob = mvnResolverService.newMvnResolverJob();
