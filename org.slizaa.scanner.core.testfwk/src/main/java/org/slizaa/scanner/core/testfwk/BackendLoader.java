@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.slizaa.scanner.core.testfwk.internal;
+package org.slizaa.scanner.core.testfwk;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,7 +31,7 @@ import org.slizaa.scanner.core.spi.parser.IParserFactory;
  *
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ScannerBackendLoader {
+public class BackendLoader {
 
   /** - */
   private IModelImporterFactory    _modelImporterFactory;
@@ -50,24 +50,24 @@ public class ScannerBackendLoader {
 
   /**
    * <p>
-   * Creates a new instance of type {@link ScannerBackendLoader}.
+   * Creates a new instance of type {@link BackendLoader}.
    * </p>
    *
    * @param configurer
    */
-  public ScannerBackendLoader(Consumer<IMvnResolverJob> configurer) {
-    this(configurer, ScannerBackendLoader.class.getClassLoader());
+  public BackendLoader(Consumer<IMvnResolverJob> configurer) {
+    this(configurer, BackendLoader.class.getClassLoader());
   }
 
   /**
    * <p>
-   * Creates a new instance of type {@link ScannerBackendLoader}.
+   * Creates a new instance of type {@link BackendLoader}.
    * </p>
    *
    * @param configurer
    * @param mainClassLoader
    */
-  public ScannerBackendLoader(Consumer<IMvnResolverJob> configurer, ClassLoader mainClassLoader) {
+  public BackendLoader(Consumer<IMvnResolverJob> configurer, ClassLoader mainClassLoader) {
 
     //
     checkNotNull(configurer);
@@ -97,7 +97,7 @@ public class ScannerBackendLoader {
     // Step 2: create the cypher statement registry
     IClasspathScanner urlclasspathScanner = ClasspathScannerFactoryBuilder.newClasspathScannerFactory()
         .registerCodeSourceClassLoaderProvider(URLClassLoader.class, cl1 -> cl1).create()
-        .createScanner(this._classLoader, ScannerBackendLoader.class.getClassLoader());
+        .createScanner(this._classLoader, BackendLoader.class.getClassLoader());
 
     //
     this._cypherStatementRegistry = new CypherStatementRegistry(() -> {
