@@ -1,7 +1,4 @@
-/**
- *
- */
-package org.slizaa.scanner.core.testfwk;
+package org.slizaa.scanner.core.testfwk.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -24,6 +21,7 @@ import org.slizaa.scanner.core.api.importer.IModelImporterFactory;
 import org.slizaa.scanner.core.cypherregistry.CypherStatementRegistry;
 import org.slizaa.scanner.core.cypherregistry.SlizaaCypherFileParser;
 import org.slizaa.scanner.core.spi.parser.IParserFactory;
+import org.slizaa.scanner.core.testfwk.AbstractSlizaaTestServerRule.ITestFwkBackEnd;
 
 /**
  * <p>
@@ -31,7 +29,7 @@ import org.slizaa.scanner.core.spi.parser.IParserFactory;
  *
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class BackendLoader {
+public class BackEndLoader implements ITestFwkBackEnd {
 
   /** - */
   private IModelImporterFactory    _modelImporterFactory;
@@ -50,24 +48,24 @@ public class BackendLoader {
 
   /**
    * <p>
-   * Creates a new instance of type {@link BackendLoader}.
+   * Creates a new instance of type {@link BackEndLoader}.
    * </p>
    *
    * @param configurer
    */
-  public BackendLoader(Consumer<IMvnResolverJob> configurer) {
-    this(configurer, BackendLoader.class.getClassLoader());
+  public BackEndLoader(Consumer<IMvnResolverJob> configurer) {
+    this(configurer, BackEndLoader.class.getClassLoader());
   }
 
   /**
    * <p>
-   * Creates a new instance of type {@link BackendLoader}.
+   * Creates a new instance of type {@link BackEndLoader}.
    * </p>
    *
    * @param configurer
    * @param mainClassLoader
    */
-  public BackendLoader(Consumer<IMvnResolverJob> configurer, ClassLoader mainClassLoader) {
+  public BackEndLoader(Consumer<IMvnResolverJob> configurer, ClassLoader mainClassLoader) {
 
     //
     checkNotNull(configurer);
@@ -97,7 +95,7 @@ public class BackendLoader {
     // Step 2: create the cypher statement registry
     IClasspathScanner urlclasspathScanner = ClasspathScannerFactoryBuilder.newClasspathScannerFactory()
         .registerCodeSourceClassLoaderProvider(URLClassLoader.class, cl1 -> cl1).create()
-        .createScanner(this._classLoader, BackendLoader.class.getClassLoader());
+        .createScanner(this._classLoader, BackEndLoader.class.getClassLoader());
 
     //
     this._cypherStatementRegistry = new CypherStatementRegistry(() -> {
@@ -116,6 +114,7 @@ public class BackendLoader {
    *
    * @return
    */
+  @Override
   public IModelImporterFactory getModelImporterFactory() {
     return this._modelImporterFactory;
   }
@@ -126,6 +125,7 @@ public class BackendLoader {
    *
    * @return
    */
+  @Override
   public IGraphDbFactory getGraphDbFactory() {
     return this._graphDbFactory;
   }
@@ -136,6 +136,7 @@ public class BackendLoader {
    *
    * @return
    */
+  @Override
   public ICypherStatementRegistry getCypherStatementRegistry() {
     return this._cypherStatementRegistry;
   }
@@ -146,6 +147,7 @@ public class BackendLoader {
    *
    * @return
    */
+  @Override
   public List<IParserFactory> getParserFactories() {
     return this._parserFactories;
   }
@@ -156,6 +158,7 @@ public class BackendLoader {
    *
    * @return
    */
+  @Override
   public ClassLoader getClassLoader() {
     return this._classLoader;
   }

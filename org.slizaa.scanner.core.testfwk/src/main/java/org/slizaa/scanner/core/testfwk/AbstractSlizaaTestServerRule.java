@@ -17,31 +17,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ServiceLoader;
 import java.util.function.Consumer;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.slizaa.core.classpathscanner.ClasspathScannerFactoryBuilder;
-import org.slizaa.core.classpathscanner.IClasspathScanner;
-import org.slizaa.core.mvnresolver.MvnResolverServiceFactoryFactory;
-import org.slizaa.core.mvnresolver.api.IMvnResolverService;
 import org.slizaa.core.mvnresolver.api.IMvnResolverService.IMvnResolverJob;
-import org.slizaa.scanner.core.api.cypherregistry.ICypherStatement;
 import org.slizaa.scanner.core.api.cypherregistry.ICypherStatementRegistry;
 import org.slizaa.scanner.core.api.graphdb.IGraphDb;
 import org.slizaa.scanner.core.api.graphdb.IGraphDbFactory;
 import org.slizaa.scanner.core.api.importer.IModelImporterFactory;
-import org.slizaa.scanner.core.cypherregistry.CypherStatementRegistry;
-import org.slizaa.scanner.core.cypherregistry.SlizaaCypherFileParser;
 import org.slizaa.scanner.core.spi.parser.IParserFactory;
+import org.slizaa.scanner.core.testfwk.internal.BackEndLoader;
 
 /**
  * <p>
@@ -61,7 +52,7 @@ public abstract class AbstractSlizaaTestServerRule implements TestRule {
   private List<Class<?>>            _extensionClasses;
 
   /** - */
-  private BackEndLoader             _backEndLoader;
+  private ITestFwkBackEnd           _testFwkBackEnd;
 
   /** - */
   private Consumer<IMvnResolverJob> _backEndLoaderConfigurer;
@@ -134,6 +125,16 @@ public abstract class AbstractSlizaaTestServerRule implements TestRule {
   }
 
   /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  public ITestFwkBackEnd getTestFwkBackEnd() {
+    return _testFwkBackEnd;
+  }
+
+  /**
    * {@inheritDoc}
    */
   @Override
@@ -145,12 +146,12 @@ public abstract class AbstractSlizaaTestServerRule implements TestRule {
       public void evaluate() throws Throwable {
 
         //
-        AbstractSlizaaTestServerRule.this._backEndLoader = new BackEndLoader(
+        AbstractSlizaaTestServerRule.this._testFwkBackEnd = new BackEndLoader(
             AbstractSlizaaTestServerRule.this._backEndLoaderConfigurer);
 
         //
         AbstractSlizaaTestServerRule.this._graphDb = createGraphDatabase(
-            AbstractSlizaaTestServerRule.this._backEndLoader);
+            AbstractSlizaaTestServerRule.this._testFwkBackEnd);
 
         try {
           base.evaluate();
@@ -173,8 +174,9 @@ public abstract class AbstractSlizaaTestServerRule implements TestRule {
    *
    * @param _backEndLoader2
    * @return
+   * @throws IOException 
    */
-  protected abstract IGraphDb createGraphDatabase(BackEndLoader backEndLoader);
+  protected abstract IGraphDb createGraphDatabase(ITestFwkBackEnd testFwkBackEnd) throws IOException;
 
   /**
    * <p>
@@ -230,84 +232,7 @@ public abstract class AbstractSlizaaTestServerRule implements TestRule {
    *
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
-  public static class BackEndLoader {
-
-    /** - */
-    private IModelImporterFactory    _modelImporterFactory;
-
-    /** - */
-    private IGraphDbFactory          _graphDbFactory;
-
-    /** - */
-    private List<IParserFactory>     _parserFactories;
-
-    /** - */
-    private ICypherStatementRegistry _cypherStatementRegistry;
-
-    /** - */
-    private ClassLoader              _classLoader;
-
-    /**
-     * <p>
-     * Creates a new instance of type {@link BackEndLoader}.
-     * </p>
-     *
-     * @param configurer
-     */
-    public BackEndLoader(Consumer<IMvnResolverJob> configurer) {
-      this(configurer, BackEndLoader.class.getClassLoader());
-    }
-
-    /**
-     * <p>
-     * Creates a new instance of type {@link BackEndLoader}.
-     * </p>
-     *
-     * @param configurer
-     * @param mainClassLoader
-     */
-    public BackEndLoader(Consumer<IMvnResolverJob> configurer, ClassLoader mainClassLoader) {
-
-      //
-      checkNotNull(configurer);
-      checkNotNull(mainClassLoader);
-
-      // create new maven resolver job...
-      IMvnResolverService mvnResolverService = MvnResolverServiceFactoryFactory.createNewResolverServiceFactory()
-          .newMvnResolverService().withDefaultRemoteRepository()
-          // TODO: Make configurable!
-          .withRemoteRepository("oss_sonatype_snapshots", "https://oss.sonatype.org/content/repositories/snapshots")
-          .create();
-
-      //
-      IMvnResolverJob mvnResolverJob = mvnResolverService.newMvnResolverJob();
-
-      // ...configure it...
-      configurer.accept(mvnResolverJob);
-
-      // ... and create a new class loader from the result
-      this._classLoader = new URLClassLoader(mvnResolverJob.resolveToUrlArray(), mainClassLoader);
-
-      // Step 1: load services via service loader mechanism
-      this._modelImporterFactory = singleService(IModelImporterFactory.class, this._classLoader);
-      this._graphDbFactory = singleService(IGraphDbFactory.class, this._classLoader);
-      this._parserFactories = allServices(IParserFactory.class, this._classLoader);
-
-      // Step 2: create the cypher statement registry
-      IClasspathScanner urlclasspathScanner = ClasspathScannerFactoryBuilder.newClasspathScannerFactory()
-          .registerCodeSourceClassLoaderProvider(URLClassLoader.class, cl1 -> cl1).create()
-          .createScanner(this._classLoader, BackEndLoader.class.getClassLoader());
-
-      //
-      this._cypherStatementRegistry = new CypherStatementRegistry(() -> {
-        List<ICypherStatement> result = new ArrayList<>();
-        urlclasspathScanner
-            .matchFiles("cypher", (name, stream, lengthBytes) -> SlizaaCypherFileParser.parse(name, stream),
-                (codeSource1, items) -> result.addAll(items))
-            .scan();
-        return result;
-      });
-    }
+  public interface ITestFwkBackEnd {
 
     /**
      * <p>
@@ -315,9 +240,7 @@ public abstract class AbstractSlizaaTestServerRule implements TestRule {
      *
      * @return
      */
-    public IModelImporterFactory getModelImporterFactory() {
-      return this._modelImporterFactory;
-    }
+    ClassLoader getClassLoader();
 
     /**
      * <p>
@@ -325,9 +248,7 @@ public abstract class AbstractSlizaaTestServerRule implements TestRule {
      *
      * @return
      */
-    public IGraphDbFactory getGraphDbFactory() {
-      return this._graphDbFactory;
-    }
+    List<IParserFactory> getParserFactories();
 
     /**
      * <p>
@@ -335,9 +256,7 @@ public abstract class AbstractSlizaaTestServerRule implements TestRule {
      *
      * @return
      */
-    public ICypherStatementRegistry getCypherStatementRegistry() {
-      return this._cypherStatementRegistry;
-    }
+    ICypherStatementRegistry getCypherStatementRegistry();
 
     /**
      * <p>
@@ -345,9 +264,7 @@ public abstract class AbstractSlizaaTestServerRule implements TestRule {
      *
      * @return
      */
-    public List<IParserFactory> getParserFactories() {
-      return this._parserFactories;
-    }
+    IGraphDbFactory getGraphDbFactory();
 
     /**
      * <p>
@@ -355,66 +272,6 @@ public abstract class AbstractSlizaaTestServerRule implements TestRule {
      *
      * @return
      */
-    public ClassLoader getClassLoader() {
-      return this._classLoader;
-    }
-
-    /**
-     * <p>
-     * </p>
-     *
-     * @param type
-     * @param classLoader
-     * @return
-     */
-    private static <T> T singleService(Class<T> type, ClassLoader classLoader) {
-
-      //
-      checkNotNull(type);
-      checkNotNull(classLoader);
-
-      // get the service loader
-      ServiceLoader<T> serviceLoader = ServiceLoader.load(type, classLoader);
-
-      //
-      Iterator<T> iterator = serviceLoader.iterator();
-      if (!iterator.hasNext()) {
-        throw new RuntimeException(String.format("No service of type '%s' available.", type));
-      }
-
-      //
-      return iterator.next();
-    }
-
-    /**
-     * <p>
-     * </p>
-     *
-     * @param type
-     * @param classLoader
-     * @return
-     */
-    private static <T> List<T> allServices(Class<T> type, ClassLoader classLoader) {
-
-      //
-      checkNotNull(type);
-      checkNotNull(classLoader);
-
-      //
-      List<T> result = new ArrayList<>();
-
-      // get the service loader
-      ServiceLoader<T> serviceLoader = ServiceLoader.load(type, classLoader);
-
-      //
-      Iterator<T> iterator = serviceLoader.iterator();
-      while (iterator.hasNext()) {
-        result.add(iterator.next());
-      }
-
-      //
-      return result;
-    }
+    IModelImporterFactory getModelImporterFactory();
   }
-
 }

@@ -80,13 +80,13 @@ public class SlizaaTestServerRule extends AbstractSlizaaTestServerRule {
    * {@inheritDoc}
    */
   @Override
-  protected IGraphDb createGraphDatabase(BackEndLoader backEndLoader) {
+  protected IGraphDb createGraphDatabase(ITestFwkBackEnd testFwkBackEnd) {
 
     //
-    IGraphDbFactory graphDbFactory = backEndLoader.getGraphDbFactory();
-    IModelImporterFactory modelImporterFactory = backEndLoader.getModelImporterFactory();
-    List<IParserFactory> parserFactories = backEndLoader.getParserFactories();
-    ICypherStatementRegistry cypherStatementRegistry = backEndLoader.getCypherStatementRegistry();
+    IGraphDbFactory graphDbFactory = testFwkBackEnd.getGraphDbFactory();
+    IModelImporterFactory modelImporterFactory = testFwkBackEnd.getModelImporterFactory();
+    List<IParserFactory> parserFactories = testFwkBackEnd.getParserFactories();
+    ICypherStatementRegistry cypherStatementRegistry = testFwkBackEnd.getCypherStatementRegistry();
 
     // parse
     IModelImporter modelImporter = modelImporterFactory.createModelImporter(
@@ -94,7 +94,7 @@ public class SlizaaTestServerRule extends AbstractSlizaaTestServerRule {
         parserFactories, cypherStatementRegistry.getAllStatements());
 
     //
-    executeWithThreadContextClassLoader(backEndLoader.getClassLoader(),
+    executeWithThreadContextClassLoader(testFwkBackEnd.getClassLoader(),
         () -> modelImporter.parse(new ConsoleLogProgressMonitor(),
             () -> graphDbFactory.newGraphDb(5001, SlizaaTestServerRule.this.getDatabaseDirectory()).create()));
 
@@ -114,8 +114,7 @@ public class SlizaaTestServerRule extends AbstractSlizaaTestServerRule {
 
     ZipUtil.zipFile(this.getDatabaseDirectory().getAbsolutePath(), checkNotNull(file), true);
     if (restart) {
-      throw new UnsupportedOperationException();
-      // setGraphDb(this._backendLoader.getGraphDbFactory().newGraphDb(5001, this._databaseDirectory).create());
+      setGraphDb(this.getTestFwkBackEnd().getGraphDbFactory().newGraphDb(5001, this.getDatabaseDirectory()).create());
     }
   }
 }
