@@ -48,6 +48,19 @@
 										</artifact>
 									</artifacts>
 								</feature>
+								<feature>
+									<id>org.slizaa.scanner.core.testfwk.feature</id>
+									<version>${project.version}</version>
+									<label>org.slizaa.scanner.core.testfwk.feature</label>
+									<providerName>${project.groupId}</providerName>
+									<description>${project.description}</description>
+									<generateSourceFeature>false</generateSourceFeature>
+									<artifacts>
+										<artifact>
+											<id>${project.groupId}:org.slizaa.scanner.core.testfwk:${project.version}</id>
+										</artifact>
+									</artifacts>
+								</feature>
 							</featureDefinitions>
 						</configuration>
 					</execution>
