@@ -37,6 +37,7 @@
 									<artifacts>
 										<artifact>
 											<id>${project.groupId}:org.slizaa.scanner.core.spi-api:${project.version}</id>
+											<transitive>false</transitive>
 										</artifact>
 										<artifact>
 											<id>${project.groupId}:org.slizaa.scanner.core.cypherregistry:${project.version}</id>
@@ -58,6 +59,7 @@
 									<artifacts>
 										<artifact>
 											<id>${project.groupId}:org.slizaa.scanner.core.testfwk:${project.version}</id>
+											<transitive>false</transitive>
 										</artifact>
 									</artifacts>
 								</feature>
