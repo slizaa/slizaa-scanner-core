@@ -1,15 +1,13 @@
 /*******************************************************************************
- * Copyright (C) 2011-2017 Gerd Wuetherich (gerd@gerd-wuetherich.de).
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
+ * Copyright (C) 2011-2017 Gerd Wuetherich (gerd@gerd-wuetherich.de). All rights reserved. This program and the
+ * accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this
+ * distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors: Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
 package org.slizaa.scanner.core.spi.contentdefinition.filebased;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Set;
 
@@ -19,7 +17,7 @@ import org.slizaa.scanner.core.spi.contentdefinition.IContentDefinition;
 /**
  * <p>
  * </p>
- * 
+ *
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public interface IFileBasedContentDefinition extends IContentDefinition {
@@ -32,7 +30,7 @@ public interface IFileBasedContentDefinition extends IContentDefinition {
    * If this content entry is not a resource content ( <code>isAnalyze()</code> returns <code>false</code>), an empty
    * set will be returned.
    * </p>
-   * 
+   *
    * @param type
    * @return a Set of resources, never null.
    */
@@ -47,7 +45,7 @@ public interface IFileBasedContentDefinition extends IContentDefinition {
    * If this content entry is not a resource content ( <code>isAnalyze()</code> returns <code>false</code>), an empty
    * set will be returned.
    * </p>
-   * 
+   *
    * @return a Set of resources, never null.
    */
   Collection<IFile> getBinaryFiles();
@@ -61,8 +59,24 @@ public interface IFileBasedContentDefinition extends IContentDefinition {
    * If this content entry is not a resource content ( <code>isAnalyze()</code> returns <code>false</code>), an empty
    * set will be returned.
    * </p>
-   * 
+   *
    * @return a Set of resources, never null.
    */
   Collection<IFile> getSourceFiles();
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  Collection<File> getBinaryRootPaths();
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  Collection<File> getSourceRootPaths();
 }
