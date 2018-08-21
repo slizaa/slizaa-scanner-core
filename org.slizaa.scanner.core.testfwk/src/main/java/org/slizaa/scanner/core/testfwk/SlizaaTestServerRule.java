@@ -17,6 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import org.slizaa.core.mvnresolver.api.IMvnResolverService.IMvnResolverJob;
@@ -27,6 +28,7 @@ import org.slizaa.scanner.core.api.importer.IModelImporter;
 import org.slizaa.scanner.core.api.importer.IModelImporterFactory;
 import org.slizaa.scanner.core.spi.contentdefinition.IContentDefinitionProvider;
 import org.slizaa.scanner.core.spi.parser.IParserFactory;
+import org.slizaa.scanner.core.testfwk.internal.VersionAsInProjectResolver;
 import org.slizaa.scanner.core.testfwk.internal.ZipUtil;
 
 /**
@@ -116,5 +118,41 @@ public class SlizaaTestServerRule extends AbstractSlizaaTestServerRule {
     if (restart) {
       setGraphDb(this.getTestFwkBackEnd().getGraphDbFactory().newGraphDb(5001, this.getDatabaseDirectory()).create());
     }
+  }
+
+  public static String mavenArtifact(String groupId, String artifactId, String version) {
+    return String.format("%s:%s:%s", checkNotNull(groupId), checkNotNull(artifactId), checkNotNull(version));
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @param groupId
+   * @param artifactId
+   * @param versionFunction
+   * @return
+   */
+  public static String mavenArtifact(String groupId, String artifactId,
+      BiFunction<String, String, String> versionFunction) {
+
+    //
+    return String.format("%s:%s:%s", checkNotNull(groupId), checkNotNull(artifactId),
+        checkNotNull(versionFunction).apply(groupId, artifactId));
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  public static BiFunction<String, String, String> versionAsInProject() {
+    return (groupId, artifactId) -> {
+
+      return VersionAsInProjectResolver.resolveVersion(groupId, artifactId); 
+      
+
+    };
   }
 }
