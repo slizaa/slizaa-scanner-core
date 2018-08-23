@@ -37,7 +37,7 @@ public class VersionAsInProjectResolver {
       }
     }
 
-    return throwUsageException();
+    return throwUsageException(groupId, artifactId);
   }
 
   /**
@@ -60,7 +60,7 @@ public class VersionAsInProjectResolver {
       while (urls.hasMoreElements()) {
 
         //
-        URL url = (URL) urls.nextElement();
+        URL url = urls.nextElement();
 
         Properties properties = new Properties();
         try (InputStream stream = url.openStream()) {
@@ -79,27 +79,39 @@ public class VersionAsInProjectResolver {
       e.printStackTrace();
     }
 
-    throwUsageException();
-    return null;
+    return throwUsageException(groupId, artifactId);
   }
 
-  private static String throwUsageException() {
+  private static String throwUsageException(String groupId, String artifactId) {
 
     StringBuffer buffer = new StringBuffer();
-    
-    buffer.append("<plugin>");
-    buffer.append("  <groupId>org.apache.servicemix.tooling</groupId>");
-    buffer.append("  <artifactId>depends-maven-plugin</artifactId>");
-    buffer.append("  <version>1.4.0</version>");
-    buffer.append("  <executions>");
-    buffer.append("    <execution>");
-    buffer.append("      <id>generate-depends-file</id>");
-    buffer.append("      <goals>");
-    buffer.append("        <goal>generate-depends-file</goal>");
-    buffer.append("      </goals>");
-    buffer.append("    </execution>");
-    buffer.append("  </executions>");
-    buffer.append("</plugin>");
+
+    buffer.append("Couldn't resolve version information for maven artifact.");
+    buffer.append(String.format("Maven artifact '%s:%s':\n", groupId, artifactId));
+    buffer.append("\n");
+    buffer.append("(1) Please make sure that you have integrated the following plugin in your project setup:\n");
+    buffer.append("    <plugin>\n");
+    buffer.append("      <groupId>org.apache.servicemix.tooling</groupId>\n");
+    buffer.append("      <artifactId>depends-maven-plugin</artifactId>\n");
+    buffer.append("      <version>1.4.0</version>\n");
+    buffer.append("      <executions>\n");
+    buffer.append("        <execution>\n");
+    buffer.append("          <id>generate-depends-file</id>\n");
+    buffer.append("          <goals>\n");
+    buffer.append("            <goal>generate-depends-file</goal>\n");
+    buffer.append("          </goals>\n");
+    buffer.append("        </execution>\n");
+    buffer.append("      </executions>\n");
+    buffer.append("    </plugin>\n");
+    buffer.append("\n");
+    buffer.append("(2) Append the artifact to the list of dependencies:\n");
+    buffer.append("    <dependency>\n");
+    buffer.append(String.format("      <groupId>%s</groupId>\n", groupId));
+    buffer.append(String.format("      <artifactId>%s</artifactId>\n", artifactId));
+    buffer.append("      <artifactId>THE_ARTIFACT_VERSION</artifactId>\n");
+    buffer.append("    </dependency>\n");
+    buffer.append("\n");
+    buffer.append("(3) Execute the maven build to generate the depends file\n");
 
     throw new RuntimeException(buffer.toString());
   }

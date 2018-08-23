@@ -149,10 +149,7 @@ public class SlizaaTestServerRule extends AbstractSlizaaTestServerRule {
    */
   public static BiFunction<String, String, String> versionAsInProject() {
     return (groupId, artifactId) -> {
-
-      return VersionAsInProjectResolver.resolveVersion(groupId, artifactId); 
-      
-
+      return VersionAsInProjectResolver.resolveVersion(groupId, artifactId);
     };
   }
 }
