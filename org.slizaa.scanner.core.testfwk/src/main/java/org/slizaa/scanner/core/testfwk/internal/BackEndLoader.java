@@ -1,6 +1,15 @@
 package org.slizaa.scanner.core.testfwk.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.slizaa.core.mvnresolver.MvnResolverServiceFactoryFactory;
+import org.slizaa.core.mvnresolver.api.IMvnResolverService;
+import org.slizaa.core.mvnresolver.api.IMvnResolverService.IMvnResolverJob;
+import org.slizaa.scanner.core.api.cypherregistry.ICypherStatementRegistry;
+import org.slizaa.scanner.core.api.graphdb.IGraphDbFactory;
+import org.slizaa.scanner.core.api.importer.IModelImporterFactory;
+import org.slizaa.scanner.core.cypherregistry.CypherRegistryUtils;
+import org.slizaa.scanner.core.cypherregistry.CypherStatementRegistry;
+import org.slizaa.scanner.core.spi.parser.IParserFactory;
+import org.slizaa.scanner.core.testfwk.AbstractSlizaaTestServerRule.ITestFwkBackEnd;
 
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -9,19 +18,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
 
-import org.slizaa.core.classpathscanner.ClasspathScannerFactoryBuilder;
-import org.slizaa.core.classpathscanner.IClasspathScanner;
-import org.slizaa.core.mvnresolver.MvnResolverServiceFactoryFactory;
-import org.slizaa.core.mvnresolver.api.IMvnResolverService;
-import org.slizaa.core.mvnresolver.api.IMvnResolverService.IMvnResolverJob;
-import org.slizaa.scanner.core.api.cypherregistry.ICypherStatement;
-import org.slizaa.scanner.core.api.cypherregistry.ICypherStatementRegistry;
-import org.slizaa.scanner.core.api.graphdb.IGraphDbFactory;
-import org.slizaa.scanner.core.api.importer.IModelImporterFactory;
-import org.slizaa.scanner.core.cypherregistry.CypherStatementRegistry;
-import org.slizaa.scanner.core.cypherregistry.SlizaaCypherFileParser;
-import org.slizaa.scanner.core.spi.parser.IParserFactory;
-import org.slizaa.scanner.core.testfwk.AbstractSlizaaTestServerRule.ITestFwkBackEnd;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * <p>
@@ -93,18 +90,8 @@ public class BackEndLoader implements ITestFwkBackEnd {
     this._parserFactories = allServices(IParserFactory.class, this._classLoader);
 
     // Step 2: create the cypher statement registry
-    IClasspathScanner urlclasspathScanner = ClasspathScannerFactoryBuilder.newClasspathScannerFactory()
-        .registerCodeSourceClassLoaderProvider(URLClassLoader.class, cl1 -> cl1).create()
-        .createScanner(this._classLoader, BackEndLoader.class.getClassLoader());
-
-    //
     this._cypherStatementRegistry = new CypherStatementRegistry(() -> {
-      List<ICypherStatement> result = new ArrayList<>();
-      urlclasspathScanner
-          .matchFiles("cypher", (name, stream, lengthBytes) -> SlizaaCypherFileParser.parse(name, stream),
-              (codeSource1, items) -> result.addAll(items))
-          .scan();
-      return result;
+      return CypherRegistryUtils.getCypherStatementsFromClasspath(this._classLoader);
     });
   }
 

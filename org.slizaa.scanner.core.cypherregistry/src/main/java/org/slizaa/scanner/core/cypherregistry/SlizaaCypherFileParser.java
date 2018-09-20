@@ -18,16 +18,7 @@ public class SlizaaCypherFileParser {
 
   private static final String DOCLET_PATTERN  = "\\x40(\\S*)\\s*(.*)";
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param relativePath
-   *
-   * @param inputStream
-   * @return
-   * @throws IOException
-   */
+
   public static DefaultCypherStatement parse(String relativePath, InputStream inputStream) {
 
     //
@@ -41,15 +32,21 @@ public class SlizaaCypherFileParser {
     }
 
     //
+    return parse(relativePath, fileContent);
+  }
+
+  public static DefaultCypherStatement parse(String relativePath, String content) {
+
+    //
     Pattern pattern_comment = Pattern.compile(COMMENT_PATTERN);
     Pattern pattern_doclet = Pattern.compile(DOCLET_PATTERN);
-    Matcher matcher_comment = pattern_comment.matcher(fileContent);
+    Matcher matcher_comment = pattern_comment.matcher(content);
 
     //
     DefaultCypherStatement defaultCypherStatement = new DefaultCypherStatement();
 
     //
-    defaultCypherStatement.setStatement(CypherNormalizer.normalize(fileContent));
+    defaultCypherStatement.setStatement(CypherNormalizer.normalize(content));
 
     //
     if (matcher_comment.find()) {
