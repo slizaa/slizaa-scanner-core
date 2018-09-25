@@ -1,0 +1,4 @@
+Export-Package: !*.internal*, org.slizaa.scanner.spi.*, org.slizaa.scanner.api.*
+Slizaa-SpiApi: true
+-includeresource: OSGI-OPT/src=src/main/java
+-snapshot: BUILD-${tstamp}

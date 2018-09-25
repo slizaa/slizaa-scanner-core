@@ -5,23 +5,23 @@
       <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/[slizaa-scanner-core] clean install.launch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.core.contentdefinition/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.core.contentdefinition/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/bnd.bnd" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/bnd.bnd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/CypherRegistryUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/CypherRegistryUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/SlizaaCypherFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/SlizaaCypherFileParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/impl/Activator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.core.p2-repo/.project" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.core.p2-repo/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.core.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/internal/BackEndLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.core.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/internal/BackEndLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.contentdefinition/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.contentdefinition/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/bnd.bnd" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/bnd.bnd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/CypherRegistryUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/CypherRegistryUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/SlizaaCypherFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/SlizaaCypherFileParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/impl/Activator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.p2-repo/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.p2-repo/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/internal/BackEndLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/internal/BackEndLoader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/org.slizaa.scanner.core.contentdefinition/target/" />
-    <ignored path="$PROJECT_DIR$/org.slizaa.scanner.core.spi-api/target/" />
+    <ignored path="$PROJECT_DIR$/org.slizaa.scanner.contentdefinition/target/" />
+    <ignored path="$PROJECT_DIR$/org.slizaa.scanner.spi-api/target/" />
     <ignored path="$PROJECT_DIR$/target/" />
-    <ignored path="$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/target/" />
-    <ignored path="$PROJECT_DIR$/org.slizaa.scanner.core.testfwk/target/" />
-    <ignored path="$PROJECT_DIR$/org.slizaa.scanner.core.p2-repo/target/" />
+    <ignored path="$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/target/" />
+    <ignored path="$PROJECT_DIR$/org.slizaa.scanner.testfwk/target/" />
+    <ignored path="$PROJECT_DIR$/org.slizaa.scanner.p2-repo/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,12 +80,12 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/org.slizaa.scanner.core.contentdefinition/pom.xml" />
-        <option value="$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/pom.xml" />
-        <option value="$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/SlizaaCypherFileParser.java" />
-        <option value="$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/bnd.bnd" />
-        <option value="$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/CypherRegistryUtils.java" />
-        <option value="$PROJECT_DIR$/org.slizaa.scanner.core.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/internal/BackEndLoader.java" />
+        <option value="$PROJECT_DIR$/org.slizaa.scanner.contentdefinition/pom.xml" />
+        <option value="$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/pom.xml" />
+        <option value="$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/SlizaaCypherFileParser.java" />
+        <option value="$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/bnd.bnd" />
+        <option value="$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/CypherRegistryUtils.java" />
+        <option value="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/internal/BackEndLoader.java" />
       </list>
     </option>
   </component>
@@ -107,11 +107,11 @@
       <expand>
         <path>
           <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="org.slizaa.scanner.core:org.slizaa.scanner.core.parent" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+          <item name="org.slizaa.scanner:org.slizaa.scanner.parent" type="9519ce18:MavenProjectsStructure$ProjectNode" />
         </path>
         <path>
           <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="org.slizaa.scanner.core:org.slizaa.scanner.core.parent" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+          <item name="org.slizaa.scanner:org.slizaa.scanner.parent" type="9519ce18:MavenProjectsStructure$ProjectNode" />
           <item name="Lifecycle" type="58874e2:MavenProjectsStructure$LifecycleNode" />
         </path>
       </expand>
@@ -135,7 +135,7 @@
         <subPane>
           <expand>
             <path>
-              <item name="org.slizaa.scanner.core.parent" type="b2602c69:ProjectViewProjectNode" />
+              <item name="org.slizaa.scanner.parent" type="b2602c69:ProjectViewProjectNode" />
               <item name="slizaa-scanner-core" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -219,21 +219,21 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.core.testfwk/src/test/java/org/slizaa/scanner/core/testfwk/SlizaaTestServerRuleTest.java">
+    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/test/java/org/slizaa/scanner/core/testfwk/SlizaaTestServerRuleTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.core.contentdefinition/src/main/java/org/slizaa/scanner/core/contentdefinition/MvnBasedContentDefinitionProvider.java">
+    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.contentdefinition/src/main/java/org/slizaa/scanner/core/contentdefinition/MvnBasedContentDefinitionProvider.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="177">
           <caret line="65" column="42" selection-start-line="65" selection-start-column="42" selection-end-line="65" selection-end-column="42" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.core.contentdefinition/pom.xml">
+    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.contentdefinition/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="197">
           <caret line="37" selection-start-line="37" selection-end-line="37" />
@@ -247,10 +247,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.core.testfwk/pom.xml">
+    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.testfwk/pom.xml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/pom.xml">
+    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="459">
           <caret line="33" column="21" selection-start-line="33" selection-start-column="21" selection-end-line="33" selection-end-column="21" />
@@ -275,29 +275,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/impl/Activator.java" />
-    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/SlizaaCypherFileParser.java">
+    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/impl/Activator.java" />
+    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/SlizaaCypherFileParser.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="442">
           <caret line="36" selection-start-line="36" selection-end-line="36" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/bnd.bnd">
+    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/bnd.bnd">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="54" selection-start-column="54" selection-end-column="54" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/CypherStatementRegistry.java">
+    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/CypherStatementRegistry.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/src/test/java/org/slizaa/scanner/core/cypherregistry/CypherRegistryTest.java">
+    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/src/test/java/org/slizaa/scanner/core/cypherregistry/CypherRegistryTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="26" column="49" selection-start-line="26" selection-start-column="49" selection-end-line="26" selection-end-column="49" />
@@ -311,7 +311,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.core.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/CypherRegistryUtils.java">
+    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.cypherregistry/src/main/java/org/slizaa/scanner/core/cypherregistry/CypherRegistryUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="347">
           <caret line="36" column="6" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
@@ -321,7 +321,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.core.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/internal/BackEndLoader.java">
+    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/internal/BackEndLoader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="611">
           <caret line="36" column="2" lean-forward="true" selection-start-line="36" selection-start-column="2" selection-end-line="36" selection-end-column="2" />

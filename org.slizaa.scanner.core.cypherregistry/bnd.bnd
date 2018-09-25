@@ -1,3 +1,0 @@
-Export-Package: org.slizaa.scanner.core.cypherregistry
--includeresource: OSGI-OPT/src=src/main/java
--snapshot: BUILD-${tstamp}

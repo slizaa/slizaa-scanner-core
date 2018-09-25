@@ -4,14 +4,14 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.slizaa.scanner.core</groupId>
-	<artifactId>org.slizaa.scanner.core.parent</artifactId>
+	<groupId>org.slizaa.scanner</groupId>
+	<artifactId>org.slizaa.scanner.parent</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>Parent POM for the org.slizaa.scanner.core artifacts.</description>
+	<description>Parent POM for the org.slizaa.scanner artifacts.</description>
 	<url>http://www.slizaa.org</url>
 	<inceptionYear>2017</inceptionYear>
 
@@ -56,10 +56,10 @@
 	</properties>
 
 	<modules>
-		<module>org.slizaa.scanner.core.spi-api</module>
-		<module>org.slizaa.scanner.core.contentdefinition</module>
-		<module>org.slizaa.scanner.core.cypherregistry</module>
-		<module>org.slizaa.scanner.core.testfwk</module>
+		<module>org.slizaa.scanner.spi-api</module>
+		<module>org.slizaa.scanner.contentdefinition</module>
+		<module>org.slizaa.scanner.cypherregistry</module>
+		<module>org.slizaa.scanner.testfwk</module>
 	</modules>
 
 	<dependencyManagement>

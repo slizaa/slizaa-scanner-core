@@ -1,6 +1,0 @@
-Slizaa-Extension: true
-Slizaa-SpiApi: true
-Import-Package: org.ops4j.pax.url.mvn.*;resolution:=optional, *
-Export-Package: org.slizaa.scanner.core.contentdefinition
--includeresource: OSGI-OPT/src=src/main/java
--snapshot: BUILD-${tstamp}

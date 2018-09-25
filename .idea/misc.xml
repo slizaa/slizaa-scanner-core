@@ -9,7 +9,7 @@
     </option>
     <option name="ignoredFiles">
       <set>
-        <option value="$PROJECT_DIR$/org.slizaa.scanner.core.p2-repo/pom.xml" />
+        <option value="$PROJECT_DIR$/org.slizaa.scanner.p2-repo/pom.xml" />
       </set>
     </option>
   </component>

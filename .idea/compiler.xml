@@ -6,14 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="org.slizaa.scanner.core.contentdefinition" />
-        <module name="org.slizaa.scanner.core.cypherregistry" />
-        <module name="org.slizaa.scanner.core.spi-api" />
-        <module name="org.slizaa.scanner.core.testfwk" />
+        <module name="org.slizaa.scanner.contentdefinition" />
+        <module name="org.slizaa.scanner.cypherregistry" />
+        <module name="org.slizaa.scanner.spi-api" />
+        <module name="org.slizaa.scanner.testfwk" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="org.slizaa.scanner.core.p2-repo" target="1.8" />
+      <module name="org.slizaa.scanner.p2-repo" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
