@@ -25,7 +25,7 @@ public class SlizaaTestServerRuleTest {
       // create the content provider
       ContentDefinitionProviderFactory.simpleBinaryMvnArtifact("com.google.guava", "guava", "25.1-jre"),
 
-      // configure the
+      // configure the backend
       job -> job.withDependency("org.slizaa.neo4j:org.slizaa.neo4j.importer:1.0.0-SNAPSHOT")
                 .withDependency("org.slizaa.neo4j:org.slizaa.neo4j.graphdbfactory:1.0.0-SNAPSHOT")
                 .withDependency("org.slizaa.jtype:org.slizaa.jtype.scanner:1.0.0-SNAPSHOT")
