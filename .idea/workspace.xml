@@ -2,59 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="954fac05-e117-44d2-9c2a-89895df249a0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/api/util/DefaultProgressMonitor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/test/java/org/slizaa/scanner/api/util/DefaultProgressMonitorTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/api/cypherregistry/ICypherStatement.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/api/cypherregistry/ICypherStatementRegistry.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/api/graphdb/IGraphDb.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/api/graphdb/IGraphDbFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/api/importer/IModelImporter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/api/importer/IModelImporterFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/annotations/ParserFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/contentdefinition/AbstractContentDefinitionProvider.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/contentdefinition/AnalyzeMode.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/contentdefinition/ContentType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/contentdefinition/IContentDefinition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/contentdefinition/IContentDefinitionProvider.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/contentdefinition/filebased/FileBasedContentDefinitionFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/contentdefinition/filebased/IFile.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/contentdefinition/filebased/IFileBasedContentDefinition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/internal/Preconditions.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/internal/contentdefinition/filebased/DefaultFile.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/internal/contentdefinition/filebased/FileBasedContentDefinition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/AbstractParser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/ICypherStatementExecutor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/IParser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/IParserContext.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/IParserFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/IProblem.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/ParserType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/model/INode.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/model/IRelationship.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/model/Label.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/model/NodeFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/model/RelationshipType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/model/resource/CoreModelElementType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/model/resource/CoreModelRelationshipType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/model/resource/IDirectoryNode.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/model/resource/IGroupNode.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/model/resource/IModuleNode.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/model/resource/IResourceNode.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/core/spi/parser/model/resource/ResourceType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/AbstractSlizaaTestServerRule.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/ConsoleLogProgressMonitor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/ContentDefinitionProviderFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/PredefinedGraphDatabaseRule.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/SlizaaTestServerRule.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/TestDB.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/internal/BackEndLoader.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/internal/VersionAsInProjectResolver.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/core/testfwk/internal/ZipUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/resources/content-mapstruct.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/resources/mapstruct_1-2-0-Final-db.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/test/java/org/slizaa/scanner/core/testfwk/SlizaaTestServerRuleTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/test/java/org/slizaa/scanner/core/testfwk/SlizaaTestServerRuleTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.travis.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.travis.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/test/java/org/slizaa/scanner/api/util/DefaultProgressMonitorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/test/java/org/slizaa/scanner/api/util/DefaultProgressMonitorTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/org.slizaa.scanner.contentdefinition/target/" />
     <ignored path="$PROJECT_DIR$/org.slizaa.scanner.spi-api/target/" />
@@ -113,32 +63,34 @@
       <usages-collector id="statistics.lifecycle.project">
         <counts>
           <entry key="project.closed" value="3" />
-          <entry key="project.open.time.0" value="2" />
+          <entry key="project.open.time.0" value="3" />
           <entry key="project.open.time.7" value="1" />
-          <entry key="project.opened" value="3" />
+          <entry key="project.opened" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="java" value="26" />
+          <entry key="java" value="28" />
           <entry key="xml" value="4" />
+          <entry key="yml" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="JAVA" value="26" />
+          <entry key="JAVA" value="28" />
           <entry key="XML" value="4" />
+          <entry key="YAML" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="2046" />
+          <entry key="java" value="2066" />
           <entry key="xml" value="43" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="2046" />
+          <entry key="JAVA" value="2066" />
           <entry key="XML" value="43" />
         </counts>
       </usages-collector>
@@ -147,7 +99,17 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.travis.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -177,8 +139,9 @@
         <option value="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/api/util/IProgressMonitor.java" />
         <option value="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/testfwk/ConsoleLogProgressMonitor.java" />
         <option value="$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/testfwk/SlizaaTestServerRule.java" />
-        <option value="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/test/java/org/slizaa/scanner/api/util/DefaultProgressMonitorTest.java" />
         <option value="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/api/util/DefaultProgressMonitor.java" />
+        <option value="$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/test/java/org/slizaa/scanner/api/util/DefaultProgressMonitorTest.java" />
+        <option value="$PROJECT_DIR$/.travis.yml" />
       </list>
     </option>
   </component>
@@ -231,6 +194,11 @@
             <path>
               <item name="org.slizaa.scanner.parent" type="b2602c69:ProjectViewProjectNode" />
               <item name="slizaa-scanner" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="org.slizaa.scanner.parent" type="b2602c69:ProjectViewProjectNode" />
+              <item name="slizaa-scanner" type="462c0819:PsiDirectoryNode" />
+              <item name=".travis" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -435,9 +403,10 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="2575" height="1424" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19880715" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20095949" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -457,7 +426,7 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info anchor="right" id="Key Promoter X" order="4" />
-      <window_info anchor="right" id="Maven Projects" order="5" visible="true" weight="0.26242545" />
+      <window_info anchor="right" id="Maven Projects" order="5" visible="true" weight="0.26226014" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -616,13 +585,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/api/util/IProgressMonitor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="606">
-          <caret line="44" column="19" selection-start-line="44" selection-start-column="19" selection-end-line="44" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.testfwk/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
@@ -630,13 +592,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/testfwk/ConsoleLogProgressMonitor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="51" selection-start-line="51" selection-end-line="68" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/testfwk/ConsoleLogProgressMonitor.java" />
     <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.testfwk/src/main/java/org/slizaa/scanner/testfwk/SlizaaTestServerRule.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="393">
@@ -664,13 +620,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/main/java/org/slizaa/scanner/api/util/IProgressMonitor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="4" lean-forward="true" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/org.slizaa.scanner.spi-api/src/test/java/org/slizaa/scanner/api/util/DefaultProgressMonitorTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="31" column="59" selection-start-line="31" selection-start-column="59" selection-end-line="31" selection-end-column="59" />
+        <state relative-caret-position="202">
+          <caret line="44" column="5" lean-forward="true" selection-start-line="44" selection-start-column="5" selection-end-line="44" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.travis.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
         </state>
       </provider>
     </entry>
