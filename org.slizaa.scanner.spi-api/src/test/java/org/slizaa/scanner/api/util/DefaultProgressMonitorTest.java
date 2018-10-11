@@ -4,8 +4,14 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ *
+ */
 public class DefaultProgressMonitorTest {
 
+  /**
+   *
+   */
   @Test
   public void testDefaultProgressMonitor() {
 
@@ -25,6 +31,9 @@ public class DefaultProgressMonitorTest {
     progressMonitor.done();
   }
 
+  /**
+   *
+   */
   @Test
   public void testSubMonitor() {
 
@@ -52,6 +61,10 @@ public class DefaultProgressMonitorTest {
     }
   }
 
+  /**
+   *
+   * @param progressMonitor
+   */
   private void consumeSubmonitor(IProgressMonitor progressMonitor) {
 
     progressMonitor.beginTask("task 1", 100);
