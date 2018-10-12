@@ -20,9 +20,8 @@ public interface IProgressMonitor {
   /**
    *
    * @param name
-   * @param totalWork
    */
-  void beginTask(String name, int totalWork);
+  void subTask(String name);
 
   /**
    *
@@ -30,22 +29,20 @@ public interface IProgressMonitor {
    */
   void worked(int work);
 
-  /**
-   *
-   * @param name
-   */
-  void subTask(String name);
-
-  /**
-   *
-   * @param subTaskName
-   * @param totalWork
-   * @return
-   */
-  IProgressMonitor createSubMonitor(String subTaskName, int totalWork);
+  //
+  ISubProgressMonitorCreator newChild(String taskname);
 
   /**
    *
    */
   void done();
+
+  public static interface ISubProgressMonitorCreator {
+
+    ISubProgressMonitorCreator consumeParentTicks(int parentTicks);
+
+    ISubProgressMonitorCreator withTotalWork(int totalWork);
+
+    IProgressMonitor create();
+  }
 }
