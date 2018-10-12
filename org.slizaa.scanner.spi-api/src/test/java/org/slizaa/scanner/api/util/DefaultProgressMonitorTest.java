@@ -14,8 +14,8 @@ public class DefaultProgressMonitorTest {
 
   @Before
   public void setup() {
-    progressMonitor = new DefaultProgressMonitor("Master check", 100,
-        (done, total) -> System.out.println(String.format("%s%%", (done * 100 / total))));
+    progressMonitor = new DefaultProgressMonitor("Master check", 250,
+        (progressContext) -> System.out.println(String.format("%s%%", progressContext.getWorkDoneInPercentage())));
   }
 
   /**
@@ -25,12 +25,12 @@ public class DefaultProgressMonitorTest {
   public void testDefaultProgressMonitor() {
 
     //
-    assertThat(progressMonitor.getWorkDone()).isEqualTo(0);
+    assertThat(progressMonitor.getTotalWorkDone()).isEqualTo(0);
 
     //
-    for (int i = 1; i <= 100; i++) {
+    for (int i = 1; i <= 250; i++) {
       progressMonitor.worked(1);
-      assertThat(progressMonitor.getWorkDone()).isEqualTo(i);
+      assertThat(progressMonitor.getTotalWorkDone()).isEqualTo(i);
     }
 
     progressMonitor.done();
@@ -44,17 +44,30 @@ public class DefaultProgressMonitorTest {
 
     try {
 
-      IProgressMonitor submonitor = progressMonitor.newChildWithParentTicks("Check 1", 20, 100);
-      consumeSubmonitor(submonitor);
-      assertThat(progressMonitor.getWorkDone()).isEqualTo(20);
+      IProgressMonitor submonitor = progressMonitor.newChild("Check 1")
+              .withParentConsumption(20)
+              .withTotalWork(100)
+              .create();
 
-      submonitor = progressMonitor.newChildWithParentTicks("Check 2", 50, 100);
       consumeSubmonitor(submonitor);
-      assertThat(progressMonitor.getWorkDone()).isEqualTo(70);
+      assertThat(progressMonitor.getTotalWorkDone()).isEqualTo(50);
+      assertThat(progressMonitor.getWorkDoneInPercentage()).isEqualTo(20);
 
-      submonitor = progressMonitor.newChildWithParentTicks("Check 3", 30, 100);
+      submonitor = progressMonitor.newChild("Check 2")
+              .withParentConsumption(50)
+              .withTotalWork(100)
+              .create();
       consumeSubmonitor(submonitor);
-      assertThat(progressMonitor.getWorkDone()).isEqualTo(100);
+      assertThat(progressMonitor.getTotalWorkDone()).isEqualTo(175);
+      assertThat(progressMonitor.getWorkDoneInPercentage()).isEqualTo(70);
+
+      submonitor = progressMonitor.newChild("Check 3")
+              .withParentConsumption(30)
+              .withTotalWork(100)
+              .create();
+      consumeSubmonitor(submonitor);
+      assertThat(progressMonitor.getTotalWorkDone()).isEqualTo(250);
+      assertThat(progressMonitor.getWorkDoneInPercentage()).isEqualTo(100);
 
     } finally {
       progressMonitor.done();
@@ -73,7 +86,7 @@ public class DefaultProgressMonitorTest {
 //      consumeSubmonitor(subsubmonitor1);
 //      IProgressMonitor subsubmonitor2  = submonitor.newChild("Check 1.2", 60);
 //      consumeSubmonitor(subsubmonitor2);
-//      assertThat(progressMonitor.getWorkDone()).isEqualTo(20);
+//      assertThat(progressMonitor.getTotalWorkDone()).isEqualTo(20);
 //
 //      //
 //      submonitor = progressMonitor.newChild("Check 2", 70);
@@ -81,7 +94,7 @@ public class DefaultProgressMonitorTest {
 //      consumeSubmonitor(subsubmonitor1);
 //      subsubmonitor2  = submonitor.newChild("Check 2.2", 50);
 //      consumeSubmonitor(subsubmonitor2);
-//      assertThat(progressMonitor.getWorkDone()).isEqualTo(70);
+//      assertThat(progressMonitor.getTotalWorkDone()).isEqualTo(70);
 //
 //      //
 //      submonitor = progressMonitor.newChild("Check 3", 10);
@@ -89,7 +102,7 @@ public class DefaultProgressMonitorTest {
 //      consumeSubmonitor(subsubmonitor1);
 //      subsubmonitor2  = submonitor.newChild("Check 3.2", 40);
 //      consumeSubmonitor(subsubmonitor2);
-//      assertThat(progressMonitor.getWorkDone()).isEqualTo(100);
+//      assertThat(progressMonitor.getTotalWorkDone()).isEqualTo(100);
 //
 //    } finally {
 //      progressMonitor.done();
@@ -101,12 +114,12 @@ public class DefaultProgressMonitorTest {
    */
   private void consumeSubmonitor(IProgressMonitor progressMonitor) {
 
-    assertThat(progressMonitor.getWorkDone()).isEqualTo(0);
+    assertThat(progressMonitor.getTotalWorkDone()).isEqualTo(0);
 
     //
     for (int i = 1; i <= 100; i++) {
       progressMonitor.worked(1);
-      assertThat(progressMonitor.getWorkDone()).isEqualTo(i);
+      assertThat(progressMonitor.getTotalWorkDone()).isEqualTo(i);
     }
 
     //
