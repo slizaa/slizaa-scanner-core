@@ -3,28 +3,28 @@ package org.slizaa.scanner.api.util;
 /**
  *
  */
-public interface IProgressMonitor extends IProgressStatus {
+public interface IProgressMonitor extends IProgressStatus, AutoCloseable {
 
     /**
      * @param name
      */
-    void subTask(String name);
+    void step(String name);
 
     /**
      * @param work
      */
-    void worked(int work);
+    void advance(int work);
 
     /**
      * @param taskName
      * @return
      */
-    ISubProgressMonitorCreator newChild(String taskName);
+    ISubProgressMonitorCreator subTask(String taskName);
 
     /**
      *
      */
-    void done();
+    void close();
 
     /**
      *
@@ -35,13 +35,19 @@ public interface IProgressMonitor extends IProgressStatus {
          * @param percentage
          * @return
          */
-        ISubProgressMonitorCreator withParentConsumption(int percentage);
+        ISubProgressMonitorCreator withParentConsumptionInPercentage(int percentage);
+
+      /**
+       * @param parentWorkTicks
+       * @return
+       */
+      ISubProgressMonitorCreator withParentConsumptionInWorkTicks(int parentWorkTicks);
 
         /**
          * @param totalWork
          * @return
          */
-        ISubProgressMonitorCreator withTotalWork(int totalWork);
+        ISubProgressMonitorCreator withTotalWorkTicks(int totalWork);
 
         /**
          * @return

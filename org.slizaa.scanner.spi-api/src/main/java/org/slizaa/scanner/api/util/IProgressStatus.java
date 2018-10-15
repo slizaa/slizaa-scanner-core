@@ -5,7 +5,7 @@ public interface IProgressStatus {
     /**
      * @return
      */
-    int getTotalWorkDone();
+    int getWorkDoneInTicks();
 
     /**
      * @return
@@ -15,10 +15,16 @@ public interface IProgressStatus {
     /**
      * @return
      */
-    int getTotalWork();
+    int getTotalWorkTicks();
+
+    /**
+     *
+     * @return
+     */
+    boolean isComplete();
 
     /**
      * @return
      */
-    String getCurrentTask();
+    String getCurrentStep();
 }

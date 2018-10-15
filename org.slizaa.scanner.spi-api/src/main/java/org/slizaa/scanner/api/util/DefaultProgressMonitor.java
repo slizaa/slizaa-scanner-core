@@ -1,11 +1,11 @@
 package org.slizaa.scanner.api.util;
 
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static org.slizaa.scanner.spi.internal.Preconditions.checkNotNull;
@@ -16,204 +16,350 @@ import static org.slizaa.scanner.spi.internal.Preconditions.checkState;
  */
 public class DefaultProgressMonitor implements IProgressMonitor {
 
-    //
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultProgressMonitor.class);
+  //
+  private static final Logger LOGGER = LoggerFactory.getLogger(DefaultProgressMonitor.class);
+
+  //
+  protected Consumer<IProgressStatus> _progressStatusConsumer;
+
+  //
+  private String _taskName;
+
+  //
+  private String _subTaskName;
+
+  //
+  private int _workDone;
+
+  //
+  private int _totalWork;
+
+  //
+  private List<SubMonitor> _subMonitors;
+
+  //
+  private boolean _complete;
+
+  /**
+   *
+   */
+  public DefaultProgressMonitor(String name, int totalWork) {
+    this(name, totalWork, null);
+  }
+
+  /**
+   *
+   */
+  public DefaultProgressMonitor(String name, int totalWork, Consumer<IProgressStatus> progressStatusConsumer) {
+    checkNotNull(name);
+    checkState(totalWork > 0, "Parameter 'totalWork' must be greater than zero.");
 
     //
-    protected Consumer<IProgressStatus> _progressStatusConsumer;
+    _taskName = name;
+    _totalWork = totalWork;
+    _progressStatusConsumer = progressStatusConsumer;
 
     //
-    private String _taskName;
+    _subMonitors = new ArrayList<>();
+    _workDone = 0;
+    _complete = false;
+  }
+
+  @Override
+  public String getCurrentStep() {
+    // TODO
+    return null;
+  }
+
+  @Override
+  public boolean isComplete() {
+    return _complete;
+  }
+
+  @Override
+  public int getWorkDoneInTicks() {
+    return _complete ? _totalWork : _workDone + accumulatedSubMonitorWorkDone();
+  }
+
+  @Override
+  public int getTotalWorkTicks() {
+    return _totalWork;
+  }
+
+  @Override
+  public int getWorkDoneInPercentage() {
+    return getWorkDoneInTicks() * 100 / _totalWork;
+  }
+
+  /**
+   * @param name
+   */
+  @Override
+  public void step(String name) {
 
     //
-    private String _subTaskName;
+    if (_complete) {
+      LOGGER.warn("Calling 'step({}) on a completed progress monitor.'");
+      return;
+    }
 
     //
-    private int _workDone;
+    _subTaskName = name;
+  }
+
+  /**
+   * @param work
+   */
+  @Override
+  public void advance(int work) {
+    checkState(work >= 0, "Parameter work has be greater than or equal 0.");
 
     //
-    private int _totalWork;
+    if (_complete) {
+      return;
+    }
 
     //
-    private List<SubMonitor> _subMonitors;
+    if (!_subMonitors.isEmpty()) {
+      SubMonitor lastActiveSubMonitor = _subMonitors.get(_subMonitors.size() - 1);
+      if (!lastActiveSubMonitor.isComplete()) {
+        lastActiveSubMonitor.close();
+      }
+    }
+
+    //
+    int totalSubMonitorWork = accumulatedSubMonitorTotalWork();
+    if (_workDone + totalSubMonitorWork + work > _totalWork) {
+      System.out.println("ERROR!!");
+      _workDone = _totalWork - totalSubMonitorWork;
+    }
+    //
+    else {
+      _workDone = _workDone + work;
+    }
+
+    //
+    fireProgressStatus();
+  }
+
+  /**
+   * @param taskName
+   * @return
+   */
+  @Override
+  public ISubProgressMonitorCreator subTask(String taskName) {
+
+    //
+    checkState(!_complete,
+        "Can not create a new sub task because the parent progress monitor already has been completed.");
+
+    //
+    return new DefaultSubProgressMonitorCreator(taskName, this);
+  }
+
+  /**
+   *
+   */
+  @Override
+  public void close() {
+    _workDone = _totalWork;
+    _subTaskName = null;
+    _complete = true;
+
+    //
+    fireProgressStatus();
+  }
+
+  /**
+   *
+   */
+  public void dump() {
+    System.out.println(dump(0));
+  }
+
+  /**
+   * @param indent
+   */
+  protected String dump(int indent) {
+
+    //
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append(Strings.repeat("  ", indent));
+    stringBuilder.append(this.getClass().getSimpleName());
+    stringBuilder.append(": Work Done: ");
+    stringBuilder.append(getWorkDoneInTicks());
+    stringBuilder.append(", Work Total: ");
+    stringBuilder.append(getTotalWorkTicks());
+    stringBuilder.append(", WorkDoneInPercentage: ");
+    stringBuilder.append(getWorkDoneInPercentage());
+    if (this instanceof SubMonitor) {
+      stringBuilder.append(", Parent Ticks: ");
+      stringBuilder.append(((SubMonitor) this).getParentTicks());
+      stringBuilder.append("/");
+      stringBuilder.append(((SubMonitor) this).parent.getTotalWorkTicks());
+    }
+
+    for (SubMonitor subMonitor : _subMonitors) {
+      stringBuilder.append("\n");
+      stringBuilder.append(subMonitor.dump(indent + 1));
+    }
+
+    //
+    return stringBuilder.toString();
+  }
+
+  /**
+   * @return
+   */
+  protected DefaultProgressMonitor getRootMonitor() {
+    return this;
+  }
+
+  /**
+   * @return
+   */
+  private int accumulatedSubMonitorWorkDone() {
+    return _subMonitors.stream()
+        .mapToInt(sm -> (sm.getParentTicks() * sm.getWorkDoneInTicks()) / sm.getTotalWorkTicks()).sum();
+  }
+
+  private int accumulatedSubMonitorTotalWork() {
+    return _subMonitors.stream()
+        .mapToInt(sm -> sm.getParentTicks()).sum();
+  }
+
+  /**
+   *
+   */
+  private void fireProgressStatus() {
+
+    //
+    DefaultProgressMonitor rootMonitor = getRootMonitor();
+
+    if (rootMonitor._progressStatusConsumer != null) {
+      rootMonitor._progressStatusConsumer.accept(rootMonitor);
+    }
+  }
+
+  /**
+   *
+   */
+  private class SubMonitor extends DefaultProgressMonitor {
+
+    /* - */
+    private int parentTicks;
+
+    /* - */
+    private DefaultProgressMonitor parent;
 
     /**
-     *
+     * @param parentTicks
      */
-    public DefaultProgressMonitor(String name, int totalWork) {
-        this(name, totalWork, null);
-    }
+    public SubMonitor(String name, int parentTicks, int totalWork, DefaultProgressMonitor parent) {
+      super(name, totalWork);
 
-    /**
-     *
-     */
-    public DefaultProgressMonitor(String name, int totalWork, Consumer<IProgressStatus> progressStatusConsumer) {
-        _taskName = checkNotNull(name);
-        checkState(totalWork > 0, "Parameter 'totalWork' must be greater than zero.");
-        _subMonitors = new ArrayList<>();
-        _workDone = 0;
-        _progressStatusConsumer = progressStatusConsumer;
-        _totalWork = totalWork;
-    }
+      this.parentTicks = parentTicks;
+      this.parent = checkNotNull(parent);
 
-    @Override
-    public int getWorkDoneInPercentage() {
-        return getTotalWorkDone() * 100 / _totalWork;
-    }
-
-    /**
-     * @param name
-     */
-    @Override
-    public void subTask(String name) {
-        _subTaskName = name;
-    }
-
-    @Override
-    public String getCurrentTask() {
-        return null;
-    }
-
-    /**
-     * @param work
-     */
-    @Override
-    public void worked(int work) {
-        checkState(work > 0, "Parameter work has be greater than 0.");
-
-        _workDone = _workDone + work;
-
-        fireProgressStatus();
-    }
-
-
-
-    protected DefaultProgressMonitor getRootMonitor() {
-        return this;
-    }
-
-    @Override
-    public ISubProgressMonitorCreator newChild(String taskName) {
-        return new DefaultSubProgressMonitorCreator(taskName, this);
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void done() {
-        _workDone = _totalWork;
-        _subTaskName = null;
-    }
-
-    @Override
-    public int getTotalWorkDone() {
-        return _workDone + accumulatedSubMonitorWorkDone();
-    }
-
-    @Override
-    public int getTotalWork() {
-        return _totalWork;
+      parent._subMonitors.add(this);
     }
 
     /**
      * @return
      */
-    private int accumulatedSubMonitorWorkDone() {
-        return _subMonitors.stream().mapToInt(sm -> (sm.getParentTicks() * sm.getTotalWorkDone()) / sm.getTotalWork()).sum();
+    public int getParentTicks() {
+      return parentTicks;
     }
+
+    public void dump() {
+      getRootMonitor().dump();
+    }
+
+    protected DefaultProgressMonitor getRootMonitor() {
+      if (parent instanceof SubMonitor) {
+        return ((SubMonitor) parent).getRootMonitor();
+      }
+      return parent;
+    }
+
+//    protected String dump(int indent) {
+//      System.out.println("DUMP" + this);
+//      //
+//      StringBuilder stringBuilder = new StringBuilder();
+//      stringBuilder.append(Strings.repeat("  ", indent));
+//      stringBuilder.append("[SubMonitor Work Done: ");
+//      stringBuilder.append(getWorkDoneInTicks());
+//      stringBuilder.append(", Work Total: ");
+//      stringBuilder.append(getWorkDoneInTicks());
+//      stringBuilder.append(", WorkDoneInPercentage: ");
+//      stringBuilder.append(getWorkDoneInTicks());
+//      stringBuilder.append(", ParentTicks: ");
+//      stringBuilder.append(parentTicks);
+//      stringBuilder.append("\n");
+//
+////      for (SubMonitor sm : _subMonitors) {
+////        stringBuilder.append(sm.dump(indent + 1));
+////        stringBuilder.append("\n");
+////      }
+//
+//      stringBuilder.append("]");
+//
+//      //
+//      return stringBuilder.toString();
+//    }
+  }
+
+  /**
+   *
+   */
+  private class DefaultSubProgressMonitorCreator implements ISubProgressMonitorCreator {
+
+    //
+    private String _name;
+
+    //
+    private DefaultProgressMonitor _parent;
+
+    //
+    private int _parentPercentage;
+
+    //
+    private int _parentWorkTicks = -1;
+
+    //
+    private int _totalWork;
 
     /**
-     *
+     * @param name
      */
-    private void fireProgressStatus() {
-
-        //
-        DefaultProgressMonitor rootMonitor = getRootMonitor();
-
-        if (rootMonitor._progressStatusConsumer != null) {
-            rootMonitor._progressStatusConsumer.accept(rootMonitor);
-        }
+    public DefaultSubProgressMonitorCreator(String name, DefaultProgressMonitor parent) {
+      this._name = checkNotNull(name);
+      this._parent = parent;
     }
 
-    /**
-     *
-     */
-    private class SubMonitor extends DefaultProgressMonitor {
-
-        /* - */
-        private int parentTicks;
-
-        /* - */
-        private DefaultProgressMonitor parent;
-
-        /**
-         * @param parentTicks
-         */
-        public SubMonitor(String name, int parentTicks, int totalWork, DefaultProgressMonitor parent) {
-            super(name, totalWork);
-
-            this.parentTicks = parentTicks;
-            this.parent = checkNotNull(parent);
-
-            parent._subMonitors.add(this);
-        }
-
-        /**
-         * @return
-         */
-        public int getParentTicks() {
-            return parentTicks;
-        }
-
-        protected DefaultProgressMonitor getRootMonitor() {
-            if (parent instanceof SubMonitor) {
-                return ((SubMonitor) parent).getRootMonitor();
-            }
-            return parent;
-        }
+    @Override
+    public ISubProgressMonitorCreator withParentConsumptionInPercentage(int percentage) {
+      _parentPercentage = percentage;
+      return this;
     }
 
-    /**
-     *
-     */
-    private class DefaultSubProgressMonitorCreator implements ISubProgressMonitorCreator {
-
-        //
-        private String _name;
-
-        //
-        private DefaultProgressMonitor _parent;
-
-        //
-        private int _parentPercentage;
-
-        //
-        private int _totalWork;
-
-        /**
-         * @param name
-         */
-        public DefaultSubProgressMonitorCreator(String name, DefaultProgressMonitor parent) {
-            this._name = checkNotNull(name);
-            this._parent = parent;
-        }
-
-        @Override
-        public ISubProgressMonitorCreator withParentConsumption(int percentage) {
-            _parentPercentage = percentage;
-            return this;
-        }
-
-        @Override
-        public ISubProgressMonitorCreator withTotalWork(int totalWork) {
-            _totalWork = totalWork;
-            return this;
-        }
-
-        @Override
-        public IProgressMonitor create() {
-            return new SubMonitor(this._name, (_parentPercentage * _parent._totalWork) / 100, _totalWork, _parent);
-        }
+    @Override
+    public ISubProgressMonitorCreator withParentConsumptionInWorkTicks(int parentWorkTicks) {
+      _parentWorkTicks = parentWorkTicks;
+      return this;
     }
+
+    @Override
+    public ISubProgressMonitorCreator withTotalWorkTicks(int totalWork) {
+      _totalWork = totalWork;
+      return this;
+    }
+
+    @Override
+    public IProgressMonitor create() {
+      return new SubMonitor(this._name,
+          _parentWorkTicks > 0 ? _parentWorkTicks : (_parentPercentage * _parent._totalWork) / 100, _totalWork,
+          _parent);
+    }
+  }
 }

@@ -6,12 +6,22 @@ package org.slizaa.scanner.api.util;
 public class NullProgressMonitor implements IProgressMonitor {
 
     @Override
-    public String getCurrentTask() {
+    public void close() {
+        //
+    }
+
+    @Override
+    public boolean isComplete() {
+        return false;
+    }
+
+    @Override
+    public String getCurrentStep() {
         return null;
     }
 
     @Override
-    public int getTotalWorkDone() {
+    public int getWorkDoneInTicks() {
         return 0;
     }
 
@@ -21,38 +31,38 @@ public class NullProgressMonitor implements IProgressMonitor {
     }
 
     @Override
-    public int getTotalWork() {
+    public int getTotalWorkTicks() {
         return 0;
     }
 
     @Override
-    public void subTask(String name) {
+    public void step(String name) {
 
     }
 
     @Override
-    public void worked(int work) {
+    public void advance(int work) {
 
     }
 
     @Override
-    public ISubProgressMonitorCreator newChild(String taskName) {
-        return null;
-    }
-
-    @Override
-    public void done() {
-
+    public ISubProgressMonitorCreator subTask(String taskName) {
+        return new NullProgressMonitorCreator();
     }
 
     private static class NullProgressMonitorCreator implements ISubProgressMonitorCreator {
         @Override
-        public ISubProgressMonitorCreator withParentConsumption(int percentage) {
+        public ISubProgressMonitorCreator withParentConsumptionInPercentage(int percentage) {
             return this;
         }
 
         @Override
-        public ISubProgressMonitorCreator withTotalWork(int totalWork) {
+        public ISubProgressMonitorCreator withTotalWorkTicks(int totalWork) {
+            return this;
+        }
+
+        @Override
+        public ISubProgressMonitorCreator withParentConsumptionInWorkTicks(int parentWorkTicks) {
             return this;
         }
 
