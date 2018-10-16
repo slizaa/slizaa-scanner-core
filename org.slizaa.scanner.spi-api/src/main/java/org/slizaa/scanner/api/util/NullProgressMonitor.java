@@ -21,7 +21,7 @@ public class NullProgressMonitor implements IProgressMonitor {
     }
 
     @Override
-    public int getWorkDoneInTicks() {
+    public long getWorkDoneInTicks() {
         return 0;
     }
 
@@ -31,7 +31,7 @@ public class NullProgressMonitor implements IProgressMonitor {
     }
 
     @Override
-    public int getTotalWorkTicks() {
+    public long getTotalWorkTicks() {
         return 0;
     }
 
@@ -57,12 +57,12 @@ public class NullProgressMonitor implements IProgressMonitor {
         }
 
         @Override
-        public ISubProgressMonitorCreator withTotalWorkTicks(int totalWork) {
+        public ISubProgressMonitorCreator withTotalWorkTicks(long totalWork) {
             return this;
         }
 
         @Override
-        public ISubProgressMonitorCreator withParentConsumptionInWorkTicks(int parentWorkTicks) {
+        public ISubProgressMonitorCreator withParentConsumptionInWorkTicks(long parentWorkTicks) {
             return this;
         }
 

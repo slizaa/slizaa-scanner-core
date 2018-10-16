@@ -133,8 +133,8 @@ public class SlizaaTestServerRule extends AbstractSlizaaTestServerRule {
         parserFactories, cypherStatementRegistry.getAllStatements());
 
     //
-    DefaultProgressMonitor progressMonitor = new DefaultProgressMonitor(
-        (done, total) -> System.out.println(String.format("%s%%", (done / total) * 100)));
+    DefaultProgressMonitor progressMonitor = new DefaultProgressMonitor("Parse", 100,
+        (ctx) -> System.out.println(String.format("%s%%", ctx.getWorkDoneInPercentage())));
 
     //
     executeWithThreadContextClassLoader(testFwkBackEnd.getClassLoader(),
