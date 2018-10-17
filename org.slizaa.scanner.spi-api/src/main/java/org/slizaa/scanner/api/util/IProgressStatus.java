@@ -5,7 +5,7 @@ public interface IProgressStatus {
     /**
      * @return
      */
-    long getWorkDoneInTicks();
+    int getWorkDoneInTicks();
 
     /**
      * @return
@@ -15,7 +15,7 @@ public interface IProgressStatus {
     /**
      * @return
      */
-    long getTotalWorkTicks();
+    int getTotalWorkTicks();
 
     /**
      *

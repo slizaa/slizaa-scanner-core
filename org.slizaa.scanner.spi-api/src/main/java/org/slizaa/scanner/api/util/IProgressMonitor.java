@@ -41,13 +41,13 @@ public interface IProgressMonitor extends IProgressStatus, AutoCloseable {
        * @param parentWorkTicks
        * @return
        */
-      ISubProgressMonitorCreator withParentConsumptionInWorkTicks(long parentWorkTicks);
+      ISubProgressMonitorCreator withParentConsumptionInWorkTicks(int parentWorkTicks);
 
         /**
          * @param totalWork
          * @return
          */
-        ISubProgressMonitorCreator withTotalWorkTicks(long totalWork);
+        ISubProgressMonitorCreator withTotalWorkTicks(int totalWork);
 
         /**
          * @return

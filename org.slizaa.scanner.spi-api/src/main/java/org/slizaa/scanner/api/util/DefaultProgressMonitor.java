@@ -23,40 +23,40 @@ public class DefaultProgressMonitor implements IProgressMonitor {
     protected Consumer<IProgressStatus> _progressStatusConsumer;
 
     //
-    private String _taskName;
+    protected String _taskName;
 
     //
-    private String _subTaskName;
+    protected String _subTaskName;
 
     //
-    private long _workDone;
+    protected long _workDone;
 
     //
-    private long _totalWork;
+    protected long _totalWork;
 
     //
-    private List<SubMonitor> _subMonitors;
+    protected List<SubMonitor> _subMonitors;
 
     //
-    private boolean _complete;
+    protected boolean _complete;
 
     /**
      *
      */
-    public DefaultProgressMonitor(String name, long totalWork) {
+    public DefaultProgressMonitor(String name, int totalWork) {
         this(name, totalWork, null);
     }
 
     /**
      *
      */
-    public DefaultProgressMonitor(String name, long totalWork, Consumer<IProgressStatus> progressStatusConsumer) {
+    public DefaultProgressMonitor(String name, int totalWork, Consumer<IProgressStatus> progressStatusConsumer) {
         checkNotNull(name);
         checkState(totalWork > 0, "Parameter 'totalWork' must be greater than zero.");
 
         //
         _taskName = name;
-        _totalWork = totalWork;
+        _totalWork = scaleUp(totalWork);
         _progressStatusConsumer = progressStatusConsumer;
 
         //
@@ -77,18 +77,27 @@ public class DefaultProgressMonitor implements IProgressMonitor {
     }
 
     @Override
-    public long getWorkDoneInTicks() {
-        return _complete ? _totalWork : _workDone + accumulatedSubMonitorWorkDone();
+    public int getWorkDoneInTicks() {
+        return scaleDown(internalGetWorkDoneInTicks());
     }
 
+
     @Override
-    public long getTotalWorkTicks() {
-        return _totalWork;
+    public int getTotalWorkTicks() {
+        return scaleDown(internalGetTotalWorkTicks());
     }
 
     @Override
     public int getWorkDoneInPercentage() {
-        return (int) (getWorkDoneInTicks() * 100 / _totalWork);
+        return (int) (((float) internalGetWorkDoneInTicks() / (float) _totalWork) * 100);
+    }
+
+    protected long internalGetWorkDoneInTicks() {
+        return _complete ? _totalWork : _workDone + accumulatedSubMonitorWorkDone();
+    }
+
+    protected long internalGetTotalWorkTicks() {
+        return _totalWork;
     }
 
     /**
@@ -129,13 +138,13 @@ public class DefaultProgressMonitor implements IProgressMonitor {
 
         //
         long totalSubMonitorWork = accumulatedSubMonitorTotalWork();
-        if (_workDone + totalSubMonitorWork + work > _totalWork) {
+        if (_workDone + totalSubMonitorWork + scaleUp(work) > _totalWork) {
             System.out.println("ERROR!!");
             _workDone = _totalWork - totalSubMonitorWork;
         }
         //
         else {
-            _workDone = _workDone + work;
+            _workDone = _workDone + scaleUp(work);
         }
 
         //
@@ -194,9 +203,9 @@ public class DefaultProgressMonitor implements IProgressMonitor {
         stringBuilder.append(getWorkDoneInPercentage());
         if (this instanceof SubMonitor) {
             stringBuilder.append(", Parent Ticks: ");
-            stringBuilder.append(((SubMonitor) this).getParentTicks());
+            stringBuilder.append(((SubMonitor) this).parentTicks);
             stringBuilder.append("/");
-            stringBuilder.append(((SubMonitor) this).parent.getTotalWorkTicks());
+            stringBuilder.append(((SubMonitor) this).parent._totalWork);
         }
 
         for (SubMonitor subMonitor : _subMonitors) {
@@ -219,15 +228,16 @@ public class DefaultProgressMonitor implements IProgressMonitor {
      * @return
      */
     private long accumulatedSubMonitorWorkDone() {
-        return _subMonitors.stream()
-                .mapToLong(sm -> {
-                    return Math.round(((double) sm.getParentTicks() * (double) sm.getWorkDoneInTicks()) / (double) sm.getTotalWorkTicks());
+        return (long) _subMonitors.stream()
+                .mapToDouble(sm -> {
+                    double workDone = ((double) sm.parentTicks * (double) sm.internalGetWorkDoneInTicks()) / (double) sm._totalWork;
+                    return workDone;
                 }).sum();
     }
 
     private long accumulatedSubMonitorTotalWork() {
         return _subMonitors.stream()
-                .mapToLong(sm -> sm.getParentTicks()).sum();
+                .mapToLong(sm -> sm.parentTicks).sum();
     }
 
     /**
@@ -257,20 +267,15 @@ public class DefaultProgressMonitor implements IProgressMonitor {
         /**
          * @param parentTicks
          */
-        public SubMonitor(String name, long parentTicks, long totalWork, DefaultProgressMonitor parent) {
+        public SubMonitor(String name, long parentTicks, int totalWork, DefaultProgressMonitor parent) {
             super(name, totalWork);
 
+            //
             this.parentTicks = parentTicks;
             this.parent = checkNotNull(parent);
 
+            //
             parent._subMonitors.add(this);
-        }
-
-        /**
-         * @return
-         */
-        public long getParentTicks() {
-            return parentTicks;
         }
 
         public void dump() {
@@ -300,10 +305,10 @@ public class DefaultProgressMonitor implements IProgressMonitor {
         private int _parentPercentage;
 
         //
-        private long _parentWorkTicks = -1;
+        private int _parentWorkTicks = -1;
 
         //
-        private long _totalWork;
+        private int _totalWork;
 
         /**
          * @param name
@@ -320,22 +325,29 @@ public class DefaultProgressMonitor implements IProgressMonitor {
         }
 
         @Override
-        public ISubProgressMonitorCreator withParentConsumptionInWorkTicks(long parentWorkTicks) {
+        public ISubProgressMonitorCreator withParentConsumptionInWorkTicks(int parentWorkTicks) {
             _parentWorkTicks = parentWorkTicks;
             return this;
         }
 
         @Override
-        public ISubProgressMonitorCreator withTotalWorkTicks(long totalWork) {
+        public ISubProgressMonitorCreator withTotalWorkTicks(int totalWork) {
             _totalWork = totalWork;
             return this;
         }
 
         @Override
         public IProgressMonitor create() {
-            return new SubMonitor(this._name,
-                    _parentWorkTicks > 0 ? _parentWorkTicks : (_parentPercentage * _parent._totalWork) / 100, _totalWork,
-                    _parent);
+            long parentWorkTicks = _parentWorkTicks > 0 ? scaleUp(_parentWorkTicks) : (long) ((double) _parentPercentage * (double) _parent._totalWork / 100.0);
+            return new SubMonitor(this._name, parentWorkTicks, _totalWork, _parent);
         }
+    }
+
+    private static int scaleDown(long value) {
+        return (int) (value / 1000L);
+    }
+
+    private static long scaleUp(int value) {
+        return value * 1000L;
     }
 }
