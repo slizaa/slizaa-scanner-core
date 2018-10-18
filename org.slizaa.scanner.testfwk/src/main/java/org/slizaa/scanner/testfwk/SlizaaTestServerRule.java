@@ -134,7 +134,7 @@ public class SlizaaTestServerRule extends AbstractSlizaaTestServerRule {
 
     //
     DefaultProgressMonitor progressMonitor = new DefaultProgressMonitor("Parse", 100,
-        (ctx) -> System.out.println(String.format("%s%%", ctx.getWorkDoneInPercentage())));
+        DefaultProgressMonitor.consoleLogger());
 
     //
     executeWithThreadContextClassLoader(testFwkBackEnd.getClassLoader(),
