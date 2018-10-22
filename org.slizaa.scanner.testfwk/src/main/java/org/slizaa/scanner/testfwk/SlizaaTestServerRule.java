@@ -14,12 +14,12 @@
 package org.slizaa.scanner.testfwk;
 
 import org.slizaa.core.mvnresolver.api.IMvnResolverService.IMvnResolverJob;
+import org.slizaa.core.progressmonitor.DefaultProgressMonitor;
 import org.slizaa.scanner.api.cypherregistry.ICypherStatementRegistry;
 import org.slizaa.scanner.api.graphdb.IGraphDb;
 import org.slizaa.scanner.api.graphdb.IGraphDbFactory;
 import org.slizaa.scanner.api.importer.IModelImporter;
 import org.slizaa.scanner.api.importer.IModelImporterFactory;
-import org.slizaa.scanner.api.util.DefaultProgressMonitor;
 import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProvider;
 import org.slizaa.scanner.spi.parser.IParserFactory;
 import org.slizaa.scanner.testfwk.internal.VersionAsInProjectResolver;

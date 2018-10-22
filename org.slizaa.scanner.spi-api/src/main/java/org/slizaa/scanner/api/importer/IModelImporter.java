@@ -7,13 +7,13 @@
  ******************************************************************************/
 package org.slizaa.scanner.api.importer;
 
-import java.util.List;
-import java.util.function.Supplier;
-
-import org.slizaa.scanner.api.util.IProgressMonitor;
+import org.slizaa.core.progressmonitor.IProgressMonitor;
 import org.slizaa.scanner.api.graphdb.IGraphDb;
 import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProvider;
 import org.slizaa.scanner.spi.parser.IProblem;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * <p>

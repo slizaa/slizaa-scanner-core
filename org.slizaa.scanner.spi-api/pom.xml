@@ -20,6 +20,11 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
+		<dependency>
+			<groupId>org.slizaa.core</groupId>
+			<artifactId>org.slizaa.core.progressmonitor</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 		<!-- test -->
 		<dependency>

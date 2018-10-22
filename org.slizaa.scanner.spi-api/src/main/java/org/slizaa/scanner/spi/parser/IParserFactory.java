@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.slizaa.scanner.spi.parser;
 
-import org.slizaa.scanner.api.util.IProgressMonitor;
+import org.slizaa.core.progressmonitor.IProgressMonitor;
 import org.slizaa.scanner.spi.contentdefinition.IContentDefinition;
 import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProvider;
 
