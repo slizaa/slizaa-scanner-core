@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slizaa.scanner.api.cypherregistry.ICypherStatement;
 import org.slizaa.scanner.api.cypherregistry.ICypherStatementRegistry;
+import org.slizaa.scanner.cypherregistry.CypherRegistryUtils;
+import org.slizaa.scanner.cypherregistry.CypherStatementRegistry;
 
 /**
  * <p>

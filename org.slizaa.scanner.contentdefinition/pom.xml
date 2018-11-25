@@ -30,16 +30,12 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.platform</groupId>
-			<artifactId>org.eclipse.equinox.common</artifactId>
-		</dependency>
 		<!-- TODO: REMOVE -->
 		<dependency>
 			<groupId>org.ops4j.pax.url</groupId>
 			<artifactId>pax-url-aether</artifactId>
 		</dependency>
-
+		
 		<!-- test dependencies -->
 		<dependency>
 			<groupId>junit</groupId>

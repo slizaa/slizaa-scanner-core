@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 import org.slizaa.scanner.api.cypherregistry.ICypherStatement;
+import org.slizaa.scanner.cypherregistry.DefaultCypherStatement;
 import org.slizaa.scanner.cypherregistry.impl.DependencyGraph;
 
 public class DependencyGraphTest {

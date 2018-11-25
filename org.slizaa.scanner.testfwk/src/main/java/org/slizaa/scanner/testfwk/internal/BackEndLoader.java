@@ -1,8 +1,8 @@
 package org.slizaa.scanner.testfwk.internal;
 
+
 import org.slizaa.core.mvnresolver.MvnResolverServiceFactoryFactory;
 import org.slizaa.core.mvnresolver.api.IMvnResolverService;
-import org.slizaa.core.mvnresolver.api.IMvnResolverService.IMvnResolverJob;
 import org.slizaa.scanner.api.cypherregistry.ICypherStatementRegistry;
 import org.slizaa.scanner.api.graphdb.IGraphDbFactory;
 import org.slizaa.scanner.api.importer.IModelImporterFactory;
@@ -50,7 +50,7 @@ public class BackEndLoader implements ITestFwkBackEnd {
    *
    * @param configurer
    */
-  public BackEndLoader(Consumer<IMvnResolverJob> configurer) {
+  public BackEndLoader(Consumer<IMvnResolverService.IMvnResolverJob> configurer) {
     this(configurer, BackEndLoader.class.getClassLoader());
   }
 
@@ -62,7 +62,7 @@ public class BackEndLoader implements ITestFwkBackEnd {
    * @param configurer
    * @param mainClassLoader
    */
-  public BackEndLoader(Consumer<IMvnResolverJob> configurer, ClassLoader mainClassLoader) {
+  public BackEndLoader(Consumer<IMvnResolverService.IMvnResolverJob> configurer, ClassLoader mainClassLoader) {
 
     //
     checkNotNull(configurer);
@@ -76,7 +76,7 @@ public class BackEndLoader implements ITestFwkBackEnd {
         .create();
 
     //
-    IMvnResolverJob mvnResolverJob = mvnResolverService.newMvnResolverJob();
+    IMvnResolverService.IMvnResolverJob mvnResolverJob = mvnResolverService.newMvnResolverJob();
 
     // ...configure it...
     configurer.accept(mvnResolverJob);
