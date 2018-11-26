@@ -4,27 +4,27 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
 package org.slizaa.scanner.contentdefinition;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.ops4j.pax.url.mvn.MavenResolvers;
 import org.slizaa.scanner.spi.contentdefinition.AbstractContentDefinitionProvider;
 import org.slizaa.scanner.spi.contentdefinition.AnalyzeMode;
 import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProvider;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * <p>
  * Superclass for all implementations of {@link ITempDefinitionProvider}
  * </p>
- * 
+ *
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class MvnBasedContentDefinitionProvider extends AbstractContentDefinitionProvider
@@ -55,28 +55,29 @@ public class MvnBasedContentDefinitionProvider extends AbstractContentDefinition
   }
 
   /**
-   * @param progressMonitor
    */
   protected void onInitializeProjectContent() {
 
     //
     for (MavenCoordinates mavenCoordinates : _mavenCoordinates) {
 
+      String moduleName = mavenCoordinates.artifactId;
+      String moduleVersion = mavenCoordinates.version;
+
       try {
         File resolvedFile = MavenResolvers.createMavenResolver(null, null).resolve(mavenCoordinates.getGroupId(),
             mavenCoordinates.getArtifactId(), null, "jar", mavenCoordinates.getVersion());
 
-        this.createFileBasedContentDefinition("Module1", "1.2.3", new File[] { resolvedFile }, null,
+        this.createFileBasedContentDefinition(moduleName, mavenCoordinates.version, new File[] { resolvedFile }, null,
             AnalyzeMode.BINARIES_ONLY);
 
       } catch (IOException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-
     }
   }
-  
+
   /**
    * {@inheritDoc}
    */
