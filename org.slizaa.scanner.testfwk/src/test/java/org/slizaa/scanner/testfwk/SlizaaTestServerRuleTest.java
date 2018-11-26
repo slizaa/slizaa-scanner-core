@@ -14,7 +14,7 @@ import org.junit.Test;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  *
  */
-// s@Ignore("This test has an invalid runtime dependency to 'org.slizaa.neo4j' and 'org.slizaa.jtype'.")
+@Ignore("This test has an invalid runtime dependency to 'org.slizaa.neo4j' and 'org.slizaa.jtype'.")
 public class SlizaaTestServerRuleTest {
 
   // @formatter:off

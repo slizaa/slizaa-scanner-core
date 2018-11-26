@@ -172,7 +172,7 @@ public abstract class AbstractSlizaaTestServerRule implements TestRule {
    * <p>
    * </p>
    *
-   * @param _backEndLoader2
+   * @param testFwkBackEnd
    * @return
    * @throws IOException 
    */
