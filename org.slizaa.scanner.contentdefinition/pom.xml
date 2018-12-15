@@ -27,15 +27,15 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.slizaa.core</groupId>
+			<artifactId>org.slizaa.core.mvnresolver.uber</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-		<!-- TODO: REMOVE -->
-		<dependency>
-			<groupId>org.ops4j.pax.url</groupId>
-			<artifactId>pax-url-aether</artifactId>
-		</dependency>
-		
+
 		<!-- test dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
