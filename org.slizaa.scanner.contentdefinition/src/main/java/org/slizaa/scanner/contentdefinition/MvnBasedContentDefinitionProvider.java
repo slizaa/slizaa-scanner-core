@@ -35,6 +35,8 @@ public class MvnBasedContentDefinitionProvider extends AbstractContentDefinition
 	/** - */
 	private List<String> _mavenCoordinates;
 
+	private final IMvnResolverService resolverService;
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link MvnBasedContentDefinitionProvider}.
@@ -42,6 +44,8 @@ public class MvnBasedContentDefinitionProvider extends AbstractContentDefinition
 	 */
 	public MvnBasedContentDefinitionProvider() {
 		_mavenCoordinates = new LinkedList<>();
+		resolverService = MvnResolverServiceFactoryFactory.createNewResolverServiceFactory()
+				.newMvnResolverService().withDefaultRemoteRepository().create();
 	}
 
 	/**
@@ -58,8 +62,9 @@ public class MvnBasedContentDefinitionProvider extends AbstractContentDefinition
 				.add(String.format("%s:%s:%s", checkNotNull(groupId), checkNotNull(artifactId), checkNotNull(version)));
 	}
 	
-	public void addArtifact(String coordinate) {
+	public IMvnCoordinate addArtifact(String coordinate) {
 		_mavenCoordinates.add(coordinate);
+		return resolverService.parseCoordinate(coordinate);
 	}
 
 
@@ -71,8 +76,6 @@ public class MvnBasedContentDefinitionProvider extends AbstractContentDefinition
 		for (String coord : _mavenCoordinates) {
 
 			// TODO
-			IMvnResolverService resolverService = MvnResolverServiceFactoryFactory.createNewResolverServiceFactory()
-					.newMvnResolverService().withDefaultRemoteRepository().create();
 
 			IMvnCoordinate mvnCoordinate = resolverService.parseCoordinate(coord);
 			File resolvedFile = resolverService.resolveArtifact(coord);
