@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slizaa.core.mvnresolver.MvnResolverServiceFactoryFactory;
 import org.slizaa.core.mvnresolver.api.IMvnCoordinate;
@@ -66,9 +67,16 @@ public class MvnBasedContentDefinitionProvider extends AbstractContentDefinition
 		_mavenCoordinates.add(coordinate);
 		return resolverService.parseCoordinate(coordinate);
 	}
+	
+	public List<IMvnCoordinate> getMavenCoordinates() {
+    return _mavenCoordinates.stream().map(coordinate -> resolverService.parseCoordinate(coordinate)).collect(Collectors.toList());
+  }
 
+  public void setMavenCoordinates(List<String> mavenCoordinates) {
+    _mavenCoordinates = checkNotNull(mavenCoordinates);
+  }
 
-	/**
+  /**
 	 */
 	protected void onInitializeProjectContent() {
 
