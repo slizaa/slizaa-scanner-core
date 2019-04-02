@@ -34,7 +34,7 @@ public class MvnBasedContentDefinitionProvider extends AbstractContentDefinition
 		implements IContentDefinitionProvider {
 
 	/** - */
-	private List<String> _mavenCoordinates;
+	private List<IMvnCoordinate> _mavenCoordinates;
 
 	private final IMvnResolverService resolverService;
 
@@ -59,21 +59,21 @@ public class MvnBasedContentDefinitionProvider extends AbstractContentDefinition
 	 */
 	@Deprecated
 	public void addArtifact(String groupId, String artifactId, String version) {
-		_mavenCoordinates
-				.add(String.format("%s:%s:%s", checkNotNull(groupId), checkNotNull(artifactId), checkNotNull(version)));
+		addArtifact(String.format("%s:%s:%s", checkNotNull(groupId), checkNotNull(artifactId), checkNotNull(version)));
 	}
-	
+
+	public void setMavenCoordinates(List<String> mavenCoordinates) {
+		_mavenCoordinates = checkNotNull(mavenCoordinates.stream().map(coordinate -> resolverService.parseCoordinate(coordinate)).collect(Collectors.toList()));
+	}
+
 	public IMvnCoordinate addArtifact(String coordinate) {
-		_mavenCoordinates.add(coordinate);
-		return resolverService.parseCoordinate(coordinate);
+		IMvnCoordinate mvnCoordinate = resolverService.parseCoordinate(coordinate);
+		_mavenCoordinates.add(mvnCoordinate);
+		return mvnCoordinate;
 	}
 	
 	public List<IMvnCoordinate> getMavenCoordinates() {
-    return _mavenCoordinates.stream().map(coordinate -> resolverService.parseCoordinate(coordinate)).collect(Collectors.toList());
-  }
-
-  public void setMavenCoordinates(List<String> mavenCoordinates) {
-    _mavenCoordinates = checkNotNull(mavenCoordinates);
+    return _mavenCoordinates;
   }
 
   /**
@@ -81,12 +81,10 @@ public class MvnBasedContentDefinitionProvider extends AbstractContentDefinition
 	protected void onInitializeProjectContent() {
 
 		//
-		for (String coord : _mavenCoordinates) {
+		for (IMvnCoordinate mvnCoordinate : _mavenCoordinates) {
 
 			// TODO
-
-			IMvnCoordinate mvnCoordinate = resolverService.parseCoordinate(coord);
-			File resolvedFile = resolverService.resolveArtifact(coord);
+			File resolvedFile = resolverService.resolveArtifact(String.format("%s:%s:%s", mvnCoordinate.getGroupId(), mvnCoordinate.getArtifactId(), mvnCoordinate.getVersion()));
 
 			this.createFileBasedContentDefinition(mvnCoordinate.getArtifactId(), mvnCoordinate.getVersion(),
 					new File[] { resolvedFile }, null, AnalyzeMode.BINARIES_ONLY);
