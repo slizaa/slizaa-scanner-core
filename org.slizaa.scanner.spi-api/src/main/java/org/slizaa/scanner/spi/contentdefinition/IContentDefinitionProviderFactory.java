@@ -10,23 +10,25 @@
  ******************************************************************************/
 package org.slizaa.scanner.spi.contentdefinition;
 
-import java.util.List;
+public interface IContentDefinitionProviderFactory<T extends IContentDefinitionProvider> {
 
-/**
- * <p>
- * Represents the definition of the system that should be analyzed.
- * </p>
- *
- * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
- */
-public interface IContentDefinitionProvider {
-
-    /**
-     * <p>
-     * Returns a <b>unmodifiable</b> list with all the defined {@link IContentDefinition IContentDefinitions}.
-     * </p>
-     *
-     * @return a <b>unmodifiable</b> list with all the defined {@link IContentDefinition IContentDefinitions}.
-     */
-    List<? extends IContentDefinition> getContentDefinitions();
+  /**
+   * 
+   * @return
+   */
+  String getFactoryId();
+  
+  String getName();
+  
+  /**
+   * 
+   * @return
+   */
+  String getDescription();
+  
+  T emptyContentDefinitionProvider();
+  
+  String toExternalRepresentation(T contentDefinitionProvider);
+  
+  T fromExternalRepresentation(String externalRepresentation);
 }

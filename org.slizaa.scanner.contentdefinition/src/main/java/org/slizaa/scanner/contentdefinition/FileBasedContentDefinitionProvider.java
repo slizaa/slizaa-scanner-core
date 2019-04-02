@@ -29,17 +29,6 @@ import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProvider;
 public class FileBasedContentDefinitionProvider extends AbstractContentDefinitionProvider
 		implements IContentDefinitionProvider {
 
-
-	@Override
-	public String exportToJson() {
-		return null;
-	}
-
-	@Override
-	public void importFromJson(String json) {
-
-	}
-
 	@Override
 	public IContentDefinition createFileBasedContentDefinition(String contentName, String contentVersion,
 			File[] binaryPaths, File[] sourcePaths, AnalyzeMode analyzeMode) {
