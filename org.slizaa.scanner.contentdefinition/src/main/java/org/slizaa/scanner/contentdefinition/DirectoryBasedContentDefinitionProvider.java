@@ -40,6 +40,16 @@ public class DirectoryBasedContentDefinitionProvider extends AbstractContentDefi
     _directoriesWithBinaryArtifacts = new ArrayList<>();
   }
 
+  @Override
+  public String exportToJson() {
+    return null;
+  }
+
+  @Override
+  public void importFromJson(String json) {
+
+  }
+
   public boolean add(File e) {
     return _directoriesWithBinaryArtifacts.add(e);
   }

@@ -38,8 +38,6 @@ public abstract class AbstractContentDefinitionProvider implements IContentDefin
    * <p>
    * Creates a new instance of type {@link AbstractContentDefinitionProvider}.
    * </p>
-   * 
-   * @param contentDefinitionProvider
    */
   public AbstractContentDefinitionProvider() {
 
@@ -85,8 +83,7 @@ public abstract class AbstractContentDefinitionProvider implements IContentDefin
   /**
    * <p>
    * </p>
-   * 
-   * @param progressMonitor
+   *
    * @return
    */
   protected final void initialize() {

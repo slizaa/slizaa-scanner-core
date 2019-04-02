@@ -49,6 +49,16 @@ public class MvnBasedContentDefinitionProvider extends AbstractContentDefinition
 				.newMvnResolverService().withDefaultRemoteRepository().create();
 	}
 
+	@Override
+	public String exportToJson() {
+		return null;
+	}
+
+	@Override
+	public void importFromJson(String json) {
+
+	}
+
 	/**
 	 * <p>
 	 * </p>
