@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.slizaa.scanner.contentdefinition;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -23,29 +25,33 @@ import java.util.List;
 
 import org.slizaa.scanner.spi.contentdefinition.AbstractContentDefinitionProvider;
 import org.slizaa.scanner.spi.contentdefinition.AnalyzeMode;
-import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProvider;
+import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProviderFactory;
 
-public class DirectoryBasedContentDefinitionProvider extends AbstractContentDefinitionProvider
-    implements IContentDefinitionProvider {
+public class DirectoryBasedContentDefinitionProvider extends AbstractContentDefinitionProvider<DirectoryBasedContentDefinitionProvider> {
 
   /** - */
   private List<File> _directoriesWithBinaryArtifacts;
 
-  /**
-   * <p>
-   * Creates a new instance of type {@link DirectoryBasedContentDefinitionProvider}.
-   * </p>
-   */
-  public DirectoryBasedContentDefinitionProvider() {
-    _directoriesWithBinaryArtifacts = new ArrayList<>();
-  }
-
+  /** - */
+  private final IContentDefinitionProviderFactory<DirectoryBasedContentDefinitionProvider> _contentDefinitionProviderFactory;
+  
   public boolean add(File e) {
     return _directoriesWithBinaryArtifacts.add(e);
   }
 
   public boolean addAll(Collection<? extends File> c) {
     return _directoriesWithBinaryArtifacts.addAll(c);
+  }
+ 
+  
+  @Override
+  public IContentDefinitionProviderFactory<DirectoryBasedContentDefinitionProvider> getContentDefinitionProviderFactory() {
+    return _contentDefinitionProviderFactory;
+  }
+  
+  @Override
+  public String toExternalRepresentation() {
+    return null;
   }
 
   /**
@@ -113,4 +119,15 @@ public class DirectoryBasedContentDefinitionProvider extends AbstractContentDefi
     //
     return result;
   }
+  
+  /**
+   * <p>
+   * Creates a new instance of type {@link DirectoryBasedContentDefinitionProvider}.
+   * </p>
+   */
+  DirectoryBasedContentDefinitionProvider(IContentDefinitionProviderFactory<DirectoryBasedContentDefinitionProvider> contentDefinitionProviderFactory) {
+    _directoriesWithBinaryArtifacts = new ArrayList<>();
+    _contentDefinitionProviderFactory = checkNotNull(contentDefinitionProviderFactory);
+  }
+
 }

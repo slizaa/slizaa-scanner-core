@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.slizaa.scanner.spi.contentdefinition;
 
-public interface IContentDefinitionProviderFactory<T extends IContentDefinitionProvider> {
+public interface IContentDefinitionProviderFactory<T extends IContentDefinitionProvider<T>> {
 
   /**
    * 

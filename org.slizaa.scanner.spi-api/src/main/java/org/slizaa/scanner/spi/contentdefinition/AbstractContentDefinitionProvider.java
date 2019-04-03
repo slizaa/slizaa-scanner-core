@@ -26,7 +26,7 @@ import org.slizaa.scanner.spi.internal.contentdefinition.filebased.FileBasedCont
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractContentDefinitionProvider implements IContentDefinitionProvider {
+public abstract class AbstractContentDefinitionProvider<T extends IContentDefinitionProvider<T>> implements IContentDefinitionProvider<T> {
 
   /** the list of content definitions */
   private List<IContentDefinition> _contentDefinitions;

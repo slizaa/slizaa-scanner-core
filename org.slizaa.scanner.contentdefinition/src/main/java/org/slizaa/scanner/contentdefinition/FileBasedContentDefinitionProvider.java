@@ -11,12 +11,11 @@
 package org.slizaa.scanner.contentdefinition;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.slizaa.scanner.spi.contentdefinition.AbstractContentDefinitionProvider;
 import org.slizaa.scanner.spi.contentdefinition.AnalyzeMode;
 import org.slizaa.scanner.spi.contentdefinition.IContentDefinition;
-import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProvider;
+import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProviderFactory;
 
 /**
  * <p>
@@ -26,10 +25,21 @@ import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProvider;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 @Deprecated
-public class FileBasedContentDefinitionProvider extends AbstractContentDefinitionProvider
-		implements IContentDefinitionProvider {
-
+public class FileBasedContentDefinitionProvider extends AbstractContentDefinitionProvider<FileBasedContentDefinitionProvider> {
+  
 	@Override
+  public IContentDefinitionProviderFactory<FileBasedContentDefinitionProvider> getContentDefinitionProviderFactory() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public String toExternalRepresentation() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
 	public IContentDefinition createFileBasedContentDefinition(String contentName, String contentVersion,
 			File[] binaryPaths, File[] sourcePaths, AnalyzeMode analyzeMode) {
 

@@ -22,7 +22,7 @@ import org.slizaa.core.mvnresolver.api.IMvnCoordinate;
 import org.slizaa.core.mvnresolver.api.IMvnResolverService;
 import org.slizaa.scanner.spi.contentdefinition.AbstractContentDefinitionProvider;
 import org.slizaa.scanner.spi.contentdefinition.AnalyzeMode;
-import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProvider;
+import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProviderFactory;
 
 /**
  * <p>
@@ -30,72 +30,93 @@ import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProvider;
  *
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class MvnBasedContentDefinitionProvider extends AbstractContentDefinitionProvider
-		implements IContentDefinitionProvider {
+public class MvnBasedContentDefinitionProvider
+    extends AbstractContentDefinitionProvider<MvnBasedContentDefinitionProvider> {
 
-	/** - */
-	private List<IMvnCoordinate> _mavenCoordinates;
+  /** - */
+  private List<IMvnCoordinate>                                                       _mavenCoordinates;
 
-	private final IMvnResolverService resolverService;
+  /** - */
+  private final IMvnResolverService                                                  resolverService;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link MvnBasedContentDefinitionProvider}.
-	 * </p>
-	 */
-	public MvnBasedContentDefinitionProvider() {
-		_mavenCoordinates = new LinkedList<>();
-		resolverService = MvnResolverServiceFactoryFactory.createNewResolverServiceFactory()
-				.newMvnResolverService().withDefaultRemoteRepository().create();
-	}
+  /** - */
+  private final IContentDefinitionProviderFactory<MvnBasedContentDefinitionProvider> _contentDefinitionProviderFactory;
 
-	/**
-	 * <p>
-	 * </p>
-	 *
-	 * @param groupId
-	 * @param artifactId
-	 * @param version
-	 */
-	@Deprecated
-	public void addArtifact(String groupId, String artifactId, String version) {
-		addArtifact(String.format("%s:%s:%s", checkNotNull(groupId), checkNotNull(artifactId), checkNotNull(version)));
-	}
+  /**
+   * 
+   */
+  @Override
+  public IContentDefinitionProviderFactory<MvnBasedContentDefinitionProvider> getContentDefinitionProviderFactory() {
+    return _contentDefinitionProviderFactory;
+  }
+  
+  @Override
+  public String toExternalRepresentation() {
+    return _contentDefinitionProviderFactory.toExternalRepresentation(this);
+  }
 
-	public void setMavenCoordinates(List<String> mavenCoordinates) {
-		_mavenCoordinates = checkNotNull(mavenCoordinates.stream().map(coordinate -> resolverService.parseCoordinate(coordinate)).collect(Collectors.toList()));
-	}
+  /**
+   * <p>
+   * </p>
+   *
+   * @param groupId
+   * @param artifactId
+   * @param version
+   */
+  @Deprecated
+  public void addArtifact(String groupId, String artifactId, String version) {
+    addArtifact(String.format("%s:%s:%s", checkNotNull(groupId), checkNotNull(artifactId), checkNotNull(version)));
+  }
 
-	public IMvnCoordinate addArtifact(String coordinate) {
-		IMvnCoordinate mvnCoordinate = resolverService.parseCoordinate(coordinate);
-		_mavenCoordinates.add(mvnCoordinate);
-		return mvnCoordinate;
-	}
-	
-	public List<IMvnCoordinate> getMavenCoordinates() {
+  public void setMavenCoordinates(List<String> mavenCoordinates) {
+    _mavenCoordinates = checkNotNull(mavenCoordinates.stream()
+        .map(coordinate -> resolverService.parseCoordinate(coordinate)).collect(Collectors.toList()));
+  }
+
+  public IMvnCoordinate addArtifact(String coordinate) {
+    IMvnCoordinate mvnCoordinate = resolverService.parseCoordinate(coordinate);
+    _mavenCoordinates.add(mvnCoordinate);
+    return mvnCoordinate;
+  }
+
+  public List<IMvnCoordinate> getMavenCoordinates() {
     return _mavenCoordinates;
   }
 
   /**
-	 */
-	protected void onInitializeProjectContent() {
+   */
+  protected void onInitializeProjectContent() {
 
-		//
-		for (IMvnCoordinate mvnCoordinate : _mavenCoordinates) {
+    //
+    for (IMvnCoordinate mvnCoordinate : _mavenCoordinates) {
 
-			// TODO
-			File resolvedFile = resolverService.resolveArtifact(String.format("%s:%s:%s", mvnCoordinate.getGroupId(), mvnCoordinate.getArtifactId(), mvnCoordinate.getVersion()));
+      // TODO
+      File resolvedFile = resolverService.resolveArtifact(String.format("%s:%s:%s", mvnCoordinate.getGroupId(),
+          mvnCoordinate.getArtifactId(), mvnCoordinate.getVersion()));
 
-			this.createFileBasedContentDefinition(mvnCoordinate.getArtifactId(), mvnCoordinate.getVersion(),
-					new File[] { resolvedFile }, null, AnalyzeMode.BINARIES_ONLY);
-		}
-	}
+      this.createFileBasedContentDefinition(mvnCoordinate.getArtifactId(), mvnCoordinate.getVersion(),
+          new File[] { resolvedFile }, null, AnalyzeMode.BINARIES_ONLY);
+    }
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void onDisposeProjectContent() {
-		//
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void onDisposeProjectContent() {
+    //
+  }
+  
+  /**
+   * <p>
+   * Creates a new instance of type {@link MvnBasedContentDefinitionProvider}.
+   * </p>
+   */
+  MvnBasedContentDefinitionProvider(IContentDefinitionProviderFactory<MvnBasedContentDefinitionProvider> contentDefinitionProviderFactory) {
+    _mavenCoordinates = new LinkedList<>();
+    resolverService = MvnResolverServiceFactoryFactory.createNewResolverServiceFactory().newMvnResolverService()
+        .withDefaultRemoteRepository().create();
+    _contentDefinitionProviderFactory = contentDefinitionProviderFactory;
+  }
+
 }

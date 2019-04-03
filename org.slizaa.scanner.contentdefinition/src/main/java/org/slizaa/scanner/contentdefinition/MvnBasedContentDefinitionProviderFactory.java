@@ -27,7 +27,7 @@ public class MvnBasedContentDefinitionProviderFactory
 
   @Override
   public MvnBasedContentDefinitionProvider emptyContentDefinitionProvider() {
-    return new MvnBasedContentDefinitionProvider();
+    return new MvnBasedContentDefinitionProvider(this);
   }
 
   @Override
@@ -41,7 +41,7 @@ public class MvnBasedContentDefinitionProviderFactory
 
     checkNotNull(externalRepresentation);
 
-    MvnBasedContentDefinitionProvider contentDefinitionProvider = new MvnBasedContentDefinitionProvider();
+    MvnBasedContentDefinitionProvider contentDefinitionProvider = emptyContentDefinitionProvider();
 
     try (Scanner scanner = new Scanner(externalRepresentation)) {
 

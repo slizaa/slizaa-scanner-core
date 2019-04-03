@@ -19,14 +19,26 @@ import java.util.List;
  *
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IContentDefinitionProvider {
+public interface IContentDefinitionProvider<T extends IContentDefinitionProvider<T>> {
 
-    /**
-     * <p>
-     * Returns a <b>unmodifiable</b> list with all the defined {@link IContentDefinition IContentDefinitions}.
-     * </p>
-     *
-     * @return a <b>unmodifiable</b> list with all the defined {@link IContentDefinition IContentDefinitions}.
-     */
-    List<? extends IContentDefinition> getContentDefinitions();
+  /**
+   * 
+   * @return
+   */
+  IContentDefinitionProviderFactory<T> getContentDefinitionProviderFactory();
+  
+  /**
+   * 
+   * @return
+   */
+  String toExternalRepresentation();
+
+  /**
+   * <p>
+   * Returns a <b>unmodifiable</b> list with all the defined {@link IContentDefinition IContentDefinitions}.
+   * </p>
+   *
+   * @return a <b>unmodifiable</b> list with all the defined {@link IContentDefinition IContentDefinitions}.
+   */
+  List<? extends IContentDefinition> getContentDefinitions();
 }

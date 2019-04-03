@@ -20,10 +20,13 @@ import java.io.File;
 
 import org.slizaa.scanner.contentdefinition.FileBasedContentDefinitionProvider;
 import org.slizaa.scanner.contentdefinition.MvnBasedContentDefinitionProvider;
+import org.slizaa.scanner.contentdefinition.MvnBasedContentDefinitionProviderFactory;
 import org.slizaa.scanner.spi.contentdefinition.AnalyzeMode;
 import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProvider;
 
 public class ContentDefinitionProviderFactory {
+  
+  private static MvnBasedContentDefinitionProviderFactory mvnBasedContentDefinitionProviderFactory = new MvnBasedContentDefinitionProviderFactory();
 
   /**
    * <p>
@@ -32,7 +35,7 @@ public class ContentDefinitionProviderFactory {
    * @param coordinates
    * @return
    */
-  public static IContentDefinitionProvider multipleBinaryMvnArtifacts(String[]... coordinates) {
+  public static IContentDefinitionProvider<?> multipleBinaryMvnArtifacts(String[]... coordinates) {
 
     //
     checkNotNull(coordinates);
@@ -41,7 +44,7 @@ public class ContentDefinitionProviderFactory {
     }
 
     //
-    MvnBasedContentDefinitionProvider provider = new MvnBasedContentDefinitionProvider();
+    MvnBasedContentDefinitionProvider provider = mvnBasedContentDefinitionProviderFactory.emptyContentDefinitionProvider();
 
     //
     for (String[] coordinate : coordinates) {
@@ -61,7 +64,7 @@ public class ContentDefinitionProviderFactory {
    * @param version
    * @return
    */
-  public static IContentDefinitionProvider simpleBinaryMvnArtifact(String groupId, String artifactId, String version) {
+  public static IContentDefinitionProvider<?> simpleBinaryMvnArtifact(String groupId, String artifactId, String version) {
 
     return multipleBinaryMvnArtifacts(new String[] { groupId, artifactId, version });
   }
@@ -75,7 +78,7 @@ public class ContentDefinitionProviderFactory {
    * @param jarOrDirectory
    * @return
    */
-  public static IContentDefinitionProvider simpleBinaryFile(String name, String version, String jarOrDirectory) {
+  public static IContentDefinitionProvider<?> simpleBinaryFile(String name, String version, String jarOrDirectory) {
     return simpleBinaryFile(name, version, new File(jarOrDirectory));
   }
 
@@ -88,7 +91,7 @@ public class ContentDefinitionProviderFactory {
    * @param jarOrDirectory
    * @return
    */
-  public static IContentDefinitionProvider simpleBinaryFile(String name, String version, File jarOrDirectory) {
+  public static IContentDefinitionProvider<?> simpleBinaryFile(String name, String version, File jarOrDirectory) {
 
     checkNotNull(name);
     checkNotNull(version);
