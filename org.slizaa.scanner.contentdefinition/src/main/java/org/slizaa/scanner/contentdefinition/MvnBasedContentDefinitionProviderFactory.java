@@ -12,7 +12,7 @@ public class MvnBasedContentDefinitionProviderFactory
 
   @Override
   public String getFactoryId() {
-    return IContentDefinitionProviderFactory.class.getName();
+    return MvnBasedContentDefinitionProviderFactory.class.getName();
   }
 
   @Override
