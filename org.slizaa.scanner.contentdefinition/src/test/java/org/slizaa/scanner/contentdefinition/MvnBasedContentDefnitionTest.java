@@ -35,7 +35,7 @@ public class MvnBasedContentDefnitionTest {
   @Test
   public void testMvnBasedContentDefnition_2() {
     
-    String externalRepresentation = "org.springframework:spring-core:5.1.6.RELEASE" + System.lineSeparator() + "org.springframework:spring-beans:5.1.6.RELEASE";
+    String externalRepresentation = "org.springframework:spring-core:5.1.6.RELEASE, org.springframework:spring-beans:5.1.6.RELEASE";
     
     MvnBasedContentDefinitionProvider contentDefinitionProvider = _providerFactory.fromExternalRepresentation(externalRepresentation);
 

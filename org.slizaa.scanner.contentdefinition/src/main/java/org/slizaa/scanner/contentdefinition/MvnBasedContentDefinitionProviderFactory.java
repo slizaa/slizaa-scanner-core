@@ -10,6 +10,8 @@ import org.slizaa.scanner.spi.contentdefinition.IContentDefinitionProviderFactor
 public class MvnBasedContentDefinitionProviderFactory
     implements IContentDefinitionProviderFactory<MvnBasedContentDefinitionProvider> {
 
+  private static final String DELIMITER = ",";
+
   @Override
   public String getFactoryId() {
     return MvnBasedContentDefinitionProviderFactory.class.getName();
@@ -33,7 +35,7 @@ public class MvnBasedContentDefinitionProviderFactory
   @Override
   public String toExternalRepresentation(MvnBasedContentDefinitionProvider contentDefinitionProvider) {
     return contentDefinitionProvider.getMavenCoordinates().stream()
-        .map(mvnCoordinate -> mvnCoordinate.toCanonicalForm()).collect(Collectors.joining(System.lineSeparator()));
+        .map(mvnCoordinate -> mvnCoordinate.toCanonicalForm()).collect(Collectors.joining(DELIMITER));
   }
 
   @Override
@@ -43,13 +45,12 @@ public class MvnBasedContentDefinitionProviderFactory
 
     MvnBasedContentDefinitionProvider contentDefinitionProvider = emptyContentDefinitionProvider();
 
-    try (Scanner scanner = new Scanner(externalRepresentation)) {
+    String[] parts = externalRepresentation.split(DELIMITER);
 
-      while (scanner.hasNextLine()) {
-        String artifact = scanner.nextLine();
-        if (!artifact.isEmpty()) {
-          contentDefinitionProvider.addArtifact(artifact);
-        }
+    for (String part : parts) {
+      part = part.trim();
+      if (!part.isEmpty()) {
+        contentDefinitionProvider.addArtifact(part);
       }
     }
 
